@@ -1,0 +1,67 @@
+<div class="container">
+
+  <!-- 🔵 BARRA SUPERIOR -->
+  <div class="header">
+    <div class="logo-container">
+      <img src="assets/logo.png" class="logo" alt="Logo Proterquim" />
+      <h1>Proterquim</h1>
+    </div>
+  </div>
+
+  <!-- 🧾 LOGIN -->
+  <div class="login-box">
+    <h2>Inicio de Sesión</h2>
+
+    <!-- 🔴 MENSAJE DE ERROR -->
+    <p *ngIf="mensajeError" class="error" role="alert">
+      {{ mensajeError }}
+    </p>
+
+    <!-- 👤 USUARIO -->
+    <input 
+      type="text"
+      name="usuario"
+      placeholder="Nombre de Usuario"
+      [(ngModel)]="usuario"
+      autocomplete="username"
+      (keyup.enter)="login()"
+    />
+
+    <!-- 🔒 PASSWORD CON OJO -->
+    <div class="password-container">
+      <input 
+        [type]="verPassword ? 'text' : 'password'"
+        name="password"
+        placeholder="Contraseña"
+        [(ngModel)]="password"
+        autocomplete="current-password"
+        (keyup.enter)="login()"
+      />
+      <span 
+        class="eye" 
+        (click)="togglePassword()"
+        [attr.aria-label]="verPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+        role="button"
+        tabindex="0"
+        (keyup.enter)="togglePassword()"
+      >
+        👁️
+      </span>
+    </div>
+
+    <!-- 🔘 BOTÓN CON LOADING -->
+    <button 
+      (click)="login()" 
+      [disabled]="cargando"
+      [attr.aria-busy]="cargando"
+    >
+      {{ cargando ? 'Ingresando...' : 'Iniciar sesión' }}
+    </button>
+
+    <!-- 🔁 RECUPERAR -->
+    <p class="forgot" (click)="recuperar()">
+      ¿Olvidó su contraseña?
+    </p>
+  </div>
+
+</div>

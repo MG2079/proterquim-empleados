@@ -1,0 +1,161 @@
+/* 🌐 FONDO GENERAL */
+.container {
+  min-height: 100vh;
+  background: #e5e5e5;
+  font-family: Arial, sans-serif;
+}
+
+/* 🔵 BARRA SUPERIOR */
+.header {
+  width: 100%;
+  height: 80px;
+  background: #4a90e2;
+  display: flex;
+  align-items: center;
+  padding: 0 30px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* LOGO + TEXTO */
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  width: 55px;
+  margin-right: 15px;
+}
+
+.logo-container h1 {
+  color: white;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+/* 🧾 LOGIN */
+.login-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 100px;
+}
+
+.login-box h2 {
+  font-size: 42px;
+  margin-bottom: 30px;
+}
+
+/* 🔴 ERROR */
+.error {
+  color: red;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* INPUTS (usuario y password alineados) */
+.login-box input {
+  width: 420px;
+  padding: 14px;
+  margin: 12px 0;
+  border-radius: 12px;
+  border: 2px solid #333;
+  font-size: 16px;
+  transition: 0.3s;
+  box-sizing: border-box; /* 🔥 clave para alineación */
+}
+
+/* EFECTO FOCUS */
+.login-box input:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
+}
+
+/* 🔒 CONTENEDOR PASSWORD */
+.password-container {
+  position: relative;
+  width: 420px; /* 🔥 mismo ancho que input */
+}
+
+/* INPUT dentro del password (ajuste para el ojo) */
+.password-container input {
+  width: 100%;
+  padding-right: 42px; /* espacio para el icono */
+  box-sizing: border-box;
+}
+
+/* 👁️ OJO */
+.eye {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* 🔘 BOTÓN */
+.login-box button {
+  margin-top: 25px;
+  width: 220px;
+  padding: 12px;
+  background: #4a90e2;
+  border-radius: 10px;
+  border: none;
+  font-size: 18px;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* HOVER */
+.login-box button:hover {
+  background: #357abd;
+}
+
+/* BOTÓN DESHABILITADO */
+.login-box button:disabled {
+  background: #999;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* TEXTO */
+.forgot {
+  margin-top: 20px;
+  font-size: 15px;
+  cursor: pointer;
+  color: #333;
+  transition: 0.3s;
+}
+
+/* HOVER TEXTO */
+.forgot:hover {
+  color: #4a90e2;
+  text-decoration: underline;
+}
+
+/* 📱 RESPONSIVE (celular) */
+@media (max-width: 480px) {
+  .login-box input,
+  .password-container {
+    width: 90%;
+  }
+
+  .login-box h2 {
+    font-size: 32px;
+  }
+
+  .header {
+    height: 70px;
+    padding: 0 15px;
+  }
+
+  .logo {
+    width: 45px;
+  }
+}

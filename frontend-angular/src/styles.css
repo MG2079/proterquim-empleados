@@ -1,0 +1,175 @@
+/* RESET */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f4f6f9;
+}
+
+/* LAYOUT GENERAL */
+.layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* HEADER */
+.header {
+  background: #3CA0F2;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+}
+
+/* LOGO */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.logo span {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+/* TOP BAR (BUSCADOR + BOTÓN) */
+.top-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.top-bar input {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+}
+
+/* BOTÓN AGREGAR */
+.btn-agregar {
+  background: white;
+  color: #3CA0F2;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* MAIN (SIDEBAR + CONTENT) */
+.main {
+  display: flex;
+  flex: 1;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 250px;
+  background: #ffffff;
+  padding: 20px;
+  border-right: 1px solid #ddd;
+}
+
+.menu-item {
+  padding: 12px 15px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.menu-item:hover {
+  background: #f0f6ff;
+}
+
+.menu-item.active {
+  background: #e8f2fb;
+  font-weight: bold;
+}
+
+/* CONTENIDO */
+.content {
+  flex: 1;
+  padding: 30px;
+}
+
+/* TÍTULO */
+h1 {
+  margin-bottom: 20px;
+}
+
+/* FORMULARIO */
+.formulario {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.formulario input {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+/* TABLA */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+th {
+  background: #3CA0F2;
+  color: white;
+  padding: 12px;
+  text-align: left;
+}
+
+td {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+/* BOTONES */
+button {
+  margin-right: 5px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+button:first-child {
+  background: #3CA0F2;
+  color: white;
+}
+
+button:last-child {
+  background: #f44336;
+  color: white;
+}
+
+button:hover {
+  opacity: 0.85;
+}
+
+/* EDICIÓN */
+.form-edicion {
+  margin-top: 20px;
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
