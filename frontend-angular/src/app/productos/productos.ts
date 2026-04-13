@@ -96,7 +96,7 @@ export class ProductosComponent implements OnInit, DoCheck {
 
   // 🗑️ ELIMINAR
   eliminarProducto(id: string) {
-    if (!confirm('¿Eliminar producto?')) return;
+    if (!confirm('¿Seguro que deseas eliminar este producto?')) return;
 
     this.productoService.eliminarProducto(id).subscribe({
       next: () => {

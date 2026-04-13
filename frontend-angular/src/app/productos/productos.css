@@ -267,3 +267,11 @@ tbody tr:hover {
 .form-edicion {
   margin-top: 20px;
 }
+
+.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}

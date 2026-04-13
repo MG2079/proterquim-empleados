@@ -49,12 +49,15 @@ export class Login {
     .then(data => {
 
       if (data.usuario) {
-        localStorage.setItem('auth', 'true');
-        this.router.navigate(['/empleados']);
-      } else {
-        this.mensajeError = 'Usuario o contraseña incorrectos';
-        this.password = '';
-      }
+  localStorage.setItem('auth', 'true');
+
+  // 🔥 CAMBIO AQUÍ
+  this.router.navigate(['/productos']);
+
+} else {
+  this.mensajeError = 'Usuario o contraseña incorrectos';
+  this.password = '';
+}
 
       this.cargando = false;
     })
