@@ -46,15 +46,32 @@
   margin-bottom: 30px;
 }
 
-/* 🔴 ERROR */
-.error {
-  color: red;
-  margin-bottom: 10px;
+/* 🔔 MENSAJES (NUEVO SISTEMA) */
+.mensaje {
+  width: 420px;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 8px;
   font-size: 14px;
   font-weight: 600;
+  text-align: center;
 }
 
-/* INPUTS (usuario y password alineados) */
+/* 🔴 ERROR */
+.mensaje.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c2c7;
+}
+
+/* 🟢 ÉXITO */
+.mensaje.exito {
+  background-color: #d1e7dd;
+  color: #0f5132;
+  border: 1px solid #badbcc;
+}
+
+/* INPUTS */
 .login-box input {
   width: 420px;
   padding: 14px;
@@ -63,7 +80,7 @@
   border: 2px solid #333;
   font-size: 16px;
   transition: 0.3s;
-  box-sizing: border-box; /* 🔥 clave para alineación */
+  box-sizing: border-box;
 }
 
 /* EFECTO FOCUS */
@@ -73,16 +90,15 @@
   box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
 }
 
-/* 🔒 CONTENEDOR PASSWORD */
+/* 🔒 PASSWORD */
 .password-container {
   position: relative;
-  width: 420px; /* 🔥 mismo ancho que input */
+  width: 420px;
 }
 
-/* INPUT dentro del password (ajuste para el ojo) */
 .password-container input {
   width: 100%;
-  padding-right: 42px; /* espacio para el icono */
+  padding-right: 42px;
   box-sizing: border-box;
 }
 
@@ -94,8 +110,12 @@
   transform: translateY(-50%);
   cursor: pointer;
   font-size: 18px;
-  -webkit-user-select: none;
-  user-select: none;
+
+  /* 🔥 COMPATIBILIDAD TOTAL */
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none;    /* Firefox */
+  -ms-user-select: none;     /* IE/Edge antiguo */
+  user-select: none;         /* estándar */
 }
 
 /* 🔘 BOTÓN */
@@ -112,12 +132,10 @@
   transition: 0.3s;
 }
 
-/* HOVER */
 .login-box button:hover {
   background: #357abd;
 }
 
-/* BOTÓN DESHABILITADO */
 .login-box button:disabled {
   background: #999;
   cursor: not-allowed;
@@ -133,16 +151,16 @@
   transition: 0.3s;
 }
 
-/* HOVER TEXTO */
 .forgot:hover {
   color: #4a90e2;
   text-decoration: underline;
 }
 
-/* 📱 RESPONSIVE (celular) */
+/* 📱 RESPONSIVE */
 @media (max-width: 480px) {
   .login-box input,
-  .password-container {
+  .password-container,
+  .mensaje {
     width: 90%;
   }
 

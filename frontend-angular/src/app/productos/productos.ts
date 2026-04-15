@@ -162,9 +162,12 @@ export class ProductosComponent implements OnInit, DoCheck {
 
   // 🔐 LOGOUT
   logout() {
-    localStorage.removeItem('auth');
-    this.router.navigate(['/']);
-  }
+  localStorage.setItem('mensajeLogout', 'Sesión cerrada correctamente');
+
+  localStorage.removeItem('auth');
+
+  this.router.navigate(['/login']);
+}
 
   // 🔄 NAVEGACIÓN
   irAEmpleados() {

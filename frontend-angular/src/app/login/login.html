@@ -13,9 +13,9 @@
     <h2>Inicio de Sesión</h2>
 
     <!-- 🔴 MENSAJE DE ERROR -->
-    <p *ngIf="mensajeError" class="error" role="alert">
-      {{ mensajeError }}
-    </p>
+    <p *ngIf="mensajeError" [ngClass]="'mensaje ' + tipoMensaje" role="alert">
+  {{ mensajeError }}
+</p>
 
     <!-- 👤 USUARIO -->
     <input 
