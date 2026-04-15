@@ -98,6 +98,18 @@ Se validaron las operaciones CRUD mediante:
 * API REST en navegador
 * Base de datos MongoDB
 
+
+## 🧪 Pruebas realizadas
+
+En el proyecto Proterquim se implementaron diferentes tipos de pruebas para garantizar la calidad del software:
+
+- ✔ Pruebas unitarias con Karma y Jasmine
+- ✔ Pruebas de integración entre componentes
+- ✔ Pruebas funcionales de validación de datos
+- ✔ Pruebas de rendimiento utilizando herramientas del navegador (DevTools)
+
+Estas pruebas permitieron verificar el correcto funcionamiento del sistema, detectar errores y asegurar el cumplimiento de los requerimientos.
+
 ---
 
 ##  Autor
