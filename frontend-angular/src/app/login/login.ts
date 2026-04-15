@@ -16,31 +16,31 @@ export class Login implements OnInit {
   password: string = '';
 
   mensajeError: string = '';
-  tipoMensaje: string = ''; // 🔥 NUEVO (exito / error)
+  tipoMensaje: string = ''; // exito / error
   cargando: boolean = false;
   verPassword: boolean = false;
 
   constructor(private router: Router) {}
 
-  // 🔥 SE EJECUTA AL ENTRAR AL LOGIN
+  // 🔥 AL ENTRAR AL LOGIN
   ngOnInit() {
-  const mensaje = localStorage.getItem('mensajeLogout');
+    const mensaje = localStorage.getItem('mensaje');
 
-  if (mensaje) {
-    this.mensajeError = mensaje;
-    this.tipoMensaje = 'exito';
+    if (mensaje === 'logout') {
+      this.mensajeError = 'Sesión cerrada correctamente';
+      this.tipoMensaje = 'exito';
 
-    setTimeout(() => {
-      this.mensajeError = '';
-      this.tipoMensaje = '';
-    }, 3000);
+      setTimeout(() => {
+        this.mensajeError = '';
+        this.tipoMensaje = '';
+      }, 3000);
 
-    localStorage.removeItem('mensajeLogout');
+      localStorage.removeItem('mensaje');
 
-  } else if (localStorage.getItem('auth') === 'true') {
-    this.router.navigate(['/productos']);
+    } else if (localStorage.getItem('auth') === 'true') {
+      this.router.navigate(['/productos']);
+    }
   }
-}
 
   login() {
 
@@ -69,6 +69,10 @@ export class Login implements OnInit {
 
       if (data.usuario) {
         localStorage.setItem('auth', 'true');
+
+        // 🔥 MENSAJE DE BIENVENIDA
+        localStorage.setItem('mensaje', 'login');
+
         this.router.navigate(['/productos']);
       } else {
         this.mensajeError = 'Usuario o contraseña incorrectos';

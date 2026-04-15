@@ -19,9 +19,8 @@ export class ProductosComponent implements OnInit, DoCheck {
   ) {}
 
   productos: Producto[] = [];
-  productosFiltrados: Producto[] = []; // 🔥 CLAVE
+  productosFiltrados: Producto[] = [];
 
-  // 🔥 FORMULARIO CREAR
   nuevoProducto: Producto = {
     nombre: '',
     descripcion: '',
@@ -29,7 +28,6 @@ export class ProductosComponent implements OnInit, DoCheck {
     stock: 0
   };
 
-  // ✏️ EDITAR
   productoEditando: Producto | null = null;
 
   mensaje: string = '';
@@ -37,6 +35,15 @@ export class ProductosComponent implements OnInit, DoCheck {
   filtro: string = '';
 
   ngOnInit(): void {
+
+    // 🔥 MENSAJES (login / logout)
+    const mensaje = localStorage.getItem('mensaje');
+
+    if (mensaje === 'login') {
+      this.mostrarMensaje('Bienvenido a Proterquim S.A.S.', 'exito');
+      localStorage.removeItem('mensaje');
+    }
+
     this.obtenerProductos();
   }
 
@@ -45,7 +52,7 @@ export class ProductosComponent implements OnInit, DoCheck {
     this.productoService.obtenerProductos().subscribe({
       next: (data) => {
         this.productos = data;
-        this.productosFiltrados = data; // 🔥 IMPORTANTE
+        this.productosFiltrados = data;
       },
       error: (err) => {
         console.error(err);
@@ -162,12 +169,13 @@ export class ProductosComponent implements OnInit, DoCheck {
 
   // 🔐 LOGOUT
   logout() {
-  localStorage.setItem('mensajeLogout', 'Sesión cerrada correctamente');
+    localStorage.removeItem('auth');
 
-  localStorage.removeItem('auth');
+    // 🔥 UNIFICADO
+    localStorage.setItem('mensaje', 'logout');
 
-  this.router.navigate(['/login']);
-}
+    this.router.navigate(['/']);
+  }
 
   // 🔄 NAVEGACIÓN
   irAEmpleados() {

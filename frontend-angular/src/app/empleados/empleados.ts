@@ -143,8 +143,12 @@ export class EmpleadosComponent implements OnInit {
 
   // 🔐 LOGOUT (SOLO BOTÓN ABAJO)
   logout() {
-    localStorage.removeItem('auth');
-    this.router.navigate(['/']);
-  }
+  localStorage.removeItem('auth');
+
+  // 🔥 NUEVO: enviar mensaje al login
+  localStorage.setItem('mensaje', 'logout');
+
+  this.router.navigate(['/']);
+}
 
 }
