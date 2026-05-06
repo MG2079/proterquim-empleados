@@ -1,143 +1,86 @@
-<div class="layout">
+<h1>Gestión de Productos</h1>
 
-  <!-- 🔵 HEADER -->
-  <header class="header">
-
-    <div class="logo">
-      <img src="assets/logo.png" alt="Logo Proterquim">
-      <span>Proterquim S.A.S</span>
-    </div>
-
-    <div class="top-bar">
-
-      <!-- 🔍 BUSCADOR -->
-      <div class="search-box">
-        <input 
-          type="text" 
-          placeholder="Buscar producto..." 
-          [(ngModel)]="filtro"
-        >
-        <span class="icon">🔍</span>
-      </div>
-
-      <!-- 👤 USUARIO + LOGOUT -->
-      <div class="user-info">
-  👤 <span>Admin</span>
-</div>
-
-    </div>
-
-  </header>
-
-  <!-- 🧭 SIDEBAR -->
-  <aside class="sidebar">
-
-    <!-- 🔥 MENU -->
-    <div class="menu">
-      <div class="menu-item" (click)="irAEmpleados()">
-        ⚙️ Gestión de Empleados
-      </div>
-
-      <div class="menu-item active">
-        📦 Gestión de Productos
-      </div>
-
-      <div class="menu-item">🧾 Gestión de Pedidos</div>
-      <div class="menu-item">📊 Inventarios</div>
-      <div class="menu-item">📑 Reportes</div>
-    </div>
-
-    <!-- 🔻 BOTÓN ABAJO (CORRECTO) -->
-    <div class="logout-bottom">
-      <button (click)="logout()">Cerrar sesión</button>
-    </div>
-
-  </aside>
-
-  <!-- 📄 CONTENIDO -->
-  <div class="main">
-    <section class="content">
-
-      <h1>Gestión de Productos</h1>
-
-      <!-- 🔔 MENSAJE -->
-      <div *ngIf="mensaje" class="mensaje" [ngClass]="tipoMensaje">
+<!-- 🔔 MENSAJE -->
+<div *ngIf="mensaje" class="mensaje" [ngClass]="tipoMensaje">
   {{ mensaje }}
 </div>
 
-      <!-- 🧾 FORMULARIO -->
-      <div class="form-row">
-        <input [(ngModel)]="nuevoProducto.nombre" placeholder="Nombre">
-        <input [(ngModel)]="nuevoProducto.descripcion" placeholder="Descripción">
-        <input type="number" [(ngModel)]="nuevoProducto.precio" placeholder="Precio">
-        <input type="number" [(ngModel)]="nuevoProducto.stock" placeholder="Stock">
+<!-- 🧾 FORMULARIO -->
+<div class="form-row">
+  <input [(ngModel)]="nuevoProducto.nombre" placeholder="Nombre">
+  <input [(ngModel)]="nuevoProducto.descripcion" placeholder="Descripción">
+  <input type="number" [(ngModel)]="nuevoProducto.precio" placeholder="Precio">
+  <input type="number" [(ngModel)]="nuevoProducto.stock" placeholder="Stock">
 
-        <button class="btn-agregar" (click)="crearProducto()">
-          Agregar
-        </button>
-      </div>
+  <button class="btn-agregar" (click)="crearProducto()">
+    Agregar
+  </button>
+</div>
 
-      <!-- 📊 TABLA -->
-      <table>
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Precio</th>
-            <th>Stock</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
+<!-- 📊 TABLA -->
+<div class="tabla-container">
 
-        <tbody>
+  <table>
 
-          <tr *ngIf="productosFiltrados.length === 0">
-            <td colspan="4" class="centrado">
-              No hay productos
-            </td>
-          </tr>
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Precio</th>
+        <th>Stock</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
 
-          <tr *ngFor="let p of productosFiltrados">
-            <td>{{ p.nombre }}</td>
-            <td>{{ p.precio | number:'1.0-0' }}</td>
-            <td>{{ p.stock }}</td>
+    <tbody>
 
-            <td>
-              <button class="btn-editar" (click)="editarProducto(p)">
-                Editar
-              </button>
+      <!-- SIN DATOS -->
+      <tr *ngIf="productosFiltrados.length === 0">
+        <td colspan="4" class="centrado">
+          No hay productos
+        </td>
+      </tr>
 
-              <button class="btn-eliminar" (click)="p._id && eliminarProducto(p._id)">
-                Eliminar
-              </button>
-            </td>
-          </tr>
+      <!-- LISTADO -->
+      <tr *ngFor="let p of productosFiltrados">
+        <td>{{ p.nombre }}</td>
+        <td>{{ p.precio | number:'1.0-0' }}</td>
+        <td>{{ p.stock }}</td>
 
-        </tbody>
-      </table>
-
-      <!-- ✏️ EDITAR -->
-      <div *ngIf="productoEditando" class="form-edicion">
-
-        <h3>Editar Producto</h3>
-
-        <div class="form-row">
-          <input [(ngModel)]="productoEditando.nombre" placeholder="Nombre">
-          <input [(ngModel)]="productoEditando.descripcion" placeholder="Descripción">
-          <input type="number" [(ngModel)]="productoEditando.precio" placeholder="Precio">
-          <input type="number" [(ngModel)]="productoEditando.stock" placeholder="Stock">
-
-          <button class="btn-agregar" (click)="actualizarProducto()">
-            Guardar
+        <td>
+          <button class="btn-editar" (click)="editarProducto(p)">
+            Editar
           </button>
 
-          <button class="btn-eliminar" (click)="cancelarEdicion()">
-            Cancelar
+          <button class="btn-eliminar" (click)="p._id && eliminarProducto(p._id)">
+            Eliminar
           </button>
-        </div>
+        </td>
+      </tr>
 
-      </div>
+    </tbody>
 
-    </section>
+  </table>
+
+</div>
+
+<!-- ✏️ EDITAR -->
+<div *ngIf="productoEditando" class="form-edicion">
+
+  <h3>Editar Producto</h3>
+
+  <div class="form-row">
+    <input [(ngModel)]="productoEditando.nombre" placeholder="Nombre">
+    <input [(ngModel)]="productoEditando.descripcion" placeholder="Descripción">
+    <input type="number" [(ngModel)]="productoEditando.precio" placeholder="Precio">
+    <input type="number" [(ngModel)]="productoEditando.stock" placeholder="Stock">
+
+    <button class="btn-agregar" (click)="actualizarProducto()">
+      Guardar
+    </button>
+
+    <button class="btn-eliminar" (click)="cancelarEdicion()">
+      Cancelar
+    </button>
   </div>
 
 </div>

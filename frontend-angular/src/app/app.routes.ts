@@ -1,29 +1,33 @@
 import { Routes } from '@angular/router';
-import { Login } from './login/login';
-import { EmpleadosComponent } from './empleados/empleados';
+import { LayoutComponent } from './layout/layout.component';
 import { ProductosComponent } from './productos/productos';
-import { authGuard } from './auth.guard'; // 🔥 IMPORTANTE
+import { EmpleadosComponent } from './empleados/empleados';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { Login } from './login/login'; // 👈 IMPORTANTE
 
 export const routes: Routes = [
 
-  // 🔐 LOGIN
-  { path: '', component: Login },
-
-  // 📦 PRODUCTOS (PROTEGIDO)
+  // 🔐 LOGIN (FUERA DEL LAYOUT)
   {
-    path: 'productos',
-    component: ProductosComponent,
-    canActivate: [authGuard] // 🔥 AQUÍ ACTIVAS SEGURIDAD
+    path: 'login',
+    component: Login
   },
 
-  // 👨‍💼 EMPLEADOS (TAMBIÉN PROTEGIDO)
+  // 🔥 APP CON LAYOUT
   {
-    path: 'empleados',
-    component: EmpleadosComponent,
-    canActivate: [authGuard] // 🔥 TAMBIÉN AQUÍ
+    path: '',
+    component: LayoutComponent,
+    children: [
+      { path: 'dashboard', component: DashboardComponent },
+      { path: 'productos', component: ProductosComponent },
+      { path: 'empleados', component: EmpleadosComponent },
+
+      // 🔥 REDIRECCIÓN INTERNA
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
+    ]
   },
 
-  // 🚫 RUTA NO EXISTENTE
-  { path: '**', redirectTo: '' }
+  // 🚫 CUALQUIER RUTA DESCONOCIDA
+  { path: '**', redirectTo: 'login' }
 
 ];

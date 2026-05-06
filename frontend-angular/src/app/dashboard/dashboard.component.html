@@ -1,0 +1,57 @@
+<h1 class="titulo">Panel de control</h1>
+
+<div class="resumen-box">
+  Resumen de actividad
+</div>
+
+<div class="cards">
+
+  <div class="card">
+    <span class="card-title">Productos</span>
+    <span class="card-value">{{ totalProductos }}</span>
+  </div>
+
+  <div class="card">
+    <span class="card-title">Empleados</span>
+    <span class="card-value">{{ totalEmpleados }}</span>
+  </div>
+
+  <div class="card">
+    <span class="card-title">Stock Bajo</span>
+    <span class="card-value">{{ stockBajo }}</span>
+  </div>
+
+</div>
+
+<!-- 📊 TABLA -->
+<div class="tabla-container">
+
+  <table>
+
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Precio</th>
+        <th>Stock</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      <!-- SIN DATOS -->
+      <tr *ngIf="productos.length === 0">
+        <td colspan="3" class="centrado">No hay datos</td>
+      </tr>
+
+      <!-- LISTADO -->
+      <tr *ngFor="let p of productos">
+        <td>{{ p.nombre }}</td>
+        <td>{{ p.precio | number:'1.0-0' }}</td>
+        <td>{{ p.stock }}</td>
+      </tr>
+
+    </tbody>
+
+  </table>
+
+</div>

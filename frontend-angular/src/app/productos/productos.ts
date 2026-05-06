@@ -36,7 +36,6 @@ export class ProductosComponent implements OnInit, DoCheck {
 
   ngOnInit(): void {
 
-    // 🔥 MENSAJES (login / logout)
     const mensaje = localStorage.getItem('mensaje');
 
     if (mensaje === 'login') {
@@ -61,7 +60,7 @@ export class ProductosComponent implements OnInit, DoCheck {
     });
   }
 
-  // 🔍 FILTRO EN TIEMPO REAL
+  // 🔍 FILTRO
   actualizarLista() {
     if (!this.filtro) {
       this.productosFiltrados = this.productos;
@@ -76,7 +75,7 @@ export class ProductosComponent implements OnInit, DoCheck {
     this.actualizarLista();
   }
 
-  // ➕ CREAR PRODUCTO
+  // ➕ CREAR
   crearProducto() {
     if (
       !this.nuevoProducto.nombre ||
@@ -117,12 +116,12 @@ export class ProductosComponent implements OnInit, DoCheck {
     });
   }
 
-  // ✏️ ACTIVAR EDICIÓN
+  // ✏️ EDITAR
   editarProducto(p: Producto) {
     this.productoEditando = { ...p };
   }
 
-  // 🔄 ACTUALIZAR PRODUCTO
+  // 🔄 ACTUALIZAR
   actualizarProducto() {
     if (!this.productoEditando || !this.productoEditando._id) return;
 
@@ -142,12 +141,10 @@ export class ProductosComponent implements OnInit, DoCheck {
     });
   }
 
-  // ❌ CANCELAR EDICIÓN
   cancelarEdicion() {
     this.productoEditando = null;
   }
 
-  // 🧹 LIMPIAR FORMULARIO
   limpiarFormulario() {
     this.nuevoProducto = {
       nombre: '',
@@ -164,16 +161,13 @@ export class ProductosComponent implements OnInit, DoCheck {
 
     setTimeout(() => {
       this.mensaje = '';
-    }, 3000);
+    }, 5000);
   }
 
   // 🔐 LOGOUT
   logout() {
     localStorage.removeItem('auth');
-
-    // 🔥 UNIFICADO
     localStorage.setItem('mensaje', 'logout');
-
     this.router.navigate(['/']);
   }
 
@@ -181,4 +175,9 @@ export class ProductosComponent implements OnInit, DoCheck {
   irAEmpleados() {
     this.router.navigate(['/empleados']);
   }
+
+  irADashboard() {
+    this.router.navigate(['/dashboard']);
+  }
+
 }

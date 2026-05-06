@@ -31,7 +31,6 @@ export class EmpleadosComponent implements OnInit {
 
   mensaje: string = '';
   tipoMensaje: string = '';
-
   filtro: string = '';
 
   ngOnInit(): void {
@@ -52,7 +51,7 @@ export class EmpleadosComponent implements OnInit {
     });
   }
 
-  // 🔍 FILTRO (OPTIMIZADO)
+  // 🔍 FILTRO
   actualizarLista() {
     const texto = this.filtro.toLowerCase().trim();
 
@@ -138,17 +137,23 @@ export class EmpleadosComponent implements OnInit {
 
     setTimeout(() => {
       this.mensaje = '';
-    }, 3000);
+    }, 5000);
   }
 
-  // 🔐 LOGOUT (SOLO BOTÓN ABAJO)
+  // 🔐 LOGOUT
   logout() {
-  localStorage.removeItem('auth');
+    localStorage.removeItem('auth');
+    localStorage.setItem('mensaje', 'logout');
+    this.router.navigate(['/']);
+  }
 
-  // 🔥 NUEVO: enviar mensaje al login
-  localStorage.setItem('mensaje', 'logout');
+  // 🔄 NAVEGACIÓN
+  irAProductos() {
+    this.router.navigate(['/productos']);
+  }
 
-  this.router.navigate(['/']);
-}
+  irADashboard() {
+    this.router.navigate(['/dashboard']);
+  }
 
 }

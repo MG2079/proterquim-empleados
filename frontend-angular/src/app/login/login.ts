@@ -38,7 +38,8 @@ export class Login implements OnInit {
       localStorage.removeItem('mensaje');
 
     } else if (localStorage.getItem('auth') === 'true') {
-      this.router.navigate(['/productos']);
+      // 🔥 SI YA ESTÁ LOGUEADO → DASHBOARD
+      this.router.navigate(['/dashboard']);
     }
   }
 
@@ -73,7 +74,9 @@ export class Login implements OnInit {
         // 🔥 MENSAJE DE BIENVENIDA
         localStorage.setItem('mensaje', 'login');
 
-        this.router.navigate(['/productos']);
+        // 🔥 CAMBIO IMPORTANTE AQUÍ
+        this.router.navigateByUrl('/dashboard');
+
       } else {
         this.mensajeError = 'Usuario o contraseña incorrectos';
         this.tipoMensaje = 'error';
