@@ -1,0 +1,343 @@
+<div class="reportes-page">
+
+    <!-- 🔥 HEADER -->
+
+    <div class="header-reportes">
+
+        <div>
+
+            <h1>
+                Reportes y Estadísticas
+            </h1>
+
+            <p>
+                Análisis general del sistema
+            </p>
+
+        </div>
+
+        <!-- 🔥 BOTONES EXPORTAR -->
+
+        <div class="acciones-reportes">
+
+            <button
+                class="btn-exportar excel"
+                (click)="exportarExcel()"
+            >
+
+                Exportar Excel
+
+            </button>
+
+            <button
+                class="btn-exportar pdf"
+                (click)="exportarPDF()"
+            >
+
+                Exportar PDF
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- 🔥 MÉTRICAS -->
+
+    <div class="metricas-grid">
+
+        <div class="card metrica-card">
+
+            <h3>
+                Ventas Totales
+            </h3>
+
+            <h2>
+
+                COP{{
+                    totalVentas
+                    | number
+                }}
+
+            </h2>
+
+        </div>
+
+        <div class="card metrica-card">
+
+            <h3>
+                Pedidos
+            </h3>
+
+            <h2>
+
+                {{ totalPedidos }}
+
+            </h2>
+
+        </div>
+
+        <div class="card metrica-card">
+
+            <h3>
+                Productos
+            </h3>
+
+            <h2>
+
+                {{ totalProductos }}
+
+            </h2>
+
+        </div>
+
+        <div class="card metrica-card danger">
+
+            <h3>
+                Stock Crítico
+            </h3>
+
+            <h2>
+
+                {{ stockCritico }}
+
+            </h2>
+
+        </div>
+
+    </div>
+
+    <!-- 🔥 PRODUCTOS MÁS VENDIDOS -->
+
+    <div class="tabla-card">
+
+        <div class="tabla-header">
+
+            <h2>
+                Productos Más Vendidos
+            </h2>
+
+        </div>
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Producto
+                    </th>
+
+                    <th>
+                        Cantidad
+                    </th>
+
+                    <th>
+                        Ingresos
+                    </th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr
+                    *ngFor="
+                        let producto
+                        of productosVendidos
+                    "
+                >
+
+                    <td>
+
+                        {{ producto.nombre }}
+
+                    </td>
+
+                    <td>
+
+                        {{ producto.cantidad }}
+
+                    </td>
+
+                    <td>
+
+                        COP{{
+                            producto.ingresos
+                            | number
+                        }}
+
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <!-- 🔥 INVENTARIO CRÍTICO -->
+
+    <div class="tabla-card">
+
+        <div class="tabla-header">
+
+            <h2>
+                Inventario Crítico
+            </h2>
+
+        </div>
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Producto
+                    </th>
+
+                    <th>
+                        Stock
+                    </th>
+
+                    <th>
+                        Estado
+                    </th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr
+                    *ngFor="
+                        let producto
+                        of inventarioCritico
+                    "
+                >
+
+                    <td>
+
+                        {{ producto.nombre }}
+
+                    </td>
+
+                    <td>
+
+                        {{ producto.stock }}
+
+                    </td>
+
+                    <td>
+
+                        <span
+                            class="estado"
+                            [ngClass]="{
+
+                                'critico':
+                                producto.estado
+                                === 'Crítico',
+
+                                'bajo':
+                                producto.estado
+                                === 'Bajo'
+
+                            }"
+                        >
+
+                            {{ producto.estado }}
+
+                        </span>
+
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <!-- 🔥 ÚLTIMOS PEDIDOS -->
+
+    <div class="tabla-card">
+
+        <div class="tabla-header">
+
+            <h2>
+                Últimos Pedidos
+            </h2>
+
+        </div>
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Cliente
+                    </th>
+
+                    <th>
+                        Total
+                    </th>
+
+                    <th>
+                        Fecha
+                    </th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr
+                    *ngFor="
+                        let pedido
+                        of ultimosPedidos
+                    "
+                >
+
+                    <td>
+
+                        {{ pedido.cliente }}
+
+                    </td>
+
+                    <td>
+
+                        COP{{
+                            pedido.total
+                            | number
+                        }}
+
+                    </td>
+
+                    <td>
+
+                        {{
+                            pedido.createdAt
+                            | date:'short'
+                        }}
+
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>

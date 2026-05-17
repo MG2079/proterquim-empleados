@@ -1,183 +1,559 @@
-import { Component, OnInit, DoCheck } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { ProductoService, Producto } from '../services/producto.service';
+import {
+  Component,
+  OnInit
+} from '@angular/core';
+
+import {
+  CommonModule
+} from '@angular/common';
+
+import {
+  FormsModule
+} from '@angular/forms';
+
+import {
+  Router
+} from '@angular/router';
+
+import {
+
+  ProductoService,
+
+  Producto
+
+} from '../services/producto.service';
+
+import {
+  SearchService
+} from '../services/search.service';
 
 @Component({
-  selector: 'app-productos',
-  standalone: true,
-  imports: [CommonModule, FormsModule],
-  templateUrl: './productos.html',
-  styleUrls: ['./productos.css']
-})
-export class ProductosComponent implements OnInit, DoCheck {
 
-  constructor(
-    private router: Router,
-    private productoService: ProductoService
-  ) {}
+  selector: 'app-productos',
+
+  standalone: true,
+
+  imports: [
+    CommonModule,
+    FormsModule
+  ],
+
+  templateUrl: './productos.html',
+
+  styleUrls: ['./productos.css']
+
+})
+
+export class ProductosComponent
+implements OnInit {
+
+  // 📦 LISTADOS
 
   productos: Producto[] = [];
-  productosFiltrados: Producto[] = [];
+
+  productosFiltrados:
+  Producto[] = [];
+
+  // ➕ NUEVO PRODUCTO
 
   nuevoProducto: Producto = {
+
     nombre: '',
+
     descripcion: '',
+
     precio: 0,
-    stock: 0
+
+    stock: 0,
+
+    stockMinimo: 20,
+
+    categoria: 'General',
+
+    estado: 'Normal'
+
   };
 
-  productoEditando: Producto | null = null;
+  // ✏️ EDITAR PRODUCTO
 
-  mensaje: string = '';
-  tipoMensaje: string = '';
-  filtro: string = '';
+  productoEditando:
+  Producto | null = null;
+
+  // 🔔 MENSAJES
+
+  mensaje = '';
+
+  tipoMensaje = '';
+
+  // 🔄 LOADING
+
+  cargando = false;
+
+  constructor(
+
+    private router: Router,
+
+    private productoService:
+    ProductoService,
+
+    private searchService:
+    SearchService
+
+  ) {}
 
   ngOnInit(): void {
 
-    const mensaje = localStorage.getItem('mensaje');
-
-    if (mensaje === 'login') {
-      this.mostrarMensaje('Bienvenido a Proterquim S.A.S.', 'exito');
-      localStorage.removeItem('mensaje');
-    }
-
     this.obtenerProductos();
+
+    // 🔍 BUSCADOR GLOBAL
+
+    this.searchService
+      .termino$
+
+      .subscribe({
+
+        next: (
+          texto: string
+        ) => {
+
+          this.filtrarProductos(
+            texto
+          );
+
+        }
+
+      });
+
   }
 
-  // 🔥 OBTENER PRODUCTOS
-  obtenerProductos() {
-    this.productoService.obtenerProductos().subscribe({
-      next: (data) => {
-        this.productos = data;
-        this.productosFiltrados = data;
-      },
-      error: (err) => {
-        console.error(err);
-        this.mostrarMensaje('Error al cargar productos', 'error');
-      }
-    });
+  // 📦 OBTENER PRODUCTOS
+
+  obtenerProductos(): void {
+
+    this.cargando = true;
+
+    this.productoService
+      .obtenerProductos()
+
+      .subscribe({
+
+        next: (
+          productos: Producto[]
+        ) => {
+
+          this.productos =
+            productos;
+
+          this.productosFiltrados =
+            productos;
+
+          this.cargando = false;
+
+        },
+
+        error: (error) => {
+
+          console.error(
+
+            'Error cargando productos:',
+
+            error
+
+          );
+
+          this.mostrarMensaje(
+
+            'Error al cargar productos',
+
+            'error'
+
+          );
+
+          this.cargando = false;
+
+        }
+
+      });
+
   }
 
-  // 🔍 FILTRO
-  actualizarLista() {
-    if (!this.filtro) {
-      this.productosFiltrados = this.productos;
-    } else {
-      this.productosFiltrados = this.productos.filter(p =>
-        p.nombre.toLowerCase().includes(this.filtro.toLowerCase())
-      );
-    }
-  }
+  // 🔍 FILTRAR PRODUCTOS
 
-  ngDoCheck() {
-    this.actualizarLista();
-  }
+  filtrarProductos(
+    texto: string
+  ): void {
 
-  // ➕ CREAR
-  crearProducto() {
-    if (
-      !this.nuevoProducto.nombre ||
-      !this.nuevoProducto.descripcion ||
-      this.nuevoProducto.precio <= 0 ||
-      this.nuevoProducto.stock < 0
-    ) {
-      this.mostrarMensaje('Todos los campos son obligatorios y válidos', 'error');
+    if (!texto.trim()) {
+
+      this.productosFiltrados =
+        this.productos;
+
       return;
+
     }
 
-    this.productoService.crearProducto(this.nuevoProducto).subscribe({
-      next: () => {
-        this.obtenerProductos();
-        this.limpiarFormulario();
-        this.mostrarMensaje('Producto agregado correctamente', 'exito');
-      },
-      error: (err) => {
-        console.error(err);
-        this.mostrarMensaje('Error al crear producto', 'error');
-      }
-    });
+    const valor =
+      texto.toLowerCase();
+
+    this.productosFiltrados =
+
+      this.productos.filter(
+
+        (producto) =>
+
+          producto.nombre
+            .toLowerCase()
+            .includes(valor)
+
+          ||
+
+          producto.descripcion
+            .toLowerCase()
+            .includes(valor)
+
+      );
+
   }
 
-  // 🗑️ ELIMINAR
-  eliminarProducto(id: string) {
-    if (!confirm('¿Seguro que deseas eliminar este producto?')) return;
+  // ➕ CREAR PRODUCTO
 
-    this.productoService.eliminarProducto(id).subscribe({
-      next: () => {
-        this.obtenerProductos();
-        this.mostrarMensaje('Producto eliminado correctamente', 'exito');
-      },
-      error: (err) => {
-        console.error(err);
-        this.mostrarMensaje('Error al eliminar producto', 'error');
-      }
-    });
+  crearProducto(): void {
+
+    if (
+
+      !this.validarProducto(
+        this.nuevoProducto
+      )
+
+    ) {
+
+      return;
+
+    }
+
+    this.cargando = true;
+
+    this.productoService
+
+      .crearProducto(
+        this.nuevoProducto
+      )
+
+      .subscribe({
+
+        next: () => {
+
+          this.obtenerProductos();
+
+          this.limpiarFormulario();
+
+          this.mostrarMensaje(
+
+            'Producto agregado correctamente',
+
+            'success'
+
+          );
+
+          this.cargando = false;
+
+        },
+
+        error: (error) => {
+
+          console.error(
+
+            'Error creando producto:',
+
+            error
+
+          );
+
+          this.mostrarMensaje(
+
+            'Error al crear producto',
+
+            'error'
+
+          );
+
+          this.cargando = false;
+
+        }
+
+      });
+
   }
 
-  // ✏️ EDITAR
-  editarProducto(p: Producto) {
-    this.productoEditando = { ...p };
-  }
+  // ✏️ EDITAR PRODUCTO
 
-  // 🔄 ACTUALIZAR
-  actualizarProducto() {
-    if (!this.productoEditando || !this.productoEditando._id) return;
+  editarProducto(
+    producto: Producto
+  ): void {
 
-    this.productoService.actualizarProducto(
-      this.productoEditando._id,
-      this.productoEditando
-    ).subscribe({
-      next: () => {
-        this.obtenerProductos();
-        this.productoEditando = null;
-        this.mostrarMensaje('Producto actualizado correctamente', 'exito');
-      },
-      error: (err) => {
-        console.error(err);
-        this.mostrarMensaje('Error al actualizar producto', 'error');
-      }
-    });
-  }
+    this.productoEditando = {
 
-  cancelarEdicion() {
-    this.productoEditando = null;
-  }
+      ...producto
 
-  limpiarFormulario() {
-    this.nuevoProducto = {
-      nombre: '',
-      descripcion: '',
-      precio: 0,
-      stock: 0
     };
+
   }
 
-  // 🔔 MENSAJES
-  mostrarMensaje(texto: string, tipo: string) {
+  // 🔄 ACTUALIZAR PRODUCTO
+
+  actualizarProducto(): void {
+
+    if (
+
+      !this.productoEditando ||
+
+      !this.productoEditando._id
+
+    ) {
+
+      return;
+
+    }
+
+    if (
+
+      !this.validarProducto(
+
+        this.productoEditando
+
+      )
+
+    ) {
+
+      return;
+
+    }
+
+    this.cargando = true;
+
+    this.productoService
+
+      .actualizarProducto(
+
+        this.productoEditando._id,
+
+        this.productoEditando
+
+      )
+
+      .subscribe({
+
+        next: () => {
+
+          this.obtenerProductos();
+
+          this.cancelarEdicion();
+
+          this.mostrarMensaje(
+
+            'Producto actualizado correctamente',
+
+            'success'
+
+          );
+
+          this.cargando = false;
+
+        },
+
+        error: (error) => {
+
+          console.error(
+
+            'Error actualizando producto:',
+
+            error
+
+          );
+
+          this.mostrarMensaje(
+
+            'Error al actualizar producto',
+
+            'error'
+
+          );
+
+          this.cargando = false;
+
+        }
+
+      });
+
+  }
+
+  // 🗑 ELIMINAR PRODUCTO
+
+  eliminarProducto(
+    id: string
+  ): void {
+
+    const confirmar = confirm(
+
+      '¿Desea eliminar este producto?'
+
+    );
+
+    if (!confirmar) {
+
+      return;
+
+    }
+
+    this.productoService
+
+      .eliminarProducto(id)
+
+      .subscribe({
+
+        next: () => {
+
+          this.obtenerProductos();
+
+          this.mostrarMensaje(
+
+            'Producto eliminado correctamente',
+
+            'success'
+
+          );
+
+        },
+
+        error: (error) => {
+
+          console.error(
+
+            'Error eliminando producto:',
+
+            error
+
+          );
+
+          this.mostrarMensaje(
+
+            'Error al eliminar producto',
+
+            'error'
+
+          );
+
+        }
+
+      });
+
+  }
+
+  // ✅ VALIDAR PRODUCTO
+
+  validarProducto(
+    producto: Producto
+  ): boolean {
+
+    if (
+
+      !producto.nombre.trim() ||
+
+      !producto.descripcion.trim() ||
+
+      producto.precio <= 0 ||
+
+      producto.stock < 0
+
+    ) {
+
+      this.mostrarMensaje(
+
+        'Todos los campos son obligatorios y válidos',
+
+        'error'
+
+      );
+
+      return false;
+
+    }
+
+    return true;
+
+  }
+
+  // ❌ CANCELAR EDICIÓN
+
+  cancelarEdicion(): void {
+
+    this.productoEditando =
+      null;
+
+  }
+
+  // 🧹 LIMPIAR FORMULARIO
+
+  limpiarFormulario(): void {
+
+    this.nuevoProducto = {
+
+      nombre: '',
+
+      descripcion: '',
+
+      precio: 0,
+
+      stock: 0,
+
+      stockMinimo: 20,
+
+      categoria: 'General',
+
+      estado: 'Normal'
+
+    };
+
+  }
+
+  // 🔔 MOSTRAR MENSAJES
+
+  mostrarMensaje(
+
+    texto: string,
+
+    tipo: string
+
+  ): void {
+
     this.mensaje = texto;
-    this.tipoMensaje = tipo === 'error' ? 'error' : 'success';
+
+    this.tipoMensaje = tipo;
 
     setTimeout(() => {
+
       this.mensaje = '';
-    }, 5000);
+
+    }, 4000);
+
   }
 
-  // 🔐 LOGOUT
-  logout() {
-    localStorage.removeItem('auth');
-    localStorage.setItem('mensaje', 'logout');
-    this.router.navigate(['/']);
+  // 🚀 NAVEGACIÓN
+
+  irADashboard(): void {
+
+    this.router.navigate([
+      '/dashboard'
+    ]);
+
   }
 
-  // 🔄 NAVEGACIÓN
-  irAEmpleados() {
-    this.router.navigate(['/empleados']);
-  }
+  irAEmpleados(): void {
 
-  irADashboard() {
-    this.router.navigate(['/dashboard']);
+    this.router.navigate([
+      '/empleados'
+    ]);
+
   }
 
 }

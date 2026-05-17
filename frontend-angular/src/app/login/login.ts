@@ -1,103 +1,231 @@
-import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import {
+  Component,
+  OnInit
+} from '@angular/core';
+
+import {
+  FormsModule
+} from '@angular/forms';
+
+import {
+  Router
+} from '@angular/router';
+
+import {
+  CommonModule
+} from '@angular/common';
+
+import {
+  AuthService
+} from '../services/auth.service';
 
 @Component({
+
   selector: 'app-login',
+
   standalone: true,
-  imports: [FormsModule, CommonModule],
+
+  imports: [
+    FormsModule,
+    CommonModule
+  ],
+
   templateUrl: './login.html',
+
   styleUrls: ['./login.css']
+
 })
+
 export class Login implements OnInit {
 
   usuario: string = '';
+
   password: string = '';
 
   mensajeError: string = '';
-  tipoMensaje: string = ''; // exito / error
+
+  tipoMensaje: string = '';
+
   cargando: boolean = false;
+
   verPassword: boolean = false;
 
-  constructor(private router: Router) {}
+  constructor(
+
+    private router: Router,
+
+    private authService: AuthService
+
+  ) {}
 
   // 🔥 AL ENTRAR AL LOGIN
-  ngOnInit() {
-    const mensaje = localStorage.getItem('mensaje');
+
+  ngOnInit(): void {
+
+    const mensaje =
+      localStorage.getItem(
+        'mensaje'
+      );
 
     if (mensaje === 'logout') {
-      this.mensajeError = 'Sesión cerrada correctamente';
-      this.tipoMensaje = 'exito';
+
+      this.mensajeError =
+        'Sesión cerrada correctamente';
+
+      this.tipoMensaje =
+        'success';
 
       setTimeout(() => {
+
         this.mensajeError = '';
+
         this.tipoMensaje = '';
+
       }, 3000);
 
-      localStorage.removeItem('mensaje');
+      localStorage.removeItem(
+        'mensaje'
+      );
 
-    } else if (localStorage.getItem('auth') === 'true') {
-      // 🔥 SI YA ESTÁ LOGUEADO → DASHBOARD
-      this.router.navigate(['/dashboard']);
     }
+
+    // 🔐 SI YA ESTÁ LOGUEADO
+
+    else if (
+      this.authService
+        .estaLogueado()
+    ) {
+
+      this.router.navigate([
+        '/dashboard'
+      ]);
+
+    }
+
   }
 
-  login() {
+  // 🔐 LOGIN
 
-    if (!this.usuario || !this.password) {
-      this.mensajeError = 'Todos los campos son obligatorios';
-      this.tipoMensaje = 'error';
+  login(): void {
+
+    // 🔍 VALIDAR CAMPOS
+
+    if (
+
+      !this.usuario ||
+
+      !this.password
+
+    ) {
+
+      this.mensajeError =
+        'Todos los campos son obligatorios';
+
+      this.tipoMensaje =
+        'error';
+
       return;
+
     }
+
+    // 🔄 RESETEAR MENSAJES
 
     this.mensajeError = '';
+
     this.tipoMensaje = '';
+
     this.cargando = true;
 
-    fetch('http://localhost:3000/api/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        email: this.usuario,
-        password: this.password
-      })
+    // 🚀 LOGIN
+
+    this.authService.login({
+
+      email: this.usuario,
+
+      password: this.password
+
     })
-    .then(res => res.json())
-    .then(data => {
 
-      if (data.usuario) {
-        localStorage.setItem('auth', 'true');
+    .subscribe({
 
-        // 🔥 MENSAJE DE BIENVENIDA
-        localStorage.setItem('mensaje', 'login');
+      next: (respuesta: any) => {
 
-        // 🔥 CAMBIO IMPORTANTE AQUÍ
-        this.router.navigateByUrl('/dashboard');
+        // 🔐 GUARDAR TOKEN
 
-      } else {
-        this.mensajeError = 'Usuario o contraseña incorrectos';
-        this.tipoMensaje = 'error';
-        this.password = '';
+        this.authService
+          .guardarToken(
+            respuesta.token
+          );
+
+        // 👤 GUARDAR USUARIO
+
+        this.authService
+          .guardarUsuario(
+            respuesta.usuario
+          );
+
+        // ✅ LOGIN EXITOSO
+
+        this.tipoMensaje =
+          'success';
+
+        this.mensajeError =
+          'Bienvenido al sistema';
+
+        this.cargando = false;
+
+        // 🚀 REDIRECCIONAR
+
+        setTimeout(() => {
+
+          this.router.navigate([
+            '/dashboard'
+          ]);
+
+        }, 1000);
+
+      },
+
+      error: (error) => {
+
+        console.error(error);
+
+        this.tipoMensaje =
+          'error';
+
+        this.mensajeError =
+
+          error.error.mensaje ||
+
+          'Credenciales incorrectas';
+
+        this.cargando = false;
+
       }
 
-      this.cargando = false;
-    })
-    .catch(() => {
-      this.mensajeError = 'Error de conexión con el servidor';
-      this.tipoMensaje = 'error';
-      this.cargando = false;
     });
+
   }
 
-  togglePassword() {
-    this.verPassword = !this.verPassword;
+  // 👁️ MOSTRAR PASSWORD
+
+  togglePassword(): void {
+
+    this.verPassword =
+      !this.verPassword;
+
   }
 
-  recuperar() {
-    this.mensajeError = 'Funcionalidad en desarrollo';
-    this.tipoMensaje = 'error';
+  // 🔐 RECUPERAR PASSWORD
+
+  recuperar(): void {
+
+    this.mensajeError =
+      'Funcionalidad en desarrollo';
+
+    this.tipoMensaje =
+      'error';
+
   }
+
 }

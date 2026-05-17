@@ -1,0 +1,727 @@
+/* ====================================== */
+/* 🔥 TÍTULO */
+/* ====================================== */
+
+.titulo {
+
+  font-size: 42px;
+
+  font-weight: 650;
+
+  line-height: 1.1;
+
+  color: #0f172a;
+
+  margin-bottom: 18px;
+
+  letter-spacing: -2px;
+
+}
+
+/* ====================================== */
+/* 🔥 RESUMEN */
+/* ====================================== */
+
+.resumen-box {
+
+  width: fit-content;
+
+  padding: 12px 20px;
+
+  margin-bottom: 28px;
+
+  border: 1px solid #dbe3ec;
+
+  border-radius: 12px;
+
+  background: white;
+
+  color: #4b5563;
+
+  font-size: 14px;
+
+  box-shadow:
+    0 2px 6px rgba(0,0,0,0.04);
+
+}
+
+/* ====================================== */
+/* 🔥 ACCIONES */
+/* ====================================== */
+
+.acciones-inventario {
+
+  display: flex;
+
+  gap: 18px;
+
+  align-items: center;
+
+  margin-bottom: 30px;
+
+  flex-wrap: wrap;
+
+}
+
+/* ====================================== */
+/* 🔥 BOTONES EXPORTAR */
+/* ====================================== */
+
+.btn-exportar {
+
+  border: none;
+
+  padding: 14px 24px;
+
+  border-radius: 12px;
+
+  font-size: 15px;
+
+  font-weight: 600;
+
+  color: white;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.25s ease,
+    opacity 0.25s ease,
+    box-shadow 0.25s ease;
+
+  box-shadow:
+    0 4px 12px rgba(0,0,0,0.12);
+
+}
+
+/* 🔥 HOVER */
+
+.btn-exportar:hover {
+
+  transform: translateY(-2px);
+
+  opacity: 0.94;
+
+}
+
+/* 🟢 EXCEL */
+
+.excel {
+
+  background: linear-gradient(
+    135deg,
+    #16a34a,
+    #15803d
+  );
+
+}
+
+/* 🔴 PDF */
+
+.pdf {
+
+  background: linear-gradient(
+    135deg,
+    #ef4444,
+    #dc2626
+  );
+
+}
+
+/* ====================================== */
+/* 🔥 MENSAJE ERROR */
+/* ====================================== */
+
+.mensaje-error {
+
+  background: #fee2e2;
+
+  color: #991b1b;
+
+  padding: 14px 18px;
+
+  border-radius: 12px;
+
+  margin-bottom: 25px;
+
+  font-weight: 600;
+
+}
+
+/* ====================================== */
+/* 🔥 CARDS */
+/* ====================================== */
+
+.cards {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fit, minmax(240px, 1fr));
+
+  gap: 22px;
+
+  margin-bottom: 30px;
+
+}
+
+.card {
+
+  position: relative;
+
+  overflow: hidden;
+
+  padding: 24px;
+
+  border-radius: 20px;
+
+  color: white;
+
+  background: linear-gradient(
+    135deg,
+    #4a90e2,
+    #357abd
+  );
+
+  box-shadow:
+    0 6px 18px rgba(0,0,0,0.10);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+
+}
+
+.card:hover {
+
+  transform: translateY(-4px);
+
+  box-shadow:
+    0 10px 24px rgba(0,0,0,0.16);
+
+}
+
+/* ====================================== */
+/* 🔥 EFECTO DECORATIVO */
+/* ====================================== */
+
+.card::before {
+
+  content: '';
+
+  position: absolute;
+
+  top: -50px;
+
+  right: -50px;
+
+  width: 120px;
+
+  height: 120px;
+
+  background: rgba(255,255,255,0.10);
+
+  border-radius: 50%;
+
+}
+
+/* ====================================== */
+/* 🔥 WARNING */
+/* ====================================== */
+
+.card.bajo {
+
+  background: linear-gradient(
+    135deg,
+    #f59e0b,
+    #ea580c
+  ) !important;
+
+}
+
+.card.bajo .card-title,
+.card.bajo .card-value {
+
+  color: white !important;
+
+}
+
+/* ====================================== */
+/* 🔥 SUCCESS */
+/* ====================================== */
+
+.card-success {
+
+  background: linear-gradient(
+    135deg,
+    #22c55e,
+    #15803d
+  );
+
+}
+
+/* ====================================== */
+/* 🔥 DANGER */
+/* ====================================== */
+
+.card-danger,
+.card.critico {
+
+  background: linear-gradient(
+    135deg,
+    #ef4444,
+    #b91c1c
+  );
+
+}
+
+/* ====================================== */
+/* 🔥 TEXTOS CARD */
+/* ====================================== */
+
+.card-title {
+
+  display: block;
+
+  font-size: 16px;
+
+  font-weight: 700;
+
+  margin-bottom: 18px;
+
+}
+
+.card-value {
+
+  font-size: 38px;
+
+  font-weight: 800;
+
+  line-height: 1;
+
+}
+
+/* ====================================== */
+/* 🔥 INFO EXTRA */
+/* ====================================== */
+
+.info-grid {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fit, minmax(280px, 1fr));
+
+  gap: 22px;
+
+  margin-bottom: 30px;
+
+}
+
+.info-card {
+
+  background: white;
+
+  border-radius: 18px;
+
+  padding: 22px;
+
+  box-shadow:
+    0 4px 14px rgba(0,0,0,0.06);
+
+  border: 1px solid #eef2f7;
+
+}
+
+.info-title {
+
+  display: block;
+
+  font-size: 14px;
+
+  color: #6b7280;
+
+  margin-bottom: 12px;
+
+  font-weight: 600;
+
+}
+
+.info-value {
+
+  font-size: 24px;
+
+  font-weight: 800;
+
+  color: #111827;
+
+}
+
+/* ====================================== */
+/* 🔥 TABLA */
+/* ====================================== */
+
+.tabla-container {
+
+  background: white;
+
+  border-radius: 22px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 6px 18px rgba(0,0,0,0.06);
+
+}
+
+/* ====================================== */
+/* 🔥 HEADER TABLA */
+/* ====================================== */
+
+.tabla-header {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  padding: 28px;
+
+}
+
+.tabla-header h2 {
+
+  font-size: 30px;
+
+  font-weight: 800;
+
+  color: #111827;
+
+}
+
+.tabla-total {
+
+  color: #6b7280;
+
+  font-weight: 700;
+
+  font-size: 15px;
+
+}
+
+/* ====================================== */
+/* 🔥 SCROLL */
+/* ====================================== */
+
+.tabla-scroll {
+
+  overflow-x: auto;
+
+}
+
+/* ====================================== */
+/* 🔥 TABLA */
+/* ====================================== */
+
+table {
+
+  width: 100%;
+
+  border-collapse: collapse;
+
+  min-width: 1100px;
+
+}
+
+/* ====================================== */
+/* 🔥 HEAD */
+/* ====================================== */
+
+thead {
+
+  background: linear-gradient(
+    135deg,
+    #4a90e2,
+    #357abd
+  );
+
+}
+
+th {
+
+  color: white;
+
+  padding: 18px;
+
+  text-align: left;
+
+  font-size: 14px;
+
+  font-weight: 700;
+
+  white-space: nowrap;
+
+}
+
+/* ====================================== */
+/* 🔥 BODY */
+/* ====================================== */
+
+td {
+
+  padding: 18px;
+
+  border-bottom:
+    1px solid #f1f5f9;
+
+  color: #1f2937;
+
+  font-size: 14px;
+
+}
+
+/* ====================================== */
+/* 🔥 HOVER FILAS */
+/* ====================================== */
+
+tbody tr {
+
+  transition: 0.2s ease;
+
+}
+
+tbody tr:hover {
+
+  background: #f8fafc;
+
+}
+
+/* ====================================== */
+/* 🔥 PRODUCTO */
+/* ====================================== */
+
+.producto {
+
+  font-weight: 700;
+
+  color: #111827;
+
+}
+
+/* ====================================== */
+/* 🔥 DESCRIPCIÓN */
+/* ====================================== */
+
+.descripcion {
+
+  max-width: 260px;
+
+  color: #6b7280;
+
+}
+
+/* ====================================== */
+/* 🔥 STOCK */
+/* ====================================== */
+
+.stock-box {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 8px;
+
+}
+
+.barra-stock {
+
+  width: 100%;
+
+  height: 8px;
+
+  background: #e5e7eb;
+
+  border-radius: 20px;
+
+  overflow: hidden;
+
+}
+
+.barra-fill {
+
+  height: 100%;
+
+  border-radius: 20px;
+
+}
+
+/* ====================================== */
+/* 🔥 COLORES BARRA */
+/* ====================================== */
+
+.fill-normal {
+
+  background: #22c55e;
+
+}
+
+.fill-bajo {
+
+  background: #f59e0b;
+
+}
+
+.fill-critico {
+
+  background: #ef4444;
+
+}
+
+/* ====================================== */
+/* 🔥 ESTADOS */
+/* ====================================== */
+
+.estado {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  min-width: 90px;
+
+  padding: 8px 16px;
+
+  border-radius: 999px;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+}
+
+/* ====================================== */
+/* 🔥 NORMAL */
+/* ====================================== */
+
+.normal {
+
+  background: #dcfce7;
+
+  color: #166534;
+
+}
+
+/* ====================================== */
+/* 🔥 BAJO */
+/* ====================================== */
+
+.bajo {
+
+  background: #fef3c7;
+
+  color: #92400e;
+
+}
+
+/* ====================================== */
+/* 🔥 CRÍTICO */
+/* ====================================== */
+
+.critico {
+
+  background: #fee2e2;
+
+  color: #991b1b;
+
+}
+
+/* ====================================== */
+/* 🔥 CENTRADO */
+/* ====================================== */
+
+.centrado {
+
+  text-align: center;
+
+  padding: 28px;
+
+  color: #6b7280;
+
+  font-style: italic;
+
+}
+
+/* ====================================== */
+/* 🔥 LOADING */
+/* ====================================== */
+
+.loading {
+
+  padding: 35px;
+
+  text-align: center;
+
+  color: #6b7280;
+
+  font-weight: 600;
+
+}
+
+/* ====================================== */
+/* 🔥 RESPONSIVE */
+/* ====================================== */
+
+@media (max-width: 768px) {
+
+  .titulo {
+
+    font-size: 38px;
+
+  }
+
+  .cards {
+
+    grid-template-columns: 1fr;
+
+  }
+
+  .info-grid {
+
+    grid-template-columns: 1fr;
+
+  }
+
+  .tabla-header {
+
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 10px;
+
+  }
+
+  .tabla-header h2 {
+
+    font-size: 24px;
+
+  }
+
+  .acciones-inventario {
+
+    flex-direction: column;
+
+    align-items: stretch;
+
+  }
+
+  .btn-exportar {
+
+    width: 100%;
+
+  }
+
+}

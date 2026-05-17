@@ -1,19 +1,27 @@
 {
-  "name": "backend-node",
+  "name": "proterquim-backend",
   "version": "1.0.0",
+  "description": "Backend API para el sistema empresarial Proterquim",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "keywords": [
+    "nodejs",
+    "express",
+    "mongodb",
+    "jwt",
+    "inventarios"
+  ],
+  "author": "Mario Gallo",
+  "license": "MIT",
   "dependencies": {
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.3.1"
   },
   "devDependencies": {

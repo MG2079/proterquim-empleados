@@ -1,60 +1,226 @@
-<h1>Gestión de Productos</h1>
+<h1 class="titulo-modulo">
+  Gestión de Productos
+</h1>
 
-<!-- 🔔 MENSAJE -->
-<div *ngIf="mensaje" class="mensaje" [ngClass]="tipoMensaje">
+<!-- 🔔 MENSAJES -->
+
+<div
+  *ngIf="mensaje"
+  class="mensaje"
+  [ngClass]="tipoMensaje">
+
   {{ mensaje }}
+
 </div>
 
 <!-- 🧾 FORMULARIO -->
-<div class="form-row">
-  <input [(ngModel)]="nuevoProducto.nombre" placeholder="Nombre">
-  <input [(ngModel)]="nuevoProducto.descripcion" placeholder="Descripción">
-  <input type="number" [(ngModel)]="nuevoProducto.precio" placeholder="Precio">
-  <input type="number" [(ngModel)]="nuevoProducto.stock" placeholder="Stock">
 
-  <button class="btn-agregar" (click)="crearProducto()">
-    Agregar
-  </button>
+<div class="contenedor-formulario">
+
+  <h2 class="subtitulo-formulario">
+    Nuevo Producto
+  </h2>
+
+  <div class="form-row">
+
+    <!-- NOMBRE -->
+
+    <div class="campo">
+
+      <label>Nombre</label>
+
+      <input
+        type="text"
+        [(ngModel)]="nuevoProducto.nombre"
+        placeholder="Ingrese nombre">
+
+    </div>
+
+    <!-- DESCRIPCIÓN -->
+
+    <div class="campo">
+
+      <label>Descripción</label>
+
+      <input
+        type="text"
+        [(ngModel)]="nuevoProducto.descripcion"
+        placeholder="Ingrese descripción">
+
+    </div>
+
+    <!-- PRECIO -->
+
+    <div class="campo">
+
+      <label>Precio</label>
+
+      <input
+        type="number"
+        [(ngModel)]="nuevoProducto.precio"
+        placeholder="Ingrese precio">
+
+    </div>
+
+    <!-- STOCK -->
+
+    <div class="campo">
+
+      <label>Stock</label>
+
+      <input
+        type="number"
+        [(ngModel)]="nuevoProducto.stock"
+        placeholder="Ingrese stock">
+
+    </div>
+
+    <!-- BOTON -->
+
+    <div class="contenedor-boton">
+
+      <button
+        class="btn-agregar"
+        (click)="crearProducto()">
+
+        Agregar Producto
+
+      </button>
+
+    </div>
+
+  </div>
+
 </div>
 
 <!-- 📊 TABLA -->
+
 <div class="tabla-container">
+
+  <div class="tabla-header">
+
+    <h2 class="subtitulo-tabla">
+      Lista de Productos
+    </h2>
+
+    <span class="contador-productos">
+
+      Total:
+      {{ productosFiltrados.length }}
+
+    </span>
+
+  </div>
 
   <table>
 
     <thead>
+
       <tr>
+
         <th>Nombre</th>
+
+        <th>Descripción</th>
+
         <th>Precio</th>
+
         <th>Stock</th>
-        <th>Acciones</th>
+
+        <th class="col-acciones">
+          Acciones
+        </th>
+
       </tr>
+
     </thead>
 
     <tbody>
 
-      <!-- SIN DATOS -->
+      <!-- 🚫 SIN DATOS -->
+
       <tr *ngIf="productosFiltrados.length === 0">
-        <td colspan="4" class="centrado">
-          No hay productos
+
+        <td colspan="5" class="centrado">
+
+          📦 No hay productos registrados
+
         </td>
+
       </tr>
 
-      <!-- LISTADO -->
+      <!-- 📋 LISTADO -->
+
       <tr *ngFor="let p of productosFiltrados">
-        <td>{{ p.nombre }}</td>
-        <td>{{ p.precio | number:'1.0-0' }}</td>
-        <td>{{ p.stock }}</td>
+
+        <!-- NOMBRE -->
 
         <td>
-          <button class="btn-editar" (click)="editarProducto(p)">
+
+          {{ p.nombre }}
+
+        </td>
+
+        <!-- DESCRIPCIÓN -->
+
+        <td>
+
+          {{ p.descripcion }}
+
+        </td>
+
+        <!-- PRECIO -->
+
+        <td>
+
+          {{
+            p.precio |
+            currency:'COP':'symbol':'1.0-0'
+          }}
+
+        </td>
+
+        <!-- STOCK -->
+
+        <td>
+
+          <span
+            class="stock"
+            [ngClass]="{
+              'stock-bajo': p.stock <= 5,
+              'stock-ok': p.stock > 5
+            }">
+
+            {{ p.stock }}
+
+          </span>
+
+        </td>
+
+        <!-- ACCIONES -->
+
+        <td class="acciones">
+
+          <button
+            class="btn-editar"
+            (click)="editarProducto(p)">
+
             Editar
+
           </button>
 
-          <button class="btn-eliminar" (click)="p._id && eliminarProducto(p._id)">
+          <button
+            class="btn-eliminar"
+            (click)="
+              p._id &&
+              eliminarProducto(p._id)
+            ">
+
             Eliminar
+
           </button>
+
         </td>
+
       </tr>
 
     </tbody>
@@ -63,24 +229,94 @@
 
 </div>
 
-<!-- ✏️ EDITAR -->
-<div *ngIf="productoEditando" class="form-edicion">
+<!-- ✏️ EDITAR PRODUCTO -->
 
-  <h3>Editar Producto</h3>
+<div
+  *ngIf="productoEditando"
+  class="contenedor-edicion">
+
+  <h2 class="subtitulo-formulario">
+
+    Editar Producto
+
+  </h2>
 
   <div class="form-row">
-    <input [(ngModel)]="productoEditando.nombre" placeholder="Nombre">
-    <input [(ngModel)]="productoEditando.descripcion" placeholder="Descripción">
-    <input type="number" [(ngModel)]="productoEditando.precio" placeholder="Precio">
-    <input type="number" [(ngModel)]="productoEditando.stock" placeholder="Stock">
 
-    <button class="btn-agregar" (click)="actualizarProducto()">
-      Guardar
-    </button>
+    <!-- NOMBRE -->
 
-    <button class="btn-eliminar" (click)="cancelarEdicion()">
-      Cancelar
-    </button>
+    <div class="campo">
+
+      <label>Nombre</label>
+
+      <input
+  type="text"
+  [(ngModel)]="productoEditando.nombre"
+  placeholder="Nombre del producto">
+
+    </div>
+
+    <!-- DESCRIPCIÓN -->
+
+    <div class="campo">
+
+      <label>Descripción</label>
+
+      <input
+  type="text"
+  [(ngModel)]="productoEditando.descripcion"
+  placeholder="Descripción del producto">
+
+    </div>
+
+    <!-- PRECIO -->
+
+    <div class="campo">
+
+      <label>Precio</label>
+
+      <input
+  type="number"
+  [(ngModel)]="productoEditando.precio"
+  placeholder="Precio">
+
+    </div>
+
+    <!-- STOCK -->
+
+    <div class="campo">
+
+      <label>Stock</label>
+
+      <input
+  type="number"
+  [(ngModel)]="productoEditando.stock"
+  placeholder="Stock">
+
+    </div>
+
+    <!-- BOTONES -->
+
+    <div class="contenedor-boton botones-edicion">
+
+      <button
+        class="btn-agregar"
+        (click)="actualizarProducto()">
+
+        Guardar
+
+      </button>
+
+      <button
+        class="btn-cancelar"
+        (click)="cancelarEdicion()">
+
+        Cancelar
+
+      </button>
+
+    </div>
+
   </div>
 
 </div>

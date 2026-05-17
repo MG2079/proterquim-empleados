@@ -1,71 +1,136 @@
-# Sistema de Gestión de Empleados - Proterquim
+# PROTERQUIM S.A.S
 
-##  Descripción
-
-Aplicación web desarrollada para la gestión de empleados de la empresa **Proterquim**, permitiendo realizar operaciones CRUD (Crear, Listar, Actualizar y Eliminar) de manera eficiente.
-
-El sistema fue construido utilizando tecnologías modernas de desarrollo web, separando frontend y backend bajo una arquitectura por capas.
+Sistema empresarial de gestión de inventarios, productos, pedidos, empleados y reportes desarrollado con Angular, Node.js, Express y MongoDB.
 
 ---
 
-##  Tecnologías utilizadas
+# Tecnologías utilizadas
 
-###  Frontend
+## Frontend
 
-* Angular
-* TypeScript
-* HTML5
-* CSS3
+- Angular 17
+- TypeScript
+- Angular Router
+- Guards
+- Interceptors
+- RxJS
+- CSS3
 
-###  Backend
+## Backend
 
-* Node.js
-* Express
-* MongoDB
-* Mongoose
-
----
-
-##  Funcionalidades
-
-* ➕ Crear empleados
-* 📋 Listar empleados
-* ✏️ Editar empleados
-* ❌ Eliminar empleados
-* 🔍 Filtrar empleados
-* 💬 Mensajes de validación y confirmación
+- Node.js
+- Express
+- MongoDB
+- Mongoose
+- JWT Authentication
+- bcryptjs
 
 ---
 
-##  Arquitectura
+# Funcionalidades principales
 
-El sistema está estructurado en tres capas:
+## Autenticación
 
-* **Frontend:** Interfaz de usuario (Angular)
-* **Backend:** API REST (Node.js + Express)
-* **Base de datos:** MongoDB
+- Login seguro con JWT
+- Protección de rutas
+- Roles y permisos
+- Logout seguro
+- Interceptor HTTP
+
+## Gestión de productos
+
+- Crear productos
+- Editar productos
+- Eliminar productos
+- Control de stock
+- Alertas de stock bajo
+
+## Gestión de inventarios
+
+- Control de inventario
+- Estado de stock
+- Categorías
+- Ubicaciones
+- Validaciones
+
+## Gestión de pedidos
+
+- Crear pedidos
+- Actualizar pedidos
+- Eliminar pedidos
+- Seguimiento de pedidos
+
+## Gestión de empleados
+
+- CRUD de empleados
+- Control administrativo
+- Roles empresariales
+
+## Dashboard empresarial
+
+- Métricas generales
+- Ventas totales
+- Productos críticos
+- Pedidos recientes
+
+## Reportes
+
+- Exportación PDF
+- Exportación Excel
+- Estadísticas empresariales
 
 ---
 
-## ▶ Ejecución del proyecto
+# Arquitectura del proyecto
 
-###  Backend
+```bash
+PROTERQUIM-EMPLEADOS
+│
+├── backend-node
+│   ├── controllers
+│   ├── middlewares
+│   ├── models
+│   ├── routes
+│   └── index.js
+│
+├── frontend-angular
+│   ├── src/app
+│   │   ├── dashboard
+│   │   ├── productos
+│   │   ├── inventarios
+│   │   ├── empleados
+│   │   ├── reportes
+│   │   ├── guards
+│   │   ├── interceptors
+│   │   └── services
+│
+└── README.md
+```
+
+---
+
+# Roles del sistema
+
+| Rol | Acceso |
+|---|---|
+| Administrador | Acceso total |
+| Gerente | Productos, pedidos e inventarios |
+| Contador | Reportes y pedidos |
+| Empleado | Inventarios |
+
+---
+
+# Instalación
+
+## Backend
 
 ```bash
 cd backend-node
 npm install
-npm start
+npm run dev
 ```
 
-Servidor en:
-
-```
-http://localhost:3000
-```
-
----
-
-###  Frontend
+## Frontend
 
 ```bash
 cd frontend-angular
@@ -73,52 +138,52 @@ npm install
 ng serve
 ```
 
-Aplicación en:
+---
 
+# Variables de entorno
+
+Crear archivo `.env` dentro de `backend-node`
+
+```env
+PORT=3000
+
+MONGO_URI=mongodb://127.0.0.1:27017/proterquim
+
+JWT_SECRET=proterquim_super_secreto_2025
 ```
-http://localhost:4200
+
+---
+
+# API Base
+
+```bash
+http://localhost:3000/api
 ```
 
 ---
 
-##  Endpoints API
+# Estado del proyecto
 
-* GET `/api/empleados`
-* POST `/api/empleados`
-* PUT `/api/empleados/:id`
-* DELETE `/api/empleados/:id`
+Proyecto estable y funcional.
 
----
+Incluye:
 
-##  Pruebas realizadas
-
-Se validaron las operaciones CRUD mediante:
-
-* Navegador (Frontend Angular)
-* API REST en navegador
-* Base de datos MongoDB
-
-
-## 🧪 Pruebas realizadas
-
-En el proyecto Proterquim se implementaron diferentes tipos de pruebas para garantizar la calidad del software:
-
-- ✔ Pruebas unitarias con Karma y Jasmine
-- ✔ Pruebas de integración entre componentes
-- ✔ Pruebas funcionales de validación de datos
-- ✔ Pruebas de rendimiento utilizando herramientas del navegador (DevTools)
-
-Estas pruebas permitieron verificar el correcto funcionamiento del sistema, detectar errores y asegurar el cumplimiento de los requerimientos.
+- JWT Authentication
+- Roles empresariales
+- CRUDs completos
+- Dashboard conectado
+- MongoDB real
+- Arquitectura modular
+- Angular standalone components
 
 ---
 
-##  Autor
+# Autor
 
 Mario Gallo
-Análisis y Desarrollo de Software
 
 ---
 
-##  Licencia
+# Licencia
 
-Proyecto académico - SENA
+MIT

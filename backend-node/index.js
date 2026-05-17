@@ -2,14 +2,16 @@ require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors');
-
 const conectarDB = require('./config/db');
-
 const productoRoutes = require('./routes/productoRoutes');
 const empleadoRoutes = require('./routes/empleadoRoutes');
+const pedidoRoutes = require("./routes/pedidoRoutes");
 const authRoutes = require('./routes/authRoutes');
-
+const reporteRoutes =
+    require("./routes/reporteRoutes");
+    
 const app = express();
+
 
 // 🔹 MIDDLEWARES
 app.use(cors());
@@ -21,7 +23,16 @@ conectarDB();
 // 🔹 RUTAS API
 app.use('/api/productos', productoRoutes);
 app.use('/api/empleados', empleadoRoutes);
+app.use("/api/pedidos", pedidoRoutes);
 app.use('/api/auth', authRoutes);
+app.use(
+
+    "/api/reportes",
+
+    reporteRoutes
+
+);
+
 
 // 🔹 RUTA BASE (SALUD DEL SERVIDOR)
 app.get('/', (req, res) => {

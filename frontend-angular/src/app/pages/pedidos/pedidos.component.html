@@ -1,0 +1,302 @@
+<div class="contenedor-pedidos">
+
+  <h1>Gestión de Pedidos</h1>
+
+  <!-- 🔥 FORMULARIO -->
+
+  <div class="formulario-grid">
+
+    <!-- 🔥 FILA 1 -->
+
+    <div class="celda titulo">
+
+      <h2>Nuevo Pedido</h2>
+
+    </div>
+
+    <div class="celda vacia"></div>
+
+    <div class="celda vacia"></div>
+
+    <div class="celda vacia"></div>
+
+
+    <!-- 🔥 FILA 2 -->
+
+    <!-- CLIENTE -->
+
+    <div class="celda">
+
+      <label>Cliente</label>
+
+      <input
+        type="text"
+        [(ngModel)]="nuevoPedido.cliente"
+        placeholder="Ingrese nombre cliente"
+        title="Cliente">
+
+    </div>
+
+
+    <!-- PRODUCTO -->
+
+    <div class="celda celda-producto">
+
+      <label>Producto</label>
+
+      <select
+        [(ngModel)]="productoSeleccionado"
+        (change)="actualizarStock()"
+        title="Producto">
+
+        <option [ngValue]="null">
+          Seleccione un producto
+        </option>
+
+        <option
+          *ngFor="let producto of productosDisponibles"
+          [ngValue]="producto">
+
+          {{ producto.nombre }}
+
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <!-- CANTIDAD -->
+
+    <div class="celda">
+
+      <label>Cantidad</label>
+
+      <input
+        type="number"
+        [(ngModel)]="cantidadSeleccionada"
+        min="1"
+        placeholder="Cantidad"
+        title="Cantidad">
+
+    </div>
+
+
+    <!-- BOTON AGREGAR -->
+
+    <div class="celda boton-centro">
+
+      <button
+        class="btn-agregar"
+        (click)="agregarProducto()">
+
+        Agregar Producto
+
+      </button>
+
+    </div>
+
+
+    <!-- 🔥 FILA 3 -->
+
+    <!-- STOCK -->
+
+    <div class="celda stock-info">
+
+      Stock Disponible:
+
+      <span>{{ stockDisponible }}</span>
+
+    </div>
+
+
+    <!-- TOTAL -->
+
+    <div class="celda total-info">
+
+      Pedido total:
+
+      <span>$ {{ nuevoPedido.total || 0 }}</span>
+
+    </div>
+
+    <div class="celda vacia"></div>
+
+
+    <!-- CREAR PEDIDO -->
+
+    <div class="celda boton-centro">
+
+      <button
+        class="btn-crear"
+        (click)="crearPedido()">
+
+        Crear Pedido
+
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- 🔥 TABLA PRODUCTOS -->
+
+  <table
+    class="tabla-detalle"
+    *ngIf="nuevoPedido.productos.length > 0">
+
+    <thead>
+
+      <tr>
+
+        <th>Producto</th>
+        <th>Precio</th>
+        <th>Cantidad</th>
+        <th>Subtotal</th>
+        <th>Acciónes</th>
+
+      </tr>
+
+    </thead>
+
+    <tbody>
+
+      <tr
+        *ngFor="
+          let producto of nuevoPedido.productos;
+          let i = index;
+          trackBy: trackByProductos
+        ">
+
+        <td>
+
+          {{ producto.nombreProducto }}
+
+        </td>
+
+        <td>
+
+          $ {{ producto.precioUnitario }}
+
+        </td>
+
+        <td>
+
+          {{ producto.cantidad }}
+
+        </td>
+
+        <td>
+
+          $ {{ producto.subtotal }}
+
+        </td>
+
+        <td class="acciones-tabla">
+
+  <button
+    class="btn-editar"
+    (click)="editarProducto(i)">
+
+    Editar
+
+  </button>
+
+  <button
+    class="btn-eliminar"
+    (click)="eliminarProducto(i)">
+
+    Eliminar
+
+  </button>
+
+</td>
+
+      </tr>
+
+    </tbody>
+
+  </table>
+
+
+  <!-- 🔥 TABLA PEDIDOS -->
+
+  <div class="tabla-pedidos">
+
+    <h2>Lista de Pedidos</h2>
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>Cliente</th>
+          <th>Total</th>
+          <th>Productos</th>
+          <th>Fecha</th>
+          <th class="col-accion">Acción</th>
+
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let pedido of pedidos">
+
+          <td>
+
+            {{ pedido.cliente }}
+
+          </td>
+
+          <td>
+
+            $ {{ pedido.total }}
+
+          </td>
+
+          <td>
+
+            <ul>
+
+              <li *ngFor="let producto of pedido.productos">
+
+                {{ producto.nombreProducto }}
+                x{{ producto.cantidad }}
+
+              </li>
+
+            </ul>
+
+          </td>
+
+          <td>
+
+            {{ pedido.createdAt | date:'short' }}
+
+          </td>
+
+          <td class="col-accion">
+
+            <button
+            class="btn-eliminar"
+            (click)="eliminarPedido(pedido._id)">
+
+            Eliminar
+
+          </button>
+
+         </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>

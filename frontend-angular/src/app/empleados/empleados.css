@@ -1,262 +1,595 @@
-/* 🌐 CONTENEDOR GENERAL */
-.layout {
-  display: grid;
-  grid-template-columns: 250px 1fr;
-  grid-template-rows: 70px auto;
-  height: 100vh;
+/* =========================================================
+   🔥 CONTENEDOR GENERAL
+========================================================= */
+
+.contenedor-empleados {
+
+  width: 100%;
+
 }
 
-/* 🔵 HEADER */
-.header {
-  grid-column: 1 / 3;
-  grid-row: 1;
+/* =========================================================
+   🔥 HEADER
+========================================================= */
+
+.header-empleados {
+
   display: flex;
+
   justify-content: space-between;
+
   align-items: center;
-  background: #4a90e2;
-  padding: 0 20px;
+
+  margin-bottom: 25px;
+
+  gap: 20px;
+
+}
+
+.header-empleados h1 {
+
+  font-size: 38px;
+
+  font-weight: 700;
+
+  color: #1f1f1f;
+
+  margin-bottom: 5px;
+
+}
+
+.subtitulo {
+
+  font-size: 15px;
+
+  color: #666;
+
+}
+
+/* =========================================================
+   🔥 CONTADOR
+========================================================= */
+
+.contador-empleados {
+
+  min-width: 170px;
+
+  background: linear-gradient(
+    135deg,
+    #4a90e2,
+    #357abd
+  );
+
   color: white;
-}
 
-/* LOGO */
-.logo {
+  padding: 16px 20px;
+
+  border-radius: 14px;
+
   display: flex;
-  align-items: center;
-  gap: 10px;
-}
 
-.logo img {
-  width: 50px;
-  height: 50px;
-}
-
-/* 🔍 TOP BAR */
-.top-bar {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-/* 🔍 BUSCADOR */
-.search-box {
-  position: relative;
-}
-
-.search-box input {
-  height: 35px;
-  padding: 0 35px 0 10px;
-  border-radius: 6px;
-  border: none;
-  width: 200px;
-}
-
-/* 🔍 ICONO */
-.search-box .icon {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 14px;
-  color: #555;
-}
-
-/* 👤 USUARIO */
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: #13ad34a4;
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-weight: 500;
-}
-
-/* 📂 SIDEBAR */
-.sidebar {
-  grid-column: 1;
-  grid-row: 2;
-  display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  background: #f4f6f9;
-  padding: 15px;
-}
 
-/* MENÚ */
-.menu {
-  flex-grow: 1;
-}
-
-.menu-item {
-  padding: 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  margin-bottom: 10px;
-}
-
-.menu-item:hover {
-  background: #d6dde6;
-}
-
-.menu-item.active {
-  background: #d6dde6;
-  font-weight: bold;
-}
-
-/* 🔻 BOTÓN ABAJO */
-.logout-bottom {
-  margin-top: auto;
-}
-
-.btn-cerrar {
-  width: 80%;
-  padding: 8px;
-  font-size: 13px;
-  background: #428add;
-  border: none;
-  color: white;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.btn-cerrar:hover {
-  background: #cc0000;
-}
-
-/* 📄 CONTENIDO */
-.main {
-  grid-column: 2;
-  grid-row: 2;
-  padding: 20px 40px;
-  background: #f4f6f9;
-}
-
-.content {
-  width: 100%;
-}
-
-.content h1 {
-  margin-bottom: 20px;
-}
-
-/* 🧾 FORMULARIO */
-.form-row {
-  display: flex;
   align-items: center;
-  gap: 15px;
-  margin-bottom: 30px;
+
+  justify-content: center;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+
 }
 
-/* INPUTS */
-.form-row input {
-  height: 40px;
-  padding: 0 12px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+.contador-empleados span {
+
   font-size: 14px;
-  width: 180px;
-  box-sizing: border-box;
+
+  margin-bottom: 6px;
+
 }
 
-/* BOTÓN AGREGAR */
-.btn-agregar {
-  height: 40px;
-  padding: 0 20px;
-  background: #59a1e9;
-  border: none;
-  color: white;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.3s;
+.contador-empleados strong {
+
+  font-size: 30px;
+
   font-weight: bold;
+
 }
 
-.btn-agregar:hover {
-  background: #13ad34a4;
-}
+/* =========================================================
+   🔔 MENSAJES
+========================================================= */
 
-/* 📊 TABLA */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  background: white;
+.mensaje {
+
+  padding: 14px 18px;
+
   border-radius: 10px;
-  overflow: hidden;
+
+  margin-bottom: 20px;
+
+  font-size: 14px;
+
+  font-weight: 500;
+
 }
 
-thead {
-  background: #4a90e2;
-  color: white;
-}
-
-th, td {
-  padding: 12px;
-  text-align: left;
-}
-
-tbody tr {
-  border-bottom: 1px solid #eee;
-}
-
-tbody tr:hover {
-  background: #f5f7fa;
-}
-
-/* ✏️ BOTONES */
-.btn-editar {
-  background: #4a90e2;
-  border: none;
-  padding: 6px 10px;
-  color: white;
-  border-radius: 6px;
-  cursor: pointer;
-  margin-right: 5px;
-}
-
-.btn-editar:hover {
-  background: #357abd;
-}
-
-.btn-eliminar {
-  background: #ff4d4d;
-  border: none;
-  padding: 6px 10px;
-  color: white;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.btn-eliminar:hover {
-  background: #cc0000;
-}
-
-/* 🔔 MENSAJES */
 .success {
+
   background: #d4edda;
+
   color: #155724;
-  padding: 10px;
-  margin-bottom: 15px;
-  border-radius: 6px;
+
+  border: 1px solid #badbcc;
+
 }
 
 .error {
+
   background: #f8d7da;
+
   color: #721c24;
-  padding: 10px;
-  margin-bottom: 15px;
-  border-radius: 6px;
+
+  border: 1px solid #f5c6cb;
+
 }
 
-/* 🚫 SIN DATOS */
-.centrado {
+/* =========================================================
+   🔥 TARJETAS
+========================================================= */
+
+.formulario-card,
+.tabla-card {
+
+  background: #ffffff;
+
+  border-radius: 18px;
+
+  padding: 24px;
+
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+
+  margin-bottom: 28px;
+
+}
+
+/* =========================================================
+   🔥 HEADERS CARD
+========================================================= */
+
+.card-header {
+
+  margin-bottom: 22px;
+
+}
+
+.card-header h2 {
+
+  font-size: 24px;
+
+  font-weight: 600;
+
+  color: #1f1f1f;
+
+}
+
+/* =========================================================
+   🔥 FORMULARIO
+========================================================= */
+
+.form-grid {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  gap: 18px;
+
+  align-items: end;
+
+}
+
+.campo {
+
+  display: flex;
+
+  flex-direction: column;
+
+}
+
+.campo label {
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  color: #333;
+
+  margin-bottom: 8px;
+
+}
+
+.campo input {
+
+  width: 100%;
+
+  height: 46px;
+
+  border: 1px solid #dcdcdc;
+
+  border-radius: 10px;
+
+  padding: 0 14px;
+
+  font-size: 14px;
+
+  outline: none;
+
+  transition: 0.2s;
+
+  box-sizing: border-box;
+
+}
+
+.campo input:focus {
+
+  border-color: #4a90e2;
+
+  box-shadow: 0 0 5px rgba(74,144,226,0.25);
+
+}
+
+/* =========================================================
+   🔥 BOTONES
+========================================================= */
+
+.btn-agregar,
+.btn-editar,
+.btn-eliminar,
+.btn-cancelar {
+
+  border: none;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+
+  font-weight: 600;
+
+}
+
+/* 🔵 AGREGAR */
+
+.btn-agregar {
+
+  height: 46px;
+
+  background: #4a90e2;
+
+  color: white;
+
+  border-radius: 10px;
+
+  padding: 0 18px;
+
+  font-size: 14px;
+
+}
+
+.btn-agregar:hover {
+
+  background: #357abd;
+
+}
+
+/* 🟠 EDITAR */
+
+.btn-editar {
+
+  background: #f39c12;
+
+  color: white;
+
+  padding: 8px 14px;
+
+  border-radius: 8px;
+
+  font-size: 13px;
+
+}
+
+.btn-editar:hover {
+
+  background: #d68910;
+
+}
+
+/* 🔴 ELIMINAR */
+
+.btn-eliminar {
+
+  background: #e74c3c;
+
+  color: white;
+
+  padding: 8px 14px;
+
+  border-radius: 8px;
+
+  font-size: 13px;
+
+}
+
+.btn-eliminar:hover {
+
+  background: #c0392b;
+
+}
+
+/* ⚫ CANCELAR */
+
+.btn-cancelar {
+
+  background: #6c757d;
+
+  color: white;
+
+  padding: 0 18px;
+
+  border-radius: 10px;
+
+  height: 46px;
+
+}
+
+.btn-cancelar:hover {
+
+  background: #5a6268;
+
+}
+
+/* =========================================================
+   🔥 BOTONES EDICIÓN
+========================================================= */
+
+.botones-edicion {
+
+  display: flex;
+
+  gap: 10px;
+
+}
+
+/* =========================================================
+   🔥 TABLA
+========================================================= */
+
+.tabla-header {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-bottom: 18px;
+
+}
+
+.tabla-header h2 {
+
+  font-size: 24px;
+
+  font-weight: 600;
+
+  color: #1f1f1f;
+
+}
+
+.badge-tabla {
+
+  background: #eef4ff;
+
+  color: #357abd;
+
+  padding: 8px 14px;
+
+  border-radius: 20px;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+}
+
+.tabla-container {
+
+  overflow-x: auto;
+
+}
+
+table {
+
+  width: 100%;
+
+  border-collapse: collapse;
+
+  background: white;
+
+  border-radius: 14px;
+
+  overflow: hidden;
+
+}
+
+thead {
+
+  background: linear-gradient(
+    to right,
+    #4a90e2,
+    #357abd
+  );
+
+  color: white;
+
+}
+
+th {
+
+  padding: 14px 16px;
+
+  text-align: left;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+}
+
+td {
+
+  padding: 14px 16px;
+
+  border-top: 1px solid #ececec;
+
+  font-size: 14px;
+
+  color: #333;
+
+}
+
+tbody tr:nth-child(even) {
+
+  background: #f8fbff;
+
+}
+
+tbody tr:hover {
+
+  background: #eef5ff;
+
+  transition: 0.2s;
+
+}
+
+/* =========================================================
+   🔥 COLUMNAS
+========================================================= */
+
+.col-acciones {
+
+  width: 180px;
+
   text-align: center;
-  padding: 15px;
-  color: #888;
+
 }
 
-/* ✏️ EDICIÓN */
-.form-edicion {
-  margin-top: 20px;
+.nombre-empleado {
+
+  font-weight: 600;
+
+}
+
+.salario {
+
+  font-weight: 600;
+
+  color: #2c3e50;
+
+}
+
+/* =========================================================
+   🔥 ACCIONES
+========================================================= */
+
+.acciones {
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 10px;
+
+}
+
+/* =========================================================
+   🚫 SIN DATOS
+========================================================= */
+
+.centrado {
+
+  text-align: center;
+
+  padding: 20px;
+
+  color: #777;
+
+  font-style: italic;
+
+}
+
+/* =========================================================
+   ✏️ EDICIÓN
+========================================================= */
+
+.editar-card {
+
+  border-left: 5px solid #f39c12;
+
+}
+
+/* =========================================================
+   📱 RESPONSIVE
+========================================================= */
+
+@media (max-width: 1200px) {
+
+  .form-grid {
+
+    grid-template-columns:
+      repeat(2, 1fr);
+
+  }
+
+}
+
+@media (max-width: 768px) {
+
+  .header-empleados {
+
+    flex-direction: column;
+
+    align-items: flex-start;
+
+  }
+
+  .form-grid {
+
+    grid-template-columns: 1fr;
+
+  }
+
+  .tabla-header {
+
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 10px;
+
+  }
+
+  .acciones {
+
+    flex-direction: column;
+
+  }
+
+  .botones-edicion {
+
+    flex-direction: column;
+
+  }
+
 }

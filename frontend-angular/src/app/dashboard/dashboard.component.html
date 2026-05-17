@@ -1,53 +1,167 @@
 <h1 class="titulo">Panel de control</h1>
 
 <div class="resumen-box">
-  Resumen de actividad
+  Resumen general del sistema
 </div>
+
+<!-- 🔵 TARJETAS -->
 
 <div class="cards">
 
+  <!-- PRODUCTOS -->
+
   <div class="card">
     <span class="card-title">Productos</span>
-    <span class="card-value">{{ totalProductos }}</span>
+    <span class="card-value">
+      {{ totalProductos }}
+    </span>
   </div>
+
+  <!-- EMPLEADOS -->
 
   <div class="card">
     <span class="card-title">Empleados</span>
-    <span class="card-value">{{ totalEmpleados }}</span>
+    <span class="card-value">
+      {{ totalEmpleados }}
+    </span>
   </div>
 
+  <!-- PEDIDOS -->
+
   <div class="card">
+    <span class="card-title">Pedidos</span>
+    <span class="card-value">
+      {{ totalPedidos }}
+    </span>
+  </div>
+
+  <!-- VENTAS -->
+
+<div class="card card-ventas">
+
+  <span class="card-title">
+    Ventas Totales
+  </span>
+
+  <span class="card-value">
+    {{ ventasTotales | currency:'COP':'symbol':'1.0-0' }}
+  </span>
+
+</div>
+
+  <!-- STOCK BAJO -->
+
+  <div class="card card-warning">
     <span class="card-title">Stock Bajo</span>
-    <span class="card-value">{{ stockBajo }}</span>
+    <span class="card-value">
+      {{ stockBajo }}
+    </span>
   </div>
 
 </div>
 
-<!-- 📊 TABLA -->
+<!-- 🔥 TABLA STOCK BAJO -->
+
 <div class="tabla-container">
+
+  <h2 class="subtitulo">
+    Productos con stock bajo
+  </h2>
 
   <table>
 
     <thead>
+
       <tr>
+
         <th>Nombre</th>
         <th>Precio</th>
         <th>Stock</th>
+
       </tr>
+
     </thead>
 
     <tbody>
 
       <!-- SIN DATOS -->
+
       <tr *ngIf="productos.length === 0">
-        <td colspan="3" class="centrado">No hay datos</td>
+
+        <td colspan="3" class="centrado">
+          No hay productos con stock bajo
+        </td>
+
       </tr>
 
       <!-- LISTADO -->
+
       <tr *ngFor="let p of productos">
+
         <td>{{ p.nombre }}</td>
-        <td>{{ p.precio | number:'1.0-0' }}</td>
+
+        <td>
+          {{ p.precio | currency:'COP':'symbol':'1.0-0' }}
+        </td>
+
         <td>{{ p.stock }}</td>
+
+      </tr>
+
+    </tbody>
+
+  </table>
+
+</div>
+
+<!-- 🔥 PEDIDOS RECIENTES -->
+
+<div class="tabla-container pedidos-recientes">
+
+  <h2 class="subtitulo">
+    Últimos pedidos
+  </h2>
+
+  <table>
+
+    <thead>
+
+      <tr>
+
+        <th>Cliente</th>
+        <th>Total</th>
+        <th>Fecha</th>
+
+      </tr>
+
+    </thead>
+
+    <tbody>
+
+      <!-- SIN DATOS -->
+
+      <tr *ngIf="pedidosRecientes.length === 0">
+
+        <td colspan="3" class="centrado">
+          No hay pedidos registrados
+        </td>
+
+      </tr>
+
+      <!-- LISTADO -->
+
+      <tr *ngFor="let pedido of pedidosRecientes">
+
+        <td>{{ pedido.cliente }}</td>
+
+        <td>
+          {{ pedido.total | currency:'COP':'symbol':'1.0-0' }}
+        </td>
+
+        <td>
+          {{ pedido.createdAt | date:'short' }}
+        </td>
+
       </tr>
 
     </tbody>

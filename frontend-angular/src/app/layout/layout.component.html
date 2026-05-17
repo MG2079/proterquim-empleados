@@ -1,57 +1,190 @@
 <div class="layout">
 
-  <!-- 🔵 HEADER GLOBAL -->
-  <header class="header">
+  <!-- 🔵 HEADER -->
+
+  <div class="header">
+
+    <!-- 🧩 LOGO -->
 
     <div class="logo">
-      <img src="assets/logo.png" alt="Logo" />
-      <span>Proterquim S.A.S</span>
+
+      <img
+        src="assets/logo.png"
+        alt="logo"
+      >
+
+      <span>
+        Proterquim S.A.S
+      </span>
+
     </div>
+
+    <!-- 🔍 TOP BAR -->
 
     <div class="top-bar">
-      <div class="search-box">
-        <input type="text" placeholder="Buscar..." />
-      </div>
 
-      <div class="user-info">
-        👤 Admin
-      </div>
+      <input
+        type="text"
+        placeholder="Buscar..."
+        (input)="buscar($event)"
+      />
+
+      <!-- 👤 USUARIO -->
+
+      <span class="admin-user">
+
+        {{ usuario?.nombre }}
+
+        -
+
+        {{ rol }}
+
+      </span>
+
     </div>
 
-  </header>
+  </div>
 
-  <!-- 🔽 BODY -->
-  <div class="body">
+  <!-- 📦 MAIN -->
 
-    <!-- 🧭 SIDEBAR GLOBAL -->
-    <aside class="sidebar">
+  <div class="main">
 
-      <div class="menu">
+    <!-- 🧭 SIDEBAR -->
 
-        <div class="menu-item" (click)="irADashboard()">📊 Panel de control</div>
+    <div class="sidebar">
 
-        <div class="menu-item" (click)="irAProductos()">📦 Gestión de Productos</div>
+      <!-- 📊 DASHBOARD -->
 
-        <div class="menu-item">🧾 Gestión de Pedidos</div>
+      <div
+        class="menu-item"
+        routerLink="/dashboard"
+        routerLinkActive="activo"
+      >
+        Panel de Control
+      </div>
 
-        <div class="menu-item">📊 Inventarios</div>
+      <!-- 📦 PRODUCTOS -->
 
-        <div class="menu-item">📑 Reportes</div>
+      <div
 
-        <div class="menu-item" (click)="irAEmpleados()">⚙️ Gestión de Empleados</div>
+        *ngIf="
+          esAdmin() ||
+          esGerente()
+        "
+
+        class="menu-item"
+
+        routerLink="/productos"
+
+        routerLinkActive="activo"
+      >
+
+        Gestión de Productos
 
       </div>
+
+      <!-- 🛒 PEDIDOS -->
+
+      <div
+
+        *ngIf="
+          esAdmin() ||
+          esGerente() ||
+          esContador()
+        "
+
+        class="menu-item"
+
+        routerLink="/pedidos"
+
+        routerLinkActive="activo"
+      >
+
+        Gestión de Pedidos
+
+      </div>
+
+      <!-- 📦 INVENTARIOS -->
+
+      <div
+
+        *ngIf="
+          esAdmin() ||
+          esGerente() ||
+          esEmpleado()
+        "
+
+        class="menu-item"
+
+        routerLink="/inventarios"
+
+        routerLinkActive="activo"
+      >
+
+        Gestión de Inventarios
+
+      </div>
+
+      <!-- 📈 REPORTES -->
+
+      <div
+
+        *ngIf="
+          esAdmin() ||
+          esContador()
+        "
+
+        class="menu-item"
+
+        routerLink="/reportes"
+
+        routerLinkActive="activo"
+      >
+
+        Reportes y Estadísticas
+
+      </div>
+
+      <!-- 👨‍💼 EMPLEADOS -->
+
+      <div
+
+        *ngIf="
+          esAdmin()
+        "
+
+        class="menu-item"
+
+        routerLink="/empleados"
+
+        routerLinkActive="activo"
+      >
+
+        Gestión de Empleados
+
+      </div>
+
+      <!-- 🔐 LOGOUT -->
 
       <div class="logout-bottom">
-        <button (click)="logout()">Cerrar sesión</button>
+
+        <button (click)="logout()">
+
+          Cerrar sesión
+
+        </button>
+
       </div>
 
-    </aside>
+    </div>
 
-    <!-- 📄 CONTENIDO DINÁMICO -->
-    <main class="main">
+    <!-- 📄 CONTENIDO -->
+
+    <div class="content">
+
       <router-outlet></router-outlet>
-    </main>
+
+    </div>
 
   </div>
 

@@ -1,86 +1,259 @@
-<h1>Gestión de Empleados</h1>
+<div class="contenedor-empleados">
 
-<!-- 🔔 MENSAJE -->
-<div *ngIf="mensaje" [ngClass]="tipoMensaje">
-  {{ mensaje }}
-</div>
+  <!-- 🔥 HEADER -->
+  <div class="header-empleados">
 
-<!-- 🧾 FORMULARIO -->
-<div class="form-row">
+    <div>
+      <h1>Gestión de Empleados</h1>
+      <p class="subtitulo">
+        Administración y control del personal
+      </p>
+    </div>
 
-  <input [(ngModel)]="nuevoEmpleado.nombre" placeholder="Nombre">
-  <input [(ngModel)]="nuevoEmpleado.cargo" placeholder="Cargo">
-  <input type="number" [(ngModel)]="nuevoEmpleado.salario" placeholder="Salario">
+    <div class="contador-empleados">
+      <span>Total empleados</span>
+      <strong>{{ empleadosFiltrados.length }}</strong>
+    </div>
 
-  <button class="btn-agregar" (click)="crearEmpleado()">
-    Agregar
-  </button>
+  </div>
 
-</div>
+  <!-- 🔔 MENSAJE -->
+  <div
+    *ngIf="mensaje"
+    class="mensaje"
+    [ngClass]="tipoMensaje"
+  >
+    {{ mensaje }}
+  </div>
 
-<!-- 📊 TABLA -->
-<div class="tabla-container">
+  <!-- 🧾 FORMULARIO -->
+  <div class="formulario-card">
 
-  <table>
+    <div class="card-header">
+      <h2>Nuevo Empleado</h2>
+    </div>
 
-    <thead>
-      <tr>
-        <th>Nombre</th>
-        <th>Cargo</th>
-        <th>Salario</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
+    <div class="form-grid">
 
-    <tbody>
+      <!-- NOMBRE -->
+      <div class="campo">
+        <label>Nombre</label>
 
-      <!-- SIN DATOS -->
-      <tr *ngIf="empleadosFiltrados.length === 0">
-        <td colspan="4" class="centrado">
-          No hay empleados registrados
-        </td>
-      </tr>
+        <input
+          type="text"
+          [(ngModel)]="nuevoEmpleado.nombre"
+          placeholder="Ingrese nombre"
+        >
+      </div>
 
-      <!-- LISTADO -->
-      <tr *ngFor="let emp of empleadosFiltrados">
-        <td>{{ emp.nombre }}</td>
-        <td>{{ emp.cargo }}</td>
-        <td>{{ emp.salario | number:'1.0-0' }}</td>
+      <!-- CARGO -->
+      <div class="campo">
+        <label>Cargo</label>
 
-        <td>
-          <button class="btn-editar" (click)="editarEmpleado(emp)">
-            Editar
-          </button>
+        <input
+          type="text"
+          [(ngModel)]="nuevoEmpleado.cargo"
+          placeholder="Ingrese cargo"
+        >
+      </div>
 
-          <button class="btn-eliminar" (click)="emp._id && eliminarEmpleado(emp._id)">
-            Eliminar
-          </button>
-        </td>
-      </tr>
+      <!-- SALARIO -->
+      <div class="campo">
+        <label>Salario</label>
 
-    </tbody>
+        <input
+          type="number"
+          [(ngModel)]="nuevoEmpleado.salario"
+          placeholder="Ingrese salario"
+        >
+      </div>
 
-  </table>
+      <!-- BOTÓN -->
+      <div class="campo boton-campo">
 
-</div>
+        <button
+          class="btn-agregar"
+          (click)="crearEmpleado()"
+        >
+          Agregar Empleado
+        </button>
 
-<!-- ✏️ EDICIÓN -->
-<div *ngIf="empleadoEditando" class="form-edicion">
+      </div>
 
-  <h3>Editar Empleado</h3>
+    </div>
 
-  <div class="form-row">
-    <input [(ngModel)]="empleadoEditando.nombre" placeholder="Nombre">
-    <input [(ngModel)]="empleadoEditando.cargo" placeholder="Cargo">
-    <input type="number" [(ngModel)]="empleadoEditando.salario" placeholder="Salario">
+  </div>
 
-    <button class="btn-agregar" (click)="actualizarEmpleado()">
-      Guardar
-    </button>
+  <!-- 📊 TABLA -->
+  <div class="tabla-card">
 
-    <button class="btn-eliminar" (click)="cancelarEdicion()">
-      Cancelar
-    </button>
+    <div class="tabla-header">
+
+      <h2>Lista de Empleados</h2>
+
+      <span class="badge-tabla">
+        {{ empleadosFiltrados.length }} registros
+      </span>
+
+    </div>
+
+    <div class="tabla-container">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>Nombre</th>
+            <th>Cargo</th>
+            <th>Salario</th>
+            <th class="col-acciones">
+              Acciones
+            </th>
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          <!-- SIN DATOS -->
+          <tr *ngIf="empleadosFiltrados.length === 0">
+
+            <td
+              colspan="4"
+              class="centrado"
+            >
+              No hay empleados registrados
+            </td>
+
+          </tr>
+
+          <!-- LISTADO -->
+          <tr *ngFor="let emp of empleadosFiltrados">
+
+            <td class="nombre-empleado">
+              {{ emp.nombre }}
+            </td>
+
+            <td>
+              {{ emp.cargo }}
+            </td>
+
+            <td class="salario">
+              {{
+                emp.salario
+                | currency:'COP':'symbol':'1.0-0'
+              }}
+            </td>
+
+            <td>
+
+              <div class="acciones">
+
+                <button
+                  class="btn-editar"
+                  (click)="editarEmpleado(emp)"
+                >
+                  Editar
+                </button>
+
+                <button
+                  class="btn-eliminar"
+                  (click)="emp._id && eliminarEmpleado(emp._id)"
+                >
+                  Eliminar
+                </button>
+
+              </div>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+  <!-- ✏️ EDICIÓN -->
+  <div
+    *ngIf="empleadoEditando"
+    class="formulario-card editar-card"
+  >
+
+    <div class="card-header">
+
+      <h2>Editar Empleado</h2>
+
+    </div>
+
+    <div class="form-grid">
+
+      <!-- NOMBRE -->
+      <div class="campo">
+
+        <label>Nombre</label>
+
+        <input
+          type="text"
+          [(ngModel)]="empleadoEditando.nombre"
+          placeholder="Ingrese nombre"
+        >
+
+      </div>
+
+      <!-- CARGO -->
+      <div class="campo">
+
+        <label>Cargo</label>
+
+        <input
+          type="text"
+          [(ngModel)]="empleadoEditando.cargo"
+          placeholder="Ingrese cargo"
+        >
+
+      </div>
+
+      <!-- SALARIO -->
+      <div class="campo">
+
+        <label>Salario</label>
+
+        <input
+          type="number"
+          [(ngModel)]="empleadoEditando.salario"
+          placeholder="Ingrese salario"
+        >
+
+      </div>
+
+      <!-- BOTONES -->
+      <div class="campo botones-edicion">
+
+        <button
+          class="btn-agregar"
+          (click)="actualizarEmpleado()"
+        >
+          Guardar
+        </button>
+
+        <button
+          class="btn-cancelar"
+          (click)="cancelarEdicion()"
+        >
+          Cancelar
+        </button>
+
+      </div>
+
+    </div>
+
   </div>
 
 </div>

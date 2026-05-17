@@ -1,50 +1,203 @@
 const Usuario = require('../models/Usuario');
+
 const bcrypt = require('bcryptjs');
 
-// 🔐 LOGIN
-exports.login = async (req, res) => {
-  const { email, password } = req.body;
+const jwt = require('jsonwebtoken');
+
+
+// ==========================================
+// 🔐 REGISTRAR USUARIO
+// ==========================================
+
+exports.registrar = async (req, res) => {
 
   try {
-    const usuario = await Usuario.findOne({ email });
 
-    if (!usuario) {
-      return res.status(401).json({ mensaje: 'Credenciales incorrectas' });
-    }
+    const {
+      nombre,
+      email,
+      password,
+      rol
+    } = req.body;
 
-    const esValido = await bcrypt.compare(password, usuario.password);
+    // 🔍 VALIDAR EMAIL
 
-    if (!esValido) {
-      return res.status(401).json({ mensaje: 'Credenciales incorrectas' });
-    }
-
-    res.json({
-      mensaje: 'Login exitoso',
-      usuario
+    const usuarioExiste = await Usuario.findOne({
+      email
     });
 
-  } catch (error) {
-    res.status(500).json({ mensaje: 'Error en el servidor' });
-  }
-};
+    if (usuarioExiste) {
 
-// 📝 REGISTER (CREAR USUARIO BIEN)
-exports.register = async (req, res) => {
-  const { email, password } = req.body;
+      return res.status(400).json({
+        mensaje: 'El usuario ya existe'
+      });
 
-  try {
-    const passwordHash = await bcrypt.hash(password, 10);
+    }
+
+    // 🔒 ENCRIPTAR PASSWORD
+
+    const salt = await bcrypt.genSalt(10);
+
+    const passwordHash =
+      await bcrypt.hash(password, salt);
+
+    // 👤 CREAR USUARIO
 
     const nuevoUsuario = new Usuario({
+
+      nombre,
       email,
-      password: passwordHash
+      password: passwordHash,
+      rol
+
     });
 
     await nuevoUsuario.save();
 
-    res.json({ mensaje: 'Usuario creado correctamente' });
+    // 🎫 TOKEN
+
+    const token = jwt.sign(
+
+      {
+        id: nuevoUsuario._id,
+        rol: nuevoUsuario.rol
+      },
+
+      process.env.JWT_SECRET,
+
+      {
+        expiresIn: '8h'
+      }
+
+    );
+
+    // ✅ RESPUESTA
+
+    res.status(201).json({
+
+      mensaje: 'Usuario registrado',
+
+      token,
+
+      usuario: {
+
+        id: nuevoUsuario._id,
+        nombre: nuevoUsuario.nombre,
+        email: nuevoUsuario.email,
+        rol: nuevoUsuario.rol
+
+      }
+
+    });
 
   } catch (error) {
-    res.status(500).json({ mensaje: 'Error al registrar usuario' });
+
+    console.log(error);
+
+    res.status(500).json({
+
+      mensaje: 'Error al registrar usuario'
+
+    });
+
   }
+
+};
+
+
+// ==========================================
+// 🔐 LOGIN
+// ==========================================
+
+exports.login = async (req, res) => {
+
+  try {
+
+    const {
+      email,
+      password
+    } = req.body;
+
+    // 🔍 BUSCAR USUARIO
+
+    const usuario = await Usuario.findOne({
+      email
+    });
+
+    if (!usuario) {
+
+      return res.status(400).json({
+
+        mensaje: 'Usuario no encontrado'
+
+      });
+
+    }
+
+    // 🔒 VALIDAR PASSWORD
+
+    const passwordCorrecta =
+      await bcrypt.compare(
+        password,
+        usuario.password
+      );
+
+    if (!passwordCorrecta) {
+
+      return res.status(400).json({
+
+        mensaje: 'Contraseña incorrecta'
+
+      });
+
+    }
+
+    // 🎫 TOKEN
+
+    const token = jwt.sign(
+
+      {
+        id: usuario._id,
+        rol: usuario.rol
+      },
+
+      process.env.JWT_SECRET,
+
+      {
+        expiresIn: '8h'
+      }
+
+    );
+
+    // ✅ RESPUESTA
+
+    res.status(200).json({
+
+      mensaje: 'Login exitoso',
+
+      token,
+
+      usuario: {
+
+        id: usuario._id,
+        nombre: usuario.nombre,
+        email: usuario.email,
+        rol: usuario.rol
+
+      }
+
+    });
+
+  } catch (error) {
+
+    console.log(error);
+
+    res.status(500).json({
+
+      mensaje: 'Error en login'
+
+    });
+
+  }
+
 };
