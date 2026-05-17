@@ -1,179 +1,486 @@
-/* 🌐 FONDO GENERAL */
+/* 🌐 CONTENEDOR GENERAL */
+
 .container {
+
   min-height: 100vh;
-  background: #e5e5e5;
-  font-family: Arial, sans-serif;
+
+  display: flex;
+
+  flex-direction: column;
+
+  font-family:
+    'Segoe UI',
+    Tahoma,
+    Geneva,
+    Verdana,
+    sans-serif;
+
+  background:
+
+    linear-gradient(
+
+      135deg,
+
+      rgba(17, 24, 39, 0.92),
+
+      rgba(30, 64, 175, 0.85)
+
+    ),
+
+    url('/assets/fondo-login.jpg');
+
+  background-size: cover;
+
+  background-position: center;
+
+  overflow: hidden;
+
 }
 
-/* 🔵 BARRA SUPERIOR */
+/* 🔵 HEADER */
+
 .header {
+
   width: 100%;
-  height: 80px;
-  background: #4a90e2;
+
+  height: 85px;
+
   display: flex;
+
   align-items: center;
-  padding: 0 30px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+
+  padding: 0 40px;
+
+  background:
+    rgba(255,255,255,0.08);
+
+  -webkit-backdrop-filter:
+    blur(10px);
+
+  backdrop-filter:
+    blur(10px);
+
+  border-bottom:
+    1px solid rgba(255,255,255,0.1);
+
 }
 
-/* LOGO + TEXTO */
+/* 🧩 LOGO */
+
 .logo-container {
+
   display: flex;
+
   align-items: center;
+
+  gap: 15px;
+
 }
 
 .logo {
-  width: 55px;
-  margin-right: 15px;
+
+  width: 58px;
+
+  height: 58px;
+
+  border-radius: 50%;
+
+  background: white;
+
+  padding: 5px;
+
+  box-shadow:
+    0 4px 15px rgba(0,0,0,0.25);
+
 }
 
 .logo-container h1 {
+
   color: white;
-  font-size: 28px;
-  font-weight: bold;
+
+  font-size: 32px;
+
+  font-weight: 700;
+
+  letter-spacing: 1px;
+
 }
 
-/* 🧾 LOGIN */
+/* 🔥 LOGIN BOX */
+
 .login-box {
+
+  width: 450px;
+
+  margin: auto;
+
+  padding: 45px;
+
+  border-radius: 28px;
+
+  background:
+    rgba(255,255,255,0.12);
+
+  -webkit-backdrop-filter:
+    blur(18px);
+
+  backdrop-filter:
+    blur(18px);
+
+  border:
+    1px solid rgba(255,255,255,0.15);
+
+  box-shadow:
+
+    0 15px 40px rgba(0,0,0,0.35),
+
+    0 0 30px rgba(59,130,246,0.15);
+
   display: flex;
+
   flex-direction: column;
+
   align-items: center;
-  margin-top: 100px;
+
+  animation:
+    fadeIn 0.7s ease;
+
 }
+
+/* ✨ ANIMACIÓN */
+
+@keyframes fadeIn {
+
+  from {
+
+    opacity: 0;
+
+    transform: translateY(30px);
+
+  }
+
+  to {
+
+    opacity: 1;
+
+    transform: translateY(0);
+
+  }
+
+}
+
+/* 🧾 TÍTULO */
 
 .login-box h2 {
+
+  color: white;
+
   font-size: 42px;
-  margin-bottom: 30px;
+
+  margin-bottom: 35px;
+
+  font-weight: 700;
+
 }
 
-/* 🔔 MENSAJES (NUEVO SISTEMA) */
+/* 🔔 MENSAJES */
+
 .mensaje {
-  width: 420px;
-  padding: 12px;
-  margin-bottom: 15px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
+
+  width: 100%;
+
+  padding: 14px;
+
+  border-radius: 12px;
+
+  margin-bottom: 18px;
+
   text-align: center;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
 }
 
 /* 🔴 ERROR */
+
 .mensaje.error {
-  background-color: #f8d7da;
-  color: #721c24;
-  border: 1px solid #f5c2c7;
+
+  background:
+    rgba(239,68,68,0.18);
+
+  border:
+    1px solid rgba(239,68,68,0.4);
+
+  color: #fecaca;
+
 }
 
-/* 🟢 ÉXITO */
-.mensaje.exito {
-  background-color: #d1e7dd;
-  color: #0f5132;
-  border: 1px solid #badbcc;
+/* 🟢 SUCCESS */
+
+.mensaje.success {
+
+  background:
+    rgba(34,197,94,0.18);
+
+  border:
+    1px solid rgba(34,197,94,0.4);
+
+  color: #bbf7d0;
+
 }
 
-/* INPUTS */
+/* 🔥 INPUTS */
+
 .login-box input {
-  width: 420px;
-  padding: 14px;
-  margin: 12px 0;
-  border-radius: 12px;
-  border: 2px solid #333;
-  font-size: 16px;
-  transition: 0.3s;
-  box-sizing: border-box;
-}
 
-/* EFECTO FOCUS */
-.login-box input:focus {
-  outline: none;
-  border-color: #4a90e2;
-  box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
-}
-
-/* 🔒 PASSWORD */
-.password-container {
-  position: relative;
-  width: 420px;
-}
-
-.password-container input {
   width: 100%;
-  padding-right: 42px;
+
+  padding: 16px;
+
+  margin-bottom: 18px;
+
+  border-radius: 14px;
+
+  border:
+    1px solid rgba(255,255,255,0.15);
+
+  background:
+    rgba(255,255,255,0.08);
+
+  color: white;
+
+  font-size: 16px;
+
+  transition: all 0.3s ease;
+
+  outline: none;
+
   box-sizing: border-box;
+
+}
+
+/* ✨ PLACEHOLDER */
+
+.login-box input::placeholder {
+
+  color:
+    rgba(255,255,255,0.65);
+
+}
+
+/* ✨ FOCUS */
+
+.login-box input:focus {
+
+  border-color: #60a5fa;
+
+  box-shadow:
+
+    0 0 0 4px rgba(96,165,250,0.2);
+
+  background:
+    rgba(255,255,255,0.12);
+
+}
+
+/* 🔥 INPUTS CON ICONOS */
+
+.input-container,
+.password-container {
+
+  width: 100%;
+
+  position: relative;
+
+}
+
+/* 🔹 ICONOS IZQUIERDA */
+
+.input-icon {
+
+  position: absolute;
+
+  left: 16px;
+
+  top: 38%;
+
+  transform: translateY(-50%);
+
+  color:
+    rgba(255,255,255,0.7);
+
+  font-size: 22px;
+
+}
+
+/* 🔥 ESPACIADO INPUTS */
+
+.input-container input,
+.password-container input {
+
+  padding-left: 52px;
+
 }
 
 /* 👁️ OJO */
-.eye {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  font-size: 18px;
 
-  /* 🔥 COMPATIBILIDAD TOTAL */
-  -webkit-user-select: none; /* Safari */
-  -moz-user-select: none;    /* Firefox */
-  -ms-user-select: none;     /* IE/Edge antiguo */
-  user-select: none;         /* estándar */
+.eye {
+
+  position: absolute;
+
+  right: 16px;
+
+  top: 38%;
+
+  transform: translateY(-50%);
+
+  cursor: pointer;
+
+  color:
+    rgba(255,255,255,0.8);
+
+  transition: 0.3s;
+
+  font-size: 22px;
+
+  -webkit-user-select: none;
+
+  user-select: none;
+
+}
+
+.eye:hover {
+
+  color: white;
+
+  transform:
+    translateY(-50%)
+    scale(1.1);
+
 }
 
 /* 🔘 BOTÓN */
+
 .login-box button {
-  margin-top: 25px;
-  width: 220px;
-  padding: 12px;
-  background: #4a90e2;
-  border-radius: 10px;
+
+  width: 100%;
+
+  margin-top: 12px;
+
+  padding: 16px;
+
   border: none;
-  font-size: 18px;
+
+  border-radius: 14px;
+
+  background:
+
+    linear-gradient(
+
+      135deg,
+
+      #2563eb,
+
+      #3b82f6
+
+    );
+
   color: white;
+
+  font-size: 18px;
+
+  font-weight: 600;
+
   cursor: pointer;
-  transition: 0.3s;
+
+  transition: all 0.3s ease;
+
+  box-shadow:
+
+    0 10px 20px rgba(37,99,235,0.3);
+
 }
+
+/* ✨ HOVER BOTÓN */
 
 .login-box button:hover {
-  background: #357abd;
+
+  transform:
+    translateY(-2px);
+
+  box-shadow:
+
+    0 15px 30px rgba(37,99,235,0.45);
+
 }
+
+/* 🚫 DISABLED */
 
 .login-box button:disabled {
-  background: #999;
-  cursor: not-allowed;
+
   opacity: 0.7;
+
+  cursor: not-allowed;
+
 }
 
-/* TEXTO */
+/* 🔁 RECUPERAR */
+
 .forgot {
+
   margin-top: 20px;
-  font-size: 15px;
+
+  color:
+    rgba(255,255,255,0.85);
+
+  font-size: 14px;
+
   cursor: pointer;
-  color: #333;
+
   transition: 0.3s;
+
 }
 
 .forgot:hover {
-  color: #4a90e2;
+
+  color: white;
+
   text-decoration: underline;
+
 }
 
 /* 📱 RESPONSIVE */
-@media (max-width: 480px) {
-  .login-box input,
-  .password-container,
-  .mensaje {
+
+@media (max-width: 600px) {
+
+  .login-box {
+
     width: 90%;
+
+    padding: 35px 25px;
+
   }
 
   .login-box h2 {
-    font-size: 32px;
+
+    font-size: 34px;
+
+    text-align: center;
+
   }
 
   .header {
-    height: 70px;
-    padding: 0 15px;
+
+    padding: 0 20px;
+
   }
 
-  .logo {
-    width: 45px;
+  .logo-container h1 {
+
+    font-size: 24px;
+
   }
+
 }
