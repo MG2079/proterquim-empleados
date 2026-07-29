@@ -32,6 +32,10 @@ import {
 
 export class LayoutComponent {
 
+  // 🍔 MENU MOBILE
+
+  menuAbierto = false;
+
   // 🔐 USUARIO ACTUAL
 
   usuario: any = null;

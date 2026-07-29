@@ -70,7 +70,7 @@ const ProductoSchema = new mongoose.Schema(
 
 // 🔥 ACTUALIZAR ESTADO AUTOMÁTICO
 
-ProductoSchema.pre('save', function(next) {
+ProductoSchema.pre('save', async function() {
 
   if (this.stock <= 0) {
 
@@ -89,8 +89,6 @@ ProductoSchema.pre('save', function(next) {
     this.estado = 'Normal';
 
   }
-
-  next();
 
 });
 

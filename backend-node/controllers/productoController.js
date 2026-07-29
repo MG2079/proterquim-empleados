@@ -7,7 +7,6 @@ exports.obtenerProductos = async (req, res) => {
   try {
 
     const productos = await Producto.find()
-
       .sort({ createdAt: -1 });
 
     res.status(200).json(productos);
@@ -83,14 +82,14 @@ exports.crearProducto = async (req, res) => {
 
     } = req.body;
 
-    // 🔥 VALIDACIONES
+    // 🔥 VALIDAR CAMPOS OBLIGATORIOS
 
     if (
 
       !nombre ||
       !descripcion ||
-      precio == null ||
-      stock == null
+      precio === undefined ||
+      stock === undefined
 
     ) {
 
@@ -103,11 +102,38 @@ exports.crearProducto = async (req, res) => {
 
     }
 
+    // 🔥 VALIDAR PRECIO NEGATIVO
+
+    if (precio < 0) {
+
+      return res.status(400).json({
+
+        mensaje:
+          'El precio no puede ser negativo'
+
+      });
+
+    }
+
+    // 🔥 VALIDAR STOCK NEGATIVO
+
+    if (stock < 0) {
+
+      return res.status(400).json({
+
+        mensaje:
+          'El stock no puede ser negativo'
+
+      });
+
+    }
+
     // 🔥 NUEVO PRODUCTO
 
     const nuevoProducto = new Producto({
 
       nombre,
+
       descripcion,
 
       categoria:
@@ -168,6 +194,32 @@ exports.actualizarProducto = async (req, res) => {
 
         mensaje:
           'Producto no encontrado'
+
+      });
+
+    }
+
+    // 🔥 VALIDAR PRECIO NEGATIVO
+
+    if (req.body.precio < 0) {
+
+      return res.status(400).json({
+
+        mensaje:
+          'El precio no puede ser negativo'
+
+      });
+
+    }
+
+    // 🔥 VALIDAR STOCK NEGATIVO
+
+    if (req.body.stock < 0) {
+
+      return res.status(400).json({
+
+        mensaje:
+          'El stock no puede ser negativo'
 
       });
 

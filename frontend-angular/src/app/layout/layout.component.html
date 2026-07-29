@@ -1,11 +1,18 @@
 <div class="layout">
 
   <!-- 🔵 HEADER -->
+  <header class="header">
 
-  <div class="header">
+    <!-- 🍔 BOTON MENU MOBILE -->
+    <button
+      class="menu-toggle"
+      (click)="menuAbierto = !menuAbierto">
+
+      ☰
+
+    </button>
 
     <!-- 🧩 LOGO -->
-
     <div class="logo">
 
       <img
@@ -13,159 +20,129 @@
         alt="logo"
       >
 
-      <span>
+      <h2>
         Proterquim S.A.S
-      </span>
+      </h2>
 
     </div>
 
     <!-- 🔍 TOP BAR -->
-
     <div class="top-bar">
 
-      <input
-        type="text"
-        placeholder="Buscar..."
-        (input)="buscar($event)"
-      />
+      <div class="search-box">
 
-      <!-- 👤 USUARIO -->
+        <input
+          type="text"
+          placeholder="Buscar..."
+          (input)="buscar($event)"
+        >
+
+      </div>
 
       <span class="admin-user">
 
         {{ usuario?.nombre }}
-
         -
-
         {{ rol }}
 
       </span>
 
     </div>
 
+  </header>
+
+  <!-- 🌑 OVERLAY MOBILE -->
+  <div
+    class="overlay"
+    *ngIf="menuAbierto"
+    (click)="menuAbierto = false">
+
   </div>
 
-  <!-- 📦 MAIN -->
-
-  <div class="main">
+  <!-- 📦 CONTENIDO GENERAL -->
+  <div class="container-layout">
 
     <!-- 🧭 SIDEBAR -->
+    <div
+      class="sidebar"
+      [class.sidebar-open]="menuAbierto">
 
-    <div class="sidebar">
+      <div class="menu">
 
-      <!-- 📊 DASHBOARD -->
+        <!-- 📊 DASHBOARD -->
+        <div
+          class="menu-item"
+          routerLink="/dashboard"
+          routerLinkActive="activo"
+          (click)="menuAbierto = false">
 
-      <div
-        class="menu-item"
-        routerLink="/dashboard"
-        routerLinkActive="activo"
-      >
-        Panel de Control
-      </div>
+          Panel de Control
 
-      <!-- 📦 PRODUCTOS -->
+        </div>
 
-      <div
+        <!-- 📦 PRODUCTOS -->
+        <div
+          *ngIf="esAdmin() || esGerente()"
+          class="menu-item"
+          routerLink="/productos"
+          routerLinkActive="activo"
+          (click)="menuAbierto = false">
 
-        *ngIf="
-          esAdmin() ||
-          esGerente()
-        "
+          Gestión de Productos
 
-        class="menu-item"
+        </div>
 
-        routerLink="/productos"
+        <!-- 🛒 PEDIDOS -->
+        <div
+          *ngIf="esAdmin() || esGerente() || esContador()"
+          class="menu-item"
+          routerLink="/pedidos"
+          routerLinkActive="activo"
+          (click)="menuAbierto = false">
 
-        routerLinkActive="activo"
-      >
+          Gestión de Pedidos
 
-        Gestión de Productos
+        </div>
 
-      </div>
+        <!-- 📦 INVENTARIOS -->
+        <div
+          *ngIf="esAdmin() || esGerente() || esEmpleado()"
+          class="menu-item"
+          routerLink="/inventarios"
+          routerLinkActive="activo"
+          (click)="menuAbierto = false">
 
-      <!-- 🛒 PEDIDOS -->
+          Gestión de Inventarios
 
-      <div
+        </div>
 
-        *ngIf="
-          esAdmin() ||
-          esGerente() ||
-          esContador()
-        "
+        <!-- 📈 REPORTES -->
+        <div
+          *ngIf="esAdmin() || esContador()"
+          class="menu-item"
+          routerLink="/reportes"
+          routerLinkActive="activo"
+          (click)="menuAbierto = false">
 
-        class="menu-item"
+          Reportes y Estadísticas
 
-        routerLink="/pedidos"
+        </div>
 
-        routerLinkActive="activo"
-      >
+        <!-- 👨‍💼 EMPLEADOS -->
+        <div
+          *ngIf="esAdmin()"
+          class="menu-item"
+          routerLink="/empleados"
+          routerLinkActive="activo"
+          (click)="menuAbierto = false">
 
-        Gestión de Pedidos
+          Gestión de Empleados
 
-      </div>
-
-      <!-- 📦 INVENTARIOS -->
-
-      <div
-
-        *ngIf="
-          esAdmin() ||
-          esGerente() ||
-          esEmpleado()
-        "
-
-        class="menu-item"
-
-        routerLink="/inventarios"
-
-        routerLinkActive="activo"
-      >
-
-        Gestión de Inventarios
-
-      </div>
-
-      <!-- 📈 REPORTES -->
-
-      <div
-
-        *ngIf="
-          esAdmin() ||
-          esContador()
-        "
-
-        class="menu-item"
-
-        routerLink="/reportes"
-
-        routerLinkActive="activo"
-      >
-
-        Reportes y Estadísticas
-
-      </div>
-
-      <!-- 👨‍💼 EMPLEADOS -->
-
-      <div
-
-        *ngIf="
-          esAdmin()
-        "
-
-        class="menu-item"
-
-        routerLink="/empleados"
-
-        routerLinkActive="activo"
-      >
-
-        Gestión de Empleados
+        </div>
 
       </div>
 
       <!-- 🔐 LOGOUT -->
-
       <div class="logout-bottom">
 
         <button (click)="logout()">
@@ -179,12 +156,11 @@
     </div>
 
     <!-- 📄 CONTENIDO -->
-
-    <div class="content">
+    <main class="content">
 
       <router-outlet></router-outlet>
 
-    </div>
+    </main>
 
   </div>
 

@@ -384,37 +384,37 @@ implements OnInit {
   // 🗑 ELIMINAR PRODUCTO
 
   eliminarProducto(
-    index: number
-  ): void {
+  index: number
+): void {
 
-    const confirmar = confirm(
+  const confirmar = confirm(
+    '¿Desea eliminar este producto?'
+  );
 
-      '¿Desea eliminar este producto?'
+  if (!confirmar) {
+    return;
+  }
 
-    );
+  this.nuevoPedido
+    .productos
+    .splice(index, 1);
 
-    if (!confirmar) {
+  this.nuevoPedido.productos = [
+    ...this.nuevoPedido.productos
+  ];
 
-      return;
+  this.calcularTotal();
 
-    }
+  // Si ya no quedan productos
+  if (this.nuevoPedido.productos.length === 0) {
 
-    this.nuevoPedido
-      .productos
+    this.nuevoPedido.cliente = '';
 
-      .splice(index, 1);
-
-    this.nuevoPedido.productos = [
-
-      ...this.nuevoPedido
-        .productos
-
-    ];
-
-    this.calcularTotal();
+    this.limpiarSeleccionProducto();
 
   }
 
+}
   // ➕ CREAR PEDIDO
 
   crearPedido(): void {

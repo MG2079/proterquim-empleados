@@ -1,210 +1,162 @@
 /* 🔥 TITULO */
-
 .titulo-modulo {
 
   font-size: 38px;
-
   font-weight: 700;
-
   color: #1f1f1f;
-
   margin-bottom: 25px;
+  line-height: 1.2;
+  word-break: break-word;
 
 }
 
 
 /* 🔔 MENSAJES */
-
 .mensaje {
 
   padding: 14px 18px;
-
   border-radius: 10px;
-
   margin-bottom: 20px;
-
   font-size: 14px;
-
   font-weight: 500;
-
   animation: fadeIn 0.3s ease;
 
 }
 
 
 /* ❌ ERROR */
-
 .error {
 
   background: #fdeaea;
-
   color: #c62828;
-
   border: 1px solid #f5c2c2;
 
 }
 
 
 /* ✅ SUCCESS */
-
 .success {
 
   background: #e7f6ec;
-
   color: #1b5e20;
-
   border: 1px solid #b7dfc2;
 
 }
 
 
-/* 🧾 CONTENEDOR FORMULARIO */
-
+/* 🧾 CONTENEDOR */
 .contenedor-formulario,
-.contenedor-edicion {
+.contenedor-edicion,
+.tabla-container {
 
   background: #ffffff;
-
   border-radius: 16px;
-
   padding: 22px;
-
   margin-bottom: 28px;
-
   box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  width: 100%;
+  box-sizing: border-box;
 
 }
 
 
-/* 🔥 SUBTITULO */
-
+/* 🔥 SUBTITULOS */
 .subtitulo-formulario,
 .subtitulo-tabla {
 
   font-size: 22px;
-
   font-weight: 600;
-
   color: #1f1f1f;
-
   margin-bottom: 20px;
 
 }
 
 
-/* 🧾 FILA FORMULARIO */
-
+/* 🧾 FORM */
 .form-row {
 
   display: flex;
-
-  align-items: flex-end;
-
   gap: 18px;
-
   flex-wrap: wrap;
+  width: 100%;
+  align-items: flex-end;
 
 }
 
 
 /* 📦 CAMPOS */
-
 .campo {
 
   display: flex;
-
   flex-direction: column;
-
+  flex: 1 1 220px;
   min-width: 220px;
 
 }
 
 
-/* 🏷️ LABELS */
-
+/* 🏷️ LABEL */
 .campo label {
 
   font-size: 14px;
-
   font-weight: 600;
-
   margin-bottom: 8px;
-
   color: #333;
 
 }
 
 
-/* ✏️ INPUTS */
-
+/* ✏️ INPUT */
 .campo input {
 
   height: 44px;
-
   border: 1px solid #dcdcdc;
-
   border-radius: 10px;
-
   padding: 0 14px;
-
   font-size: 14px;
-
   outline: none;
-
+  width: 100%;
+  box-sizing: border-box;
   transition: 0.2s;
 
 }
 
 
 /* 🔥 FOCUS */
-
 .campo input:focus {
 
   border-color: #4a90e2;
-
   box-shadow: 0 0 5px rgba(74,144,226,0.2);
 
 }
 
 
-/* 🔘 CONTENEDOR BOTON */
-
+/* 🔘 BOTONES */
 .contenedor-boton {
 
   display: flex;
-
   align-items: center;
-
   gap: 12px;
 
 }
 
 
-/* 🔵 BOTON AGREGAR */
-
 .btn-agregar {
 
   height: 44px;
-
   padding: 0 22px;
-
   border: none;
-
   border-radius: 10px;
-
   background: #4a90e2;
-
   color: white;
-
   font-size: 14px;
-
   font-weight: 500;
-
   cursor: pointer;
-
   transition: 0.2s;
+  white-space: nowrap;
 
 }
+
 
 .btn-agregar:hover {
 
@@ -213,128 +165,65 @@
 }
 
 
-/* 🟡 BOTON EDITAR */
-
 .btn-editar {
 
   background: #f39c12;
-
   color: white;
-
   border: none;
-
   padding: 8px 14px;
-
   border-radius: 8px;
-
   cursor: pointer;
-
   font-size: 12px;
-
   font-weight: 500;
 
-  transition: 0.2s;
-
 }
 
-.btn-editar:hover {
-
-  background: #d68910;
-
-}
-
-
-/* 🔴 BOTON ELIMINAR */
 
 .btn-eliminar,
 .btn-cancelar {
 
   background: #e74c3c;
-
   color: white;
-
   border: none;
-
   padding: 8px 14px;
-
   border-radius: 8px;
-
   cursor: pointer;
-
   font-size: 12px;
-
   font-weight: 500;
-
-  transition: 0.2s;
-
-}
-
-.btn-eliminar:hover,
-.btn-cancelar:hover {
-
-  background: #c0392b;
 
 }
 
 
 /* 🔥 TABLA */
-
 .tabla-container {
-
-  background: white;
-
-  border-radius: 16px;
 
   overflow-x: auto;
 
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-
 }
 
-
-/* 🔥 HEADER TABLA */
 
 .tabla-header {
 
   display: flex;
-
   justify-content: space-between;
-
   align-items: center;
-
-  padding: 20px 20px 0;
-
-}
-
-
-/* 🔢 CONTADOR */
-
-.contador-productos {
-
-  font-size: 14px;
-
-  font-weight: 500;
-
-  color: #666;
+  margin-bottom: 15px;
+  gap: 10px;
+  flex-wrap: wrap;
 
 }
 
 
 /* 📊 TABLA */
-
 table {
 
   width: 100%;
-
   border-collapse: collapse;
-
-  margin-top: 15px;
 
 }
 
 
-/* 🔵 HEADER TABLA */
-
+/* 🔵 HEADER */
 thead {
 
   background: linear-gradient(
@@ -348,49 +237,36 @@ thead {
 }
 
 
-/* 🏷️ COLUMNAS */
-
 th {
 
   padding: 14px 16px;
-
   text-align: left;
-
   font-size: 14px;
-
   font-weight: 600;
+  white-space: nowrap;
 
 }
 
 
-/* 📄 CELDAS */
-
 td {
 
   padding: 14px 16px;
-
   border-bottom: 1px solid #ececec;
-
   font-size: 14px;
-
   color: #333;
 
 }
 
 
-/* 🔥 HOVER FILAS */
-
+/* 🔥 HOVER */
 tbody tr:hover {
 
   background: #f5f9ff;
 
-  transition: 0.2s;
-
 }
 
 
-/* 🎨 FILAS PARES */
-
+/* 🎨 PARES */
 tbody tr:nth-child(even) {
 
   background: #fafcff;
@@ -399,87 +275,67 @@ tbody tr:nth-child(even) {
 
 
 /* 🚫 SIN DATOS */
-
 .centrado {
 
   text-align: center;
-
   padding: 24px;
-
   color: #777;
-
   font-style: italic;
 
 }
 
 
 /* 📦 STOCK */
-
 .stock {
 
   padding: 5px 10px;
-
   border-radius: 20px;
-
   font-size: 12px;
-
   font-weight: 600;
+  display: inline-block;
 
 }
 
 
-/* 🔴 STOCK BAJO */
-
 .stock-bajo {
 
   background: #fdeaea;
-
   color: #c62828;
 
 }
 
 
-/* 🟢 STOCK OK */
-
 .stock-ok {
 
   background: #e7f6ec;
-
   color: #1b5e20;
 
 }
 
 
 /* 🎯 ACCIONES */
-
 .acciones {
 
   display: flex;
-
   gap: 10px;
-
-  align-items: center;
+  flex-wrap: wrap;
 
 }
 
 
-/* 📏 COLUMNA ACCIONES */
-
 .col-acciones {
 
-  width: 160px;
+  min-width: 160px;
 
 }
 
 
 /* ✨ ANIMACION */
-
 @keyframes fadeIn {
 
   from {
 
     opacity: 0;
-
     transform: translateY(5px);
 
   }
@@ -487,7 +343,6 @@ tbody tr:nth-child(even) {
   to {
 
     opacity: 1;
-
     transform: translateY(0);
 
   }
@@ -495,14 +350,21 @@ tbody tr:nth-child(even) {
 }
 
 
-/* 📱 RESPONSIVE */
+/* ====================================== */
+/* 📱 TABLET */
+/* ====================================== */
 
 @media (max-width: 992px) {
+
+  .titulo-modulo {
+
+    font-size: 30px;
+
+  }
 
   .form-row {
 
     flex-direction: column;
-
     align-items: stretch;
 
   }
@@ -510,6 +372,7 @@ tbody tr:nth-child(even) {
   .campo {
 
     width: 100%;
+    min-width: 100%;
 
   }
 
@@ -529,29 +392,70 @@ tbody tr:nth-child(even) {
 }
 
 
+/* ====================================== */
+/* 📱 MOVIL */
+/* ====================================== */
+
 @media (max-width: 768px) {
 
   .titulo-modulo {
 
-    font-size: 32px;
+    font-size: 24px;
+
+  }
+
+  .contenedor-formulario,
+  .contenedor-edicion,
+  .tabla-container {
+
+    padding: 16px;
+
+  }
+
+  .subtitulo-formulario,
+  .subtitulo-tabla {
+
+    font-size: 18px;
 
   }
 
   .tabla-header {
 
     flex-direction: column;
-
     align-items: flex-start;
-
-    gap: 10px;
 
   }
 
-  .acciones {
+  table {
 
-    flex-direction: column;
+    min-width: 600px;
 
-    align-items: stretch;
+  }
+
+}
+
+
+/* ====================================== */
+/* 📱 CELULARES PEQUEÑOS */
+/* ====================================== */
+
+@media (max-width: 480px) {
+
+  .titulo-modulo {
+
+    font-size: 22px;
+
+  }
+
+  .campo input {
+
+    font-size: 13px;
+
+  }
+
+  .btn-agregar {
+
+    font-size: 13px;
 
   }
 

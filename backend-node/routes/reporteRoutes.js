@@ -9,11 +9,48 @@ const reporteController = require(
 const verificarToken =
 require('../middlewares/authMiddleware');
 
-// 🔥 DASHBOARD / REPORTES
+
+// ==========================================
+// 📊 DASHBOARD
+// ==========================================
+
 router.get(
-  '/',
+  '/dashboard',
   verificarToken,
   reporteController.obtenerDashboard
+);
+
+
+// ==========================================
+// 💰 REPORTE DE VENTAS
+// ==========================================
+
+router.get(
+  '/ventas',
+  verificarToken,
+  reporteController.obtenerVentas
+);
+
+
+// ==========================================
+// 🔥 PRODUCTOS MÁS VENDIDOS
+// ==========================================
+
+router.get(
+  '/productos-mas-vendidos',
+  verificarToken,
+  reporteController.obtenerProductosMasVendidos
+);
+
+
+// ==========================================
+// ⚠️ INVENTARIO CRÍTICO
+// ==========================================
+
+router.get(
+  '/inventario-critico',
+  verificarToken,
+  reporteController.obtenerInventarioCritico
 );
 
 module.exports = router;

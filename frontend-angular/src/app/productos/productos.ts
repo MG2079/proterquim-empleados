@@ -271,6 +271,8 @@ implements OnInit {
 
           this.mostrarMensaje(
 
+            error.error?.mensaje ||
+
             'Error al crear producto',
 
             'error'
@@ -287,17 +289,17 @@ implements OnInit {
 
   // ✏️ EDITAR PRODUCTO
 
-  editarProducto(
-    producto: Producto
-  ): void {
+editarProducto(
+  producto: Producto
+): void {
 
-    this.productoEditando = {
+  this.productoEditando = {
 
-      ...producto
+    ...producto
 
-    };
+  };
 
-  }
+}
 
   // 🔄 ACTUALIZAR PRODUCTO
 
@@ -372,6 +374,8 @@ implements OnInit {
           );
 
           this.mostrarMensaje(
+
+            error.error?.mensaje ||
 
             'Error al actualizar producto',
 
@@ -455,21 +459,67 @@ implements OnInit {
     producto: Producto
   ): boolean {
 
+    // 🔥 CAMPOS VACÍOS
+
     if (
 
       !producto.nombre.trim() ||
 
-      !producto.descripcion.trim() ||
-
-      producto.precio <= 0 ||
-
-      producto.stock < 0
+      !producto.descripcion.trim()
 
     ) {
 
       this.mostrarMensaje(
 
-        'Todos los campos son obligatorios y válidos',
+        'Todos los campos son obligatorios',
+
+        'error'
+
+      );
+
+      return false;
+
+    }
+
+    // 🔥 PRECIO NEGATIVO
+
+    if (producto.precio < 0) {
+
+      this.mostrarMensaje(
+
+        'El precio no puede ser negativo',
+
+        'error'
+
+      );
+
+      return false;
+
+    }
+
+    // 🔥 PRECIO EN CERO
+
+    if (producto.precio === 0) {
+
+      this.mostrarMensaje(
+
+        'El precio debe ser mayor a cero',
+
+        'error'
+
+      );
+
+      return false;
+
+    }
+
+    // 🔥 STOCK NEGATIVO
+
+    if (producto.stock < 0) {
+
+      this.mostrarMensaje(
+
+        'El stock no puede ser negativo',
 
         'error'
 

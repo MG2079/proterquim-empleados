@@ -1,520 +1,366 @@
-/* 🔥 LAYOUT GENERAL */
+/* ====================================== */
+/* 🌍 LAYOUT GENERAL */
+/* ====================================== */
+
 .layout {
-
+  min-height: 100vh;
   display: flex;
-
   flex-direction: column;
-
-  height: 100vh;
-
+  background: #f4f6f9;
 }
 
+/* ====================================== */
 /* 🔵 HEADER */
-.header {
+/* ====================================== */
 
-  height: 75px;
+.header {
+  width: 100%;
 
   background: #4a90e2;
-
   color: white;
 
   display: flex;
-
   align-items: center;
-
   justify-content: space-between;
 
-  padding: 0 25px;
+  padding: 14px 24px;
 
+  gap: 20px;
 }
 
-/* 🔥 LOGO */
+/* ====================================== */
+/* 🧩 LOGO */
+/* ====================================== */
+
 .logo {
-
   display: flex;
-
   align-items: center;
+  gap: 12px;
 
-  gap: 10px;
-
+  margin-right: auto;
 }
 
 .logo img {
-
   width: 50px;
-
   height: 50px;
-
+  border-radius: 50%;
+  object-fit: cover;
+  background: white;
 }
 
-/* 🔥 TOP BAR */
+.logo h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* ====================================== */
+/* 🔍 TOP BAR */
+/* ====================================== */
+
 .top-bar {
-
   display: flex;
-
   align-items: center;
-
-  gap: 15px;
-
+  gap: 14px;
 }
 
-/* 🔍 BUSCADOR */
 .search-box input {
+  width: 240px;
 
-  padding: 8px 12px;
-
-  border-radius: 8px;
+  padding: 10px 14px;
 
   border: none;
-
-  background: white;
+  border-radius: 10px;
 
   outline: none;
-
 }
 
-/* 🔽 BODY */
-.body {
+.admin-user {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* ====================================== */
+/* 📦 CONTENEDOR GENERAL */
+/* ====================================== */
+
+.container-layout {
+  flex: 1;
 
   display: flex;
 
-  flex: 1;
-
+  min-height: calc(100vh - 80px);
 }
 
+/* ====================================== */
 /* 🧭 SIDEBAR */
+/* ====================================== */
+
 .sidebar {
+  width: 260px;
+  min-width: 260px;
 
-  width: 250px;
-
-  background: #f4f4f4;
-
-  padding: 15px;
+  background: white;
 
   border-right: 1px solid #ddd;
 
+  padding: 20px 14px;
+
   display: flex;
-
   flex-direction: column;
-
-  justify-content: space-between;
-
-  min-height: 100vh;
-
 }
 
-/* 🔥 MENÚ */
+/* ====================================== */
+/* 📋 MENU */
+/* ====================================== */
+
 .menu {
-
   display: flex;
-
   flex-direction: column;
-
   gap: 8px;
-
 }
 
 .menu-item {
+  padding: 14px 16px;
 
-  padding: 10px;
-
-  border-radius: 8px;
+  border-radius: 12px;
 
   cursor: pointer;
 
-  transition: 0.2s ease;
+  transition: 0.25s ease;
 
+  font-size: 15px;
+  font-weight: 500;
+
+  color: #1e293b;
 }
 
 .menu-item:hover {
-
-  background: #e0e0e0;
-
-  color: #4a90e2;
-
-}
-
-.menu-item.active {
-
-  background: #d0dbe8;
-
-  font-weight: bold;
-
+  background: #eaf2ff;
+  color: #2563eb;
 }
 
 .activo {
-
-  color: #4a90e2;
-
-  font-weight: 600;
-
+  background: #dbeafe;
+  color: #2563eb;
+  font-weight: 700;
 }
 
+/* ====================================== */
 /* 🔻 LOGOUT */
+/* ====================================== */
+
 .logout-bottom {
-
   margin-top: auto;
-
-  display: flex;
-
-  justify-content: center;
-
+  padding-top: 20px;
 }
 
 .logout-bottom button {
+  width: 100%;
 
   background: #4a90e2;
-
   color: white;
 
   border: none;
 
-  padding: 10px 18px;
+  padding: 12px;
 
-  border-radius: 8px;
+  border-radius: 12px;
 
   cursor: pointer;
 
-  transition: 0.3s ease;
+  font-weight: 600;
 
+  transition: 0.3s;
 }
 
 .logout-bottom button:hover {
-
   background: #357abd;
-
 }
 
-/* 📄 MAIN */
-.main {
+/* ====================================== */
+/* 📄 CONTENT */
+/* ====================================== */
 
+.content {
   flex: 1;
 
-  padding: 30px 40px;
+  padding: 30px;
 
-  overflow-y: auto;
+  overflow-x: auto;
 
-  background: #f5f7fa;
-
+  min-width: 0;
 }
 
-/* 📦 CONTENIDO */
-.content {
+/* ====================================== */
+/* 💻 TABLET */
+/* ====================================== */
 
-  width: 100%;
+@media (max-width: 992px) {
 
-  max-width: 1200px;
+  .container-layout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    min-width: 100%;
+
+    border-right: none;
+    border-bottom: 1px solid #ddd;
+  }
 
 }
 
 /* ====================================== */
-/* 🧾 TÍTULOS GLOBALES */
-/* ====================================== */
-
-h1 {
-
-  font-size: 4rem;
-
-  font-weight: 800;
-
-  color: #0f172a;
-
-  letter-spacing: -1px;
-
-  line-height: 1.1;
-
-  margin-bottom: 14px;
-
-}
-
-/* ====================================== */
-/* 📄 SUBTÍTULOS */
-/* ====================================== */
-
-.resumen-box {
-
-  display: inline-block;
-
-  padding: 10px 18px;
-
-  border-radius: 14px;
-
-  background: white;
-
-  border: 1px solid #e2e8f0;
-
-  color: #64748b;
-
-  font-size: 15px;
-
-  font-weight: 500;
-
-  margin-bottom: 28px;
-
-  box-shadow:
-    0 2px 10px rgba(0,0,0,0.04);
-
-}
-
-/* ====================================== */
-/* 📊 CARDS */
-/* ====================================== */
-
-.cards {
-
-  display: flex;
-
-  gap: 20px;
-
-  margin-bottom: 25px;
-
-  flex-wrap: wrap;
-
-}
-
-.card {
-
-  background: #4a90e2;
-
-  color: white;
-
-  padding: 18px;
-
-  border-radius: 16px;
-
-  min-width: 180px;
-
-  text-align: center;
-
-  font-weight: 500;
-
-  box-shadow:
-    0 4px 14px rgba(0,0,0,0.10);
-
-  transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease;
-
-}
-
-.card:hover {
-
-  transform: translateY(-3px);
-
-  box-shadow:
-    0 8px 20px rgba(0,0,0,0.14);
-
-}
-
-/* 📋 TABLA */
-.tabla-container {
-
-  width: 100%;
-
-  margin-top: 20px;
-
-  background: white;
-
-  border-radius: 16px;
-
-  overflow: hidden;
-
-  box-shadow:
-    0 4px 14px rgba(0,0,0,0.08);
-
-}
-
-table {
-
-  width: 100%;
-
-  border-collapse: collapse;
-
-}
-
-/* 🔥 HEADER TABLA */
-th {
-
-  background: linear-gradient(
-    135deg,
-    #4a90e2,
-    #357abd
-  );
-
-  color: white;
-
-  padding: 14px;
-
-  text-align: left;
-
-  font-weight: 700;
-
-}
-
-/* 🔥 FILAS */
-td {
-
-  padding: 14px;
-
-  border-bottom:
-    1px solid #eee;
-
-}
-
-/* 🔥 HOVER FILA */
-tr:hover {
-
-  background: #f9fbff;
-
-}
-
-/* 🔥 CENTRADO */
-.centrado {
-
-  text-align: center;
-
-}
-
-/* ====================================== */
-/* 🧾 FORMULARIOS */
-/* ====================================== */
-
-.form-row {
-
-  display: flex;
-
-  gap: 10px;
-
-  margin-bottom: 20px;
-
-  flex-wrap: wrap;
-
-}
-
-.form-row input {
-
-  padding: 10px 12px;
-
-  border-radius: 10px;
-
-  border: 1px solid #ccc;
-
-  outline: none;
-
-}
-
-/* ====================================== */
-/* 🔘 BOTONES */
-/* ====================================== */
-
-.btn-agregar {
-
-  background: #4a90e2;
-
-  color: white;
-
-  border: none;
-
-  padding: 10px 16px;
-
-  border-radius: 10px;
-
-  cursor: pointer;
-
-  transition: 0.3s ease;
-
-}
-
-.btn-agregar:hover {
-
-  background: #357abd;
-
-}
-
-.btn-editar {
-
-  background: #5a9dfc;
-
-  color: white;
-
-  border: none;
-
-  padding: 8px 12px;
-
-  border-radius: 8px;
-
-  margin-right: 5px;
-
-  cursor: pointer;
-
-  transition: 0.2s ease;
-
-}
-
-.btn-eliminar {
-
-  background: #ff4d4d;
-
-  color: white;
-
-  border: none;
-
-  padding: 8px 12px;
-
-  border-radius: 8px;
-
-  cursor: pointer;
-
-  transition: 0.2s ease;
-
-}
-
-.btn-editar:hover {
-
-  background: #3c7bd9;
-
-}
-
-.btn-eliminar:hover {
-
-  background: #d93636;
-
-}
-
-/* ====================================== */
-/* 📱 RESPONSIVE */
+/* 📱 MOBILE */
 /* ====================================== */
 
 @media (max-width: 768px) {
 
-  .sidebar {
-
-    width: 220px;
-
-  }
-
-  .main {
-
-    padding: 20px;
-
-  }
-
-  h1 {
-
-    font-size: 2.7rem;
-
-  }
-
-  .cards {
-
+  .header {
     flex-direction: column;
-
+    align-items: stretch;
   }
 
-  .card {
+  .logo {
+    justify-content: center;
+  }
 
+  .logo h2 {
+    font-size: 1.4rem;
+  }
+
+  .top-bar {
     width: 100%;
 
+    flex-direction: column;
+    align-items: stretch;
   }
+
+  .search-box input {
+    width: 100%;
+  }
+
+  .admin-user {
+    text-align: center;
+  }
+
+  .sidebar {
+    padding: 15px;
+  }
+
+  .menu-item {
+    text-align: center;
+  }
+
+  .content {
+    padding: 15px;
+  }
+
+}
+
+/* ====================================== */
+/* 📲 EXTRA PEQUEÑOS */
+/* ====================================== */
+
+@media (max-width: 480px) {
+
+  .logo h2 {
+    font-size: 1.1rem;
+  }
+
+  .menu-item {
+    font-size: 13px;
+    padding: 12px;
+  }
+
+ /* ====================================== */
+/* 🍔 BOTON HAMBURGUESA */
+/* ====================================== */
+
+.menu-toggle {
+  display: none;
+
+  background: white;
+  color: #4a90e2;
+
+  border: none;
+
+  width: 42px;
+  height: 42px;
+
+  border-radius: 10px;
+
+  font-size: 24px;
+  font-weight: bold;
+
+  cursor: pointer;
+}
+.menu-toggle {
+  margin-right: 10px;
+}
+
+/* ====================================== */
+/* 🌑 OVERLAY */
+/* ====================================== */
+
+.overlay {
+  position: fixed;
+
+  inset: 0;
+
+  background: rgba(0,0,0,0.4);
+
+  z-index: 998;
+}
+
+/* ====================================== */
+/* 📱 MOBILE */
+/* ====================================== */
+
+@media (max-width: 768px) {
+
+  .menu-toggle {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+  }
+
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+
+  .sidebar {
+
+    position: fixed;
+
+    top: 0;
+    left: -280px;
+
+    height: 100vh;
+
+    width: 260px;
+    min-width: 260px;
+
+    z-index: 999;
+
+    transition: 0.3s ease;
+  }
+
+  .sidebar-open {
+    left: 0;
+  }
+
+  .content {
+    width: 100%;
+    padding: 15px;
+  }
+
+} 
 
 }
