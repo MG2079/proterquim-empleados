@@ -1,119 +1,155 @@
+
 <div class="container">
-
-  <!-- 🔵 BARRA SUPERIOR -->
   <div class="header">
-
     <div class="logo-container">
-
       <img
         src="assets/logo.png"
         class="logo"
         alt="Logo Proterquim"
       />
-
       <h1>Proterquim S.A.S.</h1>
-
     </div>
-
   </div>
 
-  <!-- 🧾 LOGIN -->
   <div class="login-box">
+    <h2>{{ modoRegistro ? 'Crear cuenta' : 'Inicio de Sesión' }}</h2>
 
-    <h2>Inicio de Sesión</h2>
-
-    <!-- 🔴 MENSAJE -->
     <p
       *ngIf="mensajeError"
       [ngClass]="'mensaje ' + tipoMensaje"
       role="alert"
+      aria-live="polite"
     >
       {{ mensajeError }}
     </p>
 
-    <!-- 👤 EMAIL -->
-    <div class="input-container">
+    <!-- FORMULARIO DE LOGIN -->
+    <ng-container *ngIf="!modoRegistro">
+      <div class="input-container">
+        <span class="material-symbols-outlined input-icon">mail</span>
+        <input
+          type="email"
+          name="usuario"
+          placeholder="Correo electrónico"
+          [(ngModel)]="usuario"
+          autocomplete="username"
+          (keyup.enter)="login()"
+        />
+      </div>
 
-      <!-- 📧 ICONO -->
-      <span class="material-symbols-outlined input-icon">
-        mail
-      </span>
+      <div class="password-container">
+        <span class="material-symbols-outlined input-icon">lock</span>
+        <input
+          [type]="verPassword ? 'text' : 'password'"
+          name="password"
+          placeholder="Contraseña"
+          [(ngModel)]="password"
+          autocomplete="current-password"
+          (keyup.enter)="login()"
+        />
+        <span
+          class="material-symbols-outlined eye"
+          (click)="togglePassword()"
+          [attr.aria-label]="verPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+          role="button"
+          tabindex="0"
+          (keyup.enter)="togglePassword()"
+        >
+          {{ verPassword ? 'visibility_off' : 'visibility' }}
+        </span>
+      </div>
 
-      <!-- INPUT -->
-      <input
-        type="text"
-        name="usuario"
-        placeholder="Correo electrónico"
-        [(ngModel)]="usuario"
-        autocomplete="username"
-        (keyup.enter)="login()"
-      />
-
-    </div>
-
-    <!-- 🔒 PASSWORD -->
-    <div class="password-container">
-
-      <!-- 🔐 ICONO -->
-      <span class="material-symbols-outlined input-icon">
-        lock
-      </span>
-
-      <!-- INPUT -->
-      <input
-        [type]="verPassword ? 'text' : 'password'"
-        name="password"
-        placeholder="Contraseña"
-        [(ngModel)]="password"
-        autocomplete="current-password"
-        (keyup.enter)="login()"
-      />
-
-      <!-- 👁️ MOSTRAR / OCULTAR -->
-      <span
-        class="material-symbols-outlined eye"
-        (click)="togglePassword()"
-        [attr.aria-label]="
-          verPassword
-            ? 'Ocultar contraseña'
-            : 'Mostrar contraseña'
-        "
-        role="button"
-        tabindex="0"
-        (keyup.enter)="togglePassword()"
+      <button
+        type="button"
+        (click)="login()"
+        [disabled]="cargando"
+        [attr.aria-busy]="cargando"
       >
-        {{
-          verPassword
-            ? 'visibility_off'
-            : 'visibility'
-        }}
-      </span>
+        {{ cargando ? 'Ingresando...' : 'Iniciar sesión' }}
+      </button>
 
-    </div>
+      <p class="forgot" (click)="recuperar()">
+        ¿Olvidó su contraseña?
+      </p>
+    </ng-container>
 
-    <!-- 🔘 BOTÓN -->
-    <button
-      (click)="login()"
-      [disabled]="cargando"
-      [attr.aria-busy]="cargando"
-    >
+    <!-- FORMULARIO DE REGISTRO -->
+    <ng-container *ngIf="modoRegistro">
+      <div class="input-container">
+        <span class="material-symbols-outlined input-icon">person</span>
+        <input
+          type="text"
+          name="nombreRegistro"
+          placeholder="Nombre completo"
+          [(ngModel)]="nombreRegistro"
+          autocomplete="name"
+        />
+      </div>
 
-      {{
-        cargando
-          ? 'Ingresando...'
-          : 'Iniciar sesión'
-      }}
+      <div class="input-container">
+        <span class="material-symbols-outlined input-icon">mail</span>
+        <input
+          type="email"
+          name="emailRegistro"
+          placeholder="Correo electrónico"
+          [(ngModel)]="emailRegistro"
+          autocomplete="email"
+        />
+      </div>
 
-    </button>
+      <div class="password-container">
+        <span class="material-symbols-outlined input-icon">lock</span>
+        <input
+          [type]="verPasswordRegistro ? 'text' : 'password'"
+          name="passwordRegistro"
+          placeholder="Contraseña (mínimo 8 caracteres)"
+          [(ngModel)]="passwordRegistro"
+          autocomplete="new-password"
+        />
+        <span
+          class="material-symbols-outlined eye"
+          (click)="togglePasswordRegistro()"
+          [attr.aria-label]="verPasswordRegistro ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+          role="button"
+          tabindex="0"
+          (keyup.enter)="togglePasswordRegistro()"
+        >
+          {{ verPasswordRegistro ? 'visibility_off' : 'visibility' }}
+        </span>
+      </div>
 
-    <!-- 🔁 RECUPERAR -->
-    <p
-      class="forgot"
-      (click)="recuperar()"
-    >
-      ¿Olvidó su contraseña?
+      <div class="input-container">
+        <span class="material-symbols-outlined input-icon">badge</span>
+        <select
+          name="rolSolicitado"
+          [(ngModel)]="rolSolicitado"
+          aria-label="Rol solicitado"
+        >
+          <option
+            *ngFor="let rol of rolesSolicitables"
+            [ngValue]="rol"
+          >
+            {{ rol }}
+          </option>
+        </select>
+      </div>
+
+      <p class="forgot">
+        Tu cuenta quedará pendiente de aprobación. Elegir un rol no garantiza su asignación.
+      </p>
+
+      <button
+        type="button"
+        (click)="registrar()"
+        [disabled]="cargando"
+        [attr.aria-busy]="cargando"
+      >
+        {{ cargando ? 'Enviando solicitud...' : 'Solicitar cuenta' }}
+      </button>
+    </ng-container>
+
+    <p class="forgot" (click)="cambiarModoRegistro()">
+      {{ modoRegistro ? '¿Ya tienes una cuenta? Inicia sesión' : '¿No tienes cuenta? Crear cuenta' }}
     </p>
-
   </div>
-
 </div>

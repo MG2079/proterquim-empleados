@@ -1,217 +1,120 @@
+
 import { Routes } from '@angular/router';
 
-import { authGuard }
-from './guards/auth.guard';
+import { authGuard } from './guards/auth.guard';
+import { roleGuard } from './guards/role.guard';
 
-import {
-  roleGuard
-} from './guards/role.guard';
+import { LayoutComponent } from './layout/layout.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
-import { LayoutComponent }
-from './layout/layout.component';
+import { ProductosComponent } from './productos/productos';
+import { PedidosComponent } from './pages/pedidos/pedidos.component';
+import { InventariosComponent } from './inventarios/inventarios';
+import { EmpleadosComponent } from './empleados/empleados';
+import { ReportesComponent } from './reportes/reportes';
 
-import { DashboardComponent }
-from './dashboard/dashboard.component';
-
-import { ProductosComponent }
-from './productos/productos';
-
-import { PedidosComponent }
-from './pages/pedidos/pedidos.component';
-
-import { InventariosComponent }
-from './inventarios/inventarios';
-
-import { EmpleadosComponent }
-from './empleados/empleados';
-
-import { ReportesComponent }
-from './reportes/reportes';
-
-import { Login }
-from './login/login';
+import { Login } from './login/login';
+import { ResetPassword } from './reset-password';
+import { UsuariosPendientesComponent } from './usuarios/usuarios-pendientes';
 
 export const routes: Routes = [
-
-  // 🔐 LOGIN
-
+  // LOGIN
   {
-
     path: 'login',
-
     component: Login
-
   },
 
-  // 🔥 SISTEMA PRINCIPAL
-
+  // RESTABLECIMIENTO DE CONTRASEÑA
+  // Ruta pública, sin autenticación.
   {
+    path: 'reset-password',
+    component: ResetPassword
+  },
 
+  // SISTEMA PRINCIPAL
+  {
     path: '',
-
     component: LayoutComponent,
-
     children: [
-
-      // 📊 DASHBOARD
-
+      // DASHBOARD
       {
-
         path: 'dashboard',
-
         component: DashboardComponent,
-
-        canActivate: [
-          authGuard
-        ]
-
+        canActivate: [authGuard]
       },
 
-      // 📦 PRODUCTOS
-
+      // PRODUCTOS
       {
-
         path: 'productos',
-
         component: ProductosComponent,
-
-        canActivate: [
-          authGuard,
-          roleGuard
-        ],
-
+        canActivate: [authGuard, roleGuard],
         data: {
-
-          roles: [
-            'Administrador',
-            'Gerente'
-          ]
-
+          roles: ['Administrador', 'Gerente']
         }
-
       },
 
-      // 🧾 PEDIDOS
-
+      // PEDIDOS
       {
-
         path: 'pedidos',
-
         component: PedidosComponent,
-
-        canActivate: [
-          authGuard,
-          roleGuard
-        ],
-
+        canActivate: [authGuard, roleGuard],
         data: {
-
-          roles: [
-            'Administrador',
-            'Gerente',
-            'Contador'
-          ]
-
+          roles: ['Administrador', 'Gerente', 'Contador']
         }
-
       },
 
-      // 📦 INVENTARIOS
-
+      // INVENTARIOS
       {
-
         path: 'inventarios',
-
         component: InventariosComponent,
-
-        canActivate: [
-          authGuard,
-          roleGuard
-        ],
-
+        canActivate: [authGuard, roleGuard],
         data: {
-
-          roles: [
-            'Administrador',
-            'Gerente',
-            'Empleado'
-          ]
-
+          roles: ['Administrador', 'Gerente', 'Empleado']
         }
-
       },
 
-      // 👨‍💼 EMPLEADOS
-
+      // EMPLEADOS
       {
-
         path: 'empleados',
-
         component: EmpleadosComponent,
-
-        canActivate: [
-          authGuard,
-          roleGuard
-        ],
-
+        canActivate: [authGuard, roleGuard],
         data: {
-
-          roles: [
-            'Administrador'
-          ]
-
+          roles: ['Administrador']
         }
-
       },
 
-      // 📈 REPORTES
-
+      // REPORTES
       {
-
         path: 'reportes',
-
         component: ReportesComponent,
-
-        canActivate: [
-          authGuard,
-          roleGuard
-        ],
-
+        canActivate: [authGuard, roleGuard],
         data: {
-
-          roles: [
-            'Administrador',
-            'Contador'
-          ]
-
+          roles: ['Administrador', 'Contador']
         }
-
       },
 
-      // 🔥 REDIRECCIÓN
-
+      // SOLICITUDES DE USUARIOS
       {
+        path: 'usuarios-pendientes',
+        component: UsuariosPendientesComponent,
+        canActivate: [authGuard, roleGuard],
+        data: {
+          roles: ['Desarrollador', 'Administrador', 'Gerente']
+        }
+      },
 
+      // REDIRECCIÓN INTERNA
+      {
         path: '',
-
         redirectTo: 'dashboard',
-
         pathMatch: 'full'
-
       }
-
     ]
-
   },
 
-  // ❌ RUTA NO ENCONTRADA
-
+  // RUTA NO ENCONTRADA
   {
-
     path: '**',
-
     redirectTo: 'login'
-
   }
-
 ];

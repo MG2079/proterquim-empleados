@@ -9,30 +9,47 @@ const detallePedidoSchema = new mongoose.Schema({
 
     nombreProducto: {
         type: String,
-        required: true
+        required: true,
+        trim: true
     },
 
     cantidad: {
         type: Number,
-        required: true
+        required: true,
+        min: [1, "La cantidad debe ser mayor que cero"],
+        validate: {
+            validator: Number.isSafeInteger,
+            message: "La cantidad debe ser un número entero válido"
+        }
     },
 
     precioUnitario: {
         type: Number,
-        required: true
+        required: true,
+        min: [0, "El precio no puede ser negativo"],
+        validate: {
+            validator: Number.isFinite,
+            message: "El precio debe ser un número válido"
+        }
     },
 
     subtotal: {
         type: Number,
-        required: true
+        required: true,
+        min: [0, "El subtotal no puede ser negativo"],
+        validate: {
+            validator: Number.isFinite,
+            message: "El subtotal debe ser un número válido"
+        }
     }
 });
 
 const pedidoSchema = new mongoose.Schema({
-
     cliente: {
         type: String,
-        required: true
+        required: true,
+        trim: true,
+        minlength: [1, "El cliente es obligatorio"]
     },
 
     fecha: {
@@ -40,19 +57,31 @@ const pedidoSchema = new mongoose.Schema({
         default: Date.now
     },
 
-    productos: [detallePedidoSchema],
+    productos: {
+        type: [detallePedidoSchema],
+        required: true,
+        validate: {
+            validator: productos => productos.length > 0,
+            message: "El pedido debe contener al menos un producto"
+        }
+    },
 
     total: {
         type: Number,
-        required: true
+        required: true,
+        min: [0, "El total no puede ser negativo"],
+        validate: {
+            validator: Number.isFinite,
+            message: "El total debe ser un número válido"
+        }
     },
 
     estado: {
         type: String,
         enum: ["Pendiente", "Procesado", "Entregado", "Cancelado"],
-        default: "Pendiente"
+        default: "Pendiente",
+        required: true
     }
-
 }, {
     timestamps: true
 });

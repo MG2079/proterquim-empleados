@@ -1,62 +1,32 @@
+
 const verificarRol = (...rolesPermitidos) => {
-
   return (req, res, next) => {
-
     try {
-
-      // 🔍 VALIDAR USUARIO
-
+      // Confirmar que el middleware de autenticación se ejecutó
       if (!req.usuario) {
-
         return res.status(401).json({
-
           mensaje: 'Usuario no autenticado'
-
         });
-
       }
 
-      // 🔍 VALIDAR ROL
+      // Confirmar que el rol actual esté autorizado
+      const rolUsuario = req.usuario.rol;
 
-      const rolUsuario =
-        req.usuario.rol;
-
-      // ❌ SIN PERMISOS
-
-      if (
-        !rolesPermitidos.includes(
-          rolUsuario
-        )
-      ) {
-
+      if (!rolesPermitidos.includes(rolUsuario)) {
         return res.status(403).json({
-
-          mensaje:
-            'No tienes permisos para acceder'
-
+          mensaje: 'No tienes permisos para acceder'
         });
-
       }
 
-      // ✅ CONTINUAR
-
-      next();
-
+      return next();
     } catch (error) {
+      console.error('Error al validar el rol:', error);
 
-      console.log(error);
-
-      res.status(500).json({
-
-        mensaje:
-          'Error de validación de roles'
-
+      return res.status(500).json({
+        mensaje: 'Error de validación de roles'
       });
-
     }
-
   };
-
 };
 
 module.exports = verificarRol;

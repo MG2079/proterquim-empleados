@@ -140,6 +140,18 @@
 
         </div>
 
+<!-- SOLICITUDES DE USUARIOS -->
+<div
+  *ngIf="esDesarrollador() || esAdmin() || esGerente()"
+  class="menu-item"
+  routerLink="/usuarios-pendientes"
+  routerLinkActive="activo"
+  (click)="menuAbierto = false">
+
+  Solicitudes de usuarios
+
+</div>
+
       </div>
 
       <!-- 🔐 LOGOUT -->

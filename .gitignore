@@ -53,3 +53,5 @@ temp/
 # =========================
 
 coverage/
+
+backend-node/node_modules/

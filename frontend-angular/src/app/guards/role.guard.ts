@@ -1,77 +1,37 @@
-import {
-  CanActivateFn
-} from '@angular/router';
 
-import {
-  inject
-} from '@angular/core';
+import { CanActivateFn, Router } from '@angular/router';
+import { inject } from '@angular/core';
 
-import {
-  Router
-} from '@angular/router';
+export const roleGuard: CanActivateFn = (route) => {
+  const router = inject(Router);
 
-export const roleGuard:
-CanActivateFn = (route) => {
+  const token = localStorage.getItem('token');
+  const usuarioGuardado = localStorage.getItem('usuario');
 
-  const router =
-    inject(Router);
-
-  // 🔐 OBTENER USUARIO
-
-  const usuario =
-    localStorage.getItem(
-      'usuario'
-    );
-
-  // ❌ SI NO EXISTE
-
-  if (!usuario) {
-
-    router.navigate([
-      '/login'
-    ]);
-
-    return false;
-
+  if (!token || !usuarioGuardado) {
+    return router.createUrlTree(['/login']);
   }
 
-  // 🔥 PARSEAR USUARIO
+  try {
+    const usuario = JSON.parse(usuarioGuardado);
+    const rolUsuario = usuario?.rol;
+    const rolesPermitidos: string[] | undefined =
+      route.data?.['roles'];
 
-  const usuarioParseado =
-    JSON.parse(usuario);
+    if (
+      !rolUsuario ||
+      (rolesPermitidos && !rolesPermitidos.includes(rolUsuario))
+    ) {
+      return router.createUrlTree(['/dashboard']);
+    }
 
-  // 🔥 OBTENER ROL
+    return true;
+  } catch (error) {
+    console.error('No se pudo leer el usuario almacenado:', error);
 
-  const rolUsuario =
-    usuarioParseado.rol;
+    localStorage.removeItem('token');
+    localStorage.removeItem('usuario');
 
-  // 🔥 ROLES PERMITIDOS
-
-  const rolesPermitidos =
-    route.data?.['roles'];
-
-  // 🔒 VALIDAR ROL
-
-  if (
-
-    rolesPermitidos &&
-
-    !rolesPermitidos.includes(
-      rolUsuario
-    )
-
-  ) {
-
-    router.navigate([
-      '/dashboard'
-    ]);
-
-    return false;
-
+    return router.createUrlTree(['/login']);
   }
-
-  // ✅ PERMITIR
-
-  return true;
-
 };

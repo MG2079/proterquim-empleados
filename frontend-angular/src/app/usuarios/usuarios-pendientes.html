@@ -1,0 +1,104 @@
+
+<div class="usuarios-container">
+  <header class="pagina-header">
+    <div>
+      <h2>Solicitudes de usuarios</h2>
+      <p>Revisa las solicitudes y define los permisos de cada cuenta.</p>
+    </div>
+
+    <button
+      type="button"
+      class="btn-actualizar"
+      (click)="cargarSolicitudes()"
+      [disabled]="cargando || procesandoId !== null"
+    >
+      {{ cargando ? 'Actualizando...' : 'Actualizar lista' }}
+    </button>
+  </header>
+
+  <div
+    *ngIf="mensaje"
+    class="mensaje"
+    [ngClass]="tipoMensaje"
+    role="status"
+    aria-live="polite"
+  >
+    {{ mensaje }}
+  </div>
+
+  <div *ngIf="cargando" class="estado-vacio">
+    Cargando solicitudes...
+  </div>
+
+  <div
+    *ngIf="!cargando && solicitudes.length === 0"
+    class="estado-vacio"
+  >
+    <span class="material-symbols-outlined">person_check</span>
+    <h3>No hay solicitudes pendientes</h3>
+    <p>Cuando alguien solicite una cuenta, aparecerá aquí.</p>
+  </div>
+
+  <div
+    *ngIf="!cargando && solicitudes.length > 0"
+    class="tabla-contenedor"
+  >
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Correo electrónico</th>
+          <th>Rol solicitado</th>
+          <th>Rol definitivo</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let solicitud of solicitudes">
+          <td data-label="Nombre">{{ solicitud.nombre }}</td>
+          <td data-label="Correo">{{ solicitud.email }}</td>
+          <td data-label="Rol solicitado">
+            <span class="rol-etiqueta">
+              {{ solicitud.rolSolicitado || 'No especificado' }}
+            </span>
+          </td>
+
+          <td data-label="Rol definitivo">
+            <select
+              #rolElegido
+              [name]="'rol-' + solicitud._id"
+              [ngModel]="solicitud.rolSolicitado || 'Empleado'"
+              [disabled]="procesandoId === solicitud._id"
+              aria-label="Seleccionar rol definitivo"
+            >
+              <option *ngFor="let rol of roles" [value]="rol">
+                {{ rol }}
+              </option>
+            </select>
+          </td>
+
+          <td data-label="Acciones" class="acciones">
+            <button
+              type="button"
+              class="btn-aprobar"
+              (click)="resolver(solicitud, 'aprobar', rolElegido.value)"
+              [disabled]="procesandoId !== null"
+            >
+              {{ procesandoId === solicitud._id ? 'Procesando...' : 'Aprobar' }}
+            </button>
+
+            <button
+              type="button"
+              class="btn-rechazar"
+              (click)="resolver(solicitud, 'rechazar')"
+              [disabled]="procesandoId !== null"
+            >
+              Rechazar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

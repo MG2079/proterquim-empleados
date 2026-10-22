@@ -1,174 +1,101 @@
+
 import { Component } from '@angular/core';
-
-import {
-  Router,
-  RouterModule
-} from '@angular/router';
-
-import {
-  CommonModule
-} from '@angular/common';
-
-import {
-  SearchService
-} from '../services/search.service';
+import { Router, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { SearchService } from '../services/search.service';
 
 @Component({
-
   selector: 'app-layout',
-
   standalone: true,
-
   imports: [
     CommonModule,
     RouterModule
   ],
-
   templateUrl: './layout.component.html',
-
   styleUrls: ['./layout.component.css']
-
 })
-
 export class LayoutComponent {
 
-  // 🍔 MENU MOBILE
-
+  // Menú móvil
   menuAbierto = false;
 
-  // 🔐 USUARIO ACTUAL
-
+  // Usuario actual
   usuario: any = null;
-
   rol: string = '';
 
   constructor(
-
     private router: Router,
-
     private searchService: SearchService
-
   ) {
+    this.cargarUsuario();
+  }
 
-    // 🔥 OBTENER USUARIO
-
-    const usuarioStorage =
-      localStorage.getItem(
-        'usuario'
-      );
+  // Obtener usuario de la sesión
+  private cargarUsuario(): void {
+    const usuarioStorage = localStorage.getItem('usuario');
 
     if (usuarioStorage) {
-
-      this.usuario =
-        JSON.parse(
-          usuarioStorage
-        );
-
-      this.rol =
-        this.usuario.rol;
-
+      try {
+        this.usuario = JSON.parse(usuarioStorage);
+        this.rol = this.usuario?.rol || '';
+      } catch (error) {
+        console.error('Error al leer el usuario almacenado:', error);
+        this.usuario = null;
+        this.rol = '';
+      }
     }
-
   }
 
-  // 🔍 BUSCADOR GLOBAL
-
-  buscar(event: any) {
-
-    const valor =
-      event.target.value;
-
-    this.searchService
-      .setTermino(valor);
-
+  // Buscador global
+  buscar(event: Event): void {
+    const elemento = event.target as HTMLInputElement;
+    this.searchService.setTermino(elemento.value);
   }
 
-  // 🚀 NAVEGACIÓN
-
-  irAProductos() {
-
-    this.router.navigate([
-      '/productos'
-    ]);
-
+  // Navegación
+  irAProductos(): void {
+    this.router.navigate(['/productos']);
   }
 
-  irAEmpleados() {
-
-    this.router.navigate([
-      '/empleados'
-    ]);
-
+  irAEmpleados(): void {
+    this.router.navigate(['/empleados']);
   }
 
-  irADashboard() {
-
-    this.router.navigate([
-      '/dashboard'
-    ]);
-
+  irADashboard(): void {
+    this.router.navigate(['/dashboard']);
   }
 
-  // 🔥 VALIDAR ROLES
+  // Validación de roles
+  esDesarrollador(): boolean {
+    return this.rol === 'Desarrollador';
+  }
 
   esAdmin(): boolean {
-
-    return this.rol ===
-      'Administrador';
-
+    return this.rol === 'Administrador';
   }
 
   esGerente(): boolean {
-
-    return this.rol ===
-      'Gerente';
-
+    return this.rol === 'Gerente';
   }
 
   esContador(): boolean {
-
-    return this.rol ===
-      'Contador';
-
+    return this.rol === 'Contador';
   }
 
   esEmpleado(): boolean {
-
-    return this.rol ===
-      'Empleado';
-
+    return this.rol === 'Empleado';
   }
 
-  // 🔐 CERRAR SESIÓN
+  // Cerrar sesión
+  logout(): void {
+    localStorage.removeItem('token');
+    localStorage.removeItem('usuario');
 
-  logout() {
+    localStorage.setItem('mensaje', 'logout');
 
-    // 🗑️ LIMPIAR STORAGE
+    this.usuario = null;
+    this.rol = '';
 
-    localStorage.removeItem(
-      'token'
-    );
-
-    localStorage.removeItem(
-      'usuario'
-    );
-
-    // 📝 MENSAJE LOGIN
-
-    localStorage.setItem(
-
-      'mensaje',
-
-      'logout'
-
-    );
-
-    // 🚀 LOGIN
-
-    this.router.navigate([
-      '/login'
-    ]);
-
+    this.router.navigate(['/login']);
   }
-
 }
