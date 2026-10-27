@@ -1,347 +1,344 @@
+
+const mongoose = require('mongoose');
 const Producto = require('../models/Producto');
 
-// 🔥 OBTENER TODOS LOS PRODUCTOS
+// ==========================================
+// VALIDACIONES Y RESPUESTAS DE ERROR
+// ==========================================
+
+const tiene = (objeto, campo) =>
+  Object.prototype.hasOwnProperty.call(objeto, campo);
+
+const validarTexto = (valor, campo) => {
+  if (typeof valor !== 'string' || !valor.trim()) {
+    return `${campo} es obligatorio y no puede estar vacío`;
+  }
+
+  return null;
+};
+
+const validarNumero = (valor, campo, opciones = {}) => {
+  const { minimo = 0, entero = false } = opciones;
+
+  if (typeof valor !== 'number' || !Number.isFinite(valor)) {
+    return `${campo} debe ser un número válido`;
+  }
+
+  if (valor < minimo) {
+    return `${campo} no puede ser menor que ${minimo}`;
+  }
+
+  if (entero && !Number.isSafeInteger(valor)) {
+    return `${campo} debe ser un número entero válido`;
+  }
+
+  return null;
+};
+
+const responderError = (res, error, operacion) => {
+  console.error(`Error al ${operacion}:`, error);
+
+  if (error.name === 'ValidationError') {
+    const mensajes = Object.values(error.errors)
+      .map(item => item.message);
+
+    return res.status(400).json({
+      mensaje: 'Los datos del producto no son válidos',
+      errores: mensajes
+    });
+  }
+
+  if (error.name === 'CastError') {
+    return res.status(400).json({
+      mensaje: 'El identificador o alguno de los datos no es válido'
+    });
+  }
+
+  return res.status(500).json({
+    mensaje: `Error al ${operacion}`
+  });
+};
+
+// ==========================================
+// OBTENER TODOS LOS PRODUCTOS
+// ==========================================
 
 exports.obtenerProductos = async (req, res) => {
-
   try {
-
     const productos = await Producto.find()
       .sort({ createdAt: -1 });
 
-    res.status(200).json(productos);
-
+    return res.status(200).json(productos);
+  } catch (error) {
+    return responderError(res, error, 'obtener productos');
   }
-
-  catch (error) {
-
-    console.error(error);
-
-    res.status(500).json({
-
-      mensaje: 'Error al obtener productos'
-
-    });
-
-  }
-
 };
 
-// 🔥 OBTENER PRODUCTO POR ID
+// ==========================================
+// OBTENER PRODUCTO POR ID
+// ==========================================
 
 exports.obtenerProductoPorId = async (req, res) => {
-
   try {
-
-    const producto = await Producto.findById(
-      req.params.id
-    );
-
-    if (!producto) {
-
-      return res.status(404).json({
-
-        mensaje: 'Producto no encontrado'
-
+    if (!mongoose.isValidObjectId(req.params.id)) {
+      return res.status(400).json({
+        mensaje: 'El identificador del producto no es válido'
       });
-
     }
 
-    res.status(200).json(producto);
+    const producto = await Producto.findById(req.params.id);
 
+    if (!producto) {
+      return res.status(404).json({
+        mensaje: 'Producto no encontrado'
+      });
+    }
+
+    return res.status(200).json(producto);
+  } catch (error) {
+    return responderError(res, error, 'obtener producto');
   }
-
-  catch (error) {
-
-    console.error(error);
-
-    res.status(500).json({
-
-      mensaje: 'Error al obtener producto'
-
-    });
-
-  }
-
 };
 
-// 🔥 CREAR PRODUCTO
+// ==========================================
+// CREAR PRODUCTO
+// ==========================================
 
 exports.crearProducto = async (req, res) => {
-
   try {
-
     const {
-
       nombre,
       descripcion,
       categoria,
       precio,
       stock,
       stockMinimo
-
     } = req.body;
 
-    // 🔥 VALIDAR CAMPOS OBLIGATORIOS
+    const errorNombre = validarTexto(nombre, 'El nombre');
+    if (errorNombre) {
+      return res.status(400).json({ mensaje: errorNombre });
+    }
+
+    const errorDescripcion = validarTexto(
+      descripcion,
+      'La descripción'
+    );
+    if (errorDescripcion) {
+      return res.status(400).json({ mensaje: errorDescripcion });
+    }
+
+    if (!tiene(req.body, 'precio')) {
+      return res.status(400).json({
+        mensaje: 'El precio es obligatorio'
+      });
+    }
+
+    const errorPrecio = validarNumero(precio, 'El precio');
+    if (errorPrecio) {
+      return res.status(400).json({ mensaje: errorPrecio });
+    }
+
+    if (!tiene(req.body, 'stock')) {
+      return res.status(400).json({
+        mensaje: 'El stock es obligatorio'
+      });
+    }
+
+    const errorStock = validarNumero(stock, 'El stock', {
+      entero: true
+    });
+    if (errorStock) {
+      return res.status(400).json({ mensaje: errorStock });
+    }
+
+    const minimo = stockMinimo === undefined ? 20 : stockMinimo;
+
+    const errorMinimo = validarNumero(minimo, 'El stock mínimo', {
+      entero: true
+    });
+    if (errorMinimo) {
+      return res.status(400).json({ mensaje: errorMinimo });
+    }
 
     if (
-
-      !nombre ||
-      !descripcion ||
-      precio === undefined ||
-      stock === undefined
-
+      categoria !== undefined &&
+      (typeof categoria !== 'string' || !categoria.trim())
     ) {
-
       return res.status(400).json({
-
-        mensaje:
-          'Todos los campos obligatorios deben completarse'
-
+        mensaje: 'La categoría debe ser un texto no vacío'
       });
-
     }
-
-    // 🔥 VALIDAR PRECIO NEGATIVO
-
-    if (precio < 0) {
-
-      return res.status(400).json({
-
-        mensaje:
-          'El precio no puede ser negativo'
-
-      });
-
-    }
-
-    // 🔥 VALIDAR STOCK NEGATIVO
-
-    if (stock < 0) {
-
-      return res.status(400).json({
-
-        mensaje:
-          'El stock no puede ser negativo'
-
-      });
-
-    }
-
-    // 🔥 NUEVO PRODUCTO
 
     const nuevoProducto = new Producto({
-
-      nombre,
-
-      descripcion,
-
-      categoria:
-        categoria || 'General',
-
+      nombre: nombre.trim(),
+      descripcion: descripcion.trim(),
+      categoria: categoria === undefined
+        ? 'General'
+        : categoria.trim(),
       precio,
-
       stock,
-
-      stockMinimo:
-        stockMinimo || 20
-
+      stockMinimo: minimo
     });
 
-    const productoGuardado =
-      await nuevoProducto.save();
+    const productoGuardado = await nuevoProducto.save();
 
-    res.status(201).json({
-
-      mensaje:
-        'Producto creado correctamente',
-
-      producto:
-        productoGuardado
-
+    return res.status(201).json({
+      mensaje: 'Producto creado correctamente',
+      producto: productoGuardado
     });
-
+  } catch (error) {
+    return responderError(res, error, 'crear producto');
   }
-
-  catch (error) {
-
-    console.error(error);
-
-    res.status(500).json({
-
-      mensaje:
-        'Error al crear producto'
-
-    });
-
-  }
-
 };
 
-// 🔥 ACTUALIZAR PRODUCTO
+// ==========================================
+// ACTUALIZAR PRODUCTO
+// ==========================================
 
 exports.actualizarProducto = async (req, res) => {
-
   try {
+    if (!mongoose.isValidObjectId(req.params.id)) {
+      return res.status(400).json({
+        mensaje: 'El identificador del producto no es válido'
+      });
+    }
 
-    const producto = await Producto.findById(
+    const producto = await Producto.findById(req.params.id);
+
+    if (!producto) {
+      return res.status(404).json({
+        mensaje: 'Producto no encontrado'
+      });
+    }
+
+    const camposTexto = [
+      ['nombre', 'El nombre'],
+      ['descripcion', 'La descripción']
+    ];
+
+    for (const [campo, etiqueta] of camposTexto) {
+      if (tiene(req.body, campo)) {
+        const errorTexto = validarTexto(req.body[campo], etiqueta);
+
+        if (errorTexto) {
+          return res.status(400).json({
+            mensaje: errorTexto
+          });
+        }
+
+        producto[campo] = req.body[campo].trim();
+      }
+    }
+
+    if (tiene(req.body, 'categoria')) {
+      if (
+        typeof req.body.categoria !== 'string' ||
+        !req.body.categoria.trim()
+      ) {
+        return res.status(400).json({
+          mensaje: 'La categoría debe ser un texto no vacío'
+        });
+      }
+
+      producto.categoria = req.body.categoria.trim();
+    }
+
+    if (tiene(req.body, 'precio')) {
+      const errorPrecio = validarNumero(
+        req.body.precio,
+        'El precio'
+      );
+
+      if (errorPrecio) {
+        return res.status(400).json({
+          mensaje: errorPrecio
+        });
+      }
+
+      producto.precio = req.body.precio;
+    }
+
+    if (tiene(req.body, 'stock')) {
+      const errorStock = validarNumero(
+        req.body.stock,
+        'El stock',
+        { entero: true }
+      );
+
+      if (errorStock) {
+        return res.status(400).json({
+          mensaje: errorStock
+        });
+      }
+
+      producto.stock = req.body.stock;
+    }
+
+    if (tiene(req.body, 'stockMinimo')) {
+      const errorMinimo = validarNumero(
+        req.body.stockMinimo,
+        'El stock mínimo',
+        { entero: true }
+      );
+
+      if (errorMinimo) {
+        return res.status(400).json({
+          mensaje: errorMinimo
+        });
+      }
+
+      producto.stockMinimo = req.body.stockMinimo;
+    }
+
+    if (tiene(req.body, 'activo')) {
+      if (typeof req.body.activo !== 'boolean') {
+        return res.status(400).json({
+          mensaje: 'El campo activo debe ser verdadero o falso'
+        });
+      }
+
+      producto.activo = req.body.activo;
+    }
+
+    // El modelo recalcula el estado al guardar.
+    const productoActualizado = await producto.save();
+
+    return res.status(200).json({
+      mensaje: 'Producto actualizado correctamente',
+      producto: productoActualizado
+    });
+  } catch (error) {
+    return responderError(res, error, 'actualizar producto');
+  }
+};
+
+// ==========================================
+// ELIMINAR PRODUCTO
+// ==========================================
+
+exports.eliminarProducto = async (req, res) => {
+  try {
+    if (!mongoose.isValidObjectId(req.params.id)) {
+      return res.status(400).json({
+        mensaje: 'El identificador del producto no es válido'
+      });
+    }
+
+    const producto = await Producto.findByIdAndDelete(
       req.params.id
     );
 
     if (!producto) {
-
       return res.status(404).json({
-
-        mensaje:
-          'Producto no encontrado'
-
+        mensaje: 'Producto no encontrado'
       });
-
     }
 
-    // 🔥 VALIDAR PRECIO NEGATIVO
-
-    if (req.body.precio < 0) {
-
-      return res.status(400).json({
-
-        mensaje:
-          'El precio no puede ser negativo'
-
-      });
-
-    }
-
-    // 🔥 VALIDAR STOCK NEGATIVO
-
-    if (req.body.stock < 0) {
-
-      return res.status(400).json({
-
-        mensaje:
-          'El stock no puede ser negativo'
-
-      });
-
-    }
-
-    // 🔥 ACTUALIZAR CAMPOS
-
-    producto.nombre =
-      req.body.nombre || producto.nombre;
-
-    producto.descripcion =
-      req.body.descripcion || producto.descripcion;
-
-    producto.categoria =
-      req.body.categoria || producto.categoria;
-
-    producto.precio =
-      req.body.precio ?? producto.precio;
-
-    producto.stock =
-      req.body.stock ?? producto.stock;
-
-    producto.stockMinimo =
-      req.body.stockMinimo ?? producto.stockMinimo;
-
-    producto.activo =
-      req.body.activo ?? producto.activo;
-
-    // 🔥 ESTADO AUTOMÁTICO
-
-    if (producto.stock <= 0) {
-
-      producto.estado = 'Crítico';
-
-    }
-
-    else if (
-      producto.stock <= producto.stockMinimo
-    ) {
-
-      producto.estado = 'Bajo';
-
-    }
-
-    else {
-
-      producto.estado = 'Normal';
-
-    }
-
-    const productoActualizado =
-      await producto.save();
-
-    res.status(200).json({
-
-      mensaje:
-        'Producto actualizado correctamente',
-
-      producto:
-        productoActualizado
-
+    return res.status(200).json({
+      mensaje: 'Producto eliminado correctamente'
     });
-
+  } catch (error) {
+    return responderError(res, error, 'eliminar producto');
   }
-
-  catch (error) {
-
-    console.error(error);
-
-    res.status(500).json({
-
-      mensaje:
-        'Error al actualizar producto'
-
-    });
-
-  }
-
-};
-
-// 🔥 ELIMINAR PRODUCTO
-
-exports.eliminarProducto = async (req, res) => {
-
-  try {
-
-    const producto =
-      await Producto.findByIdAndDelete(
-        req.params.id
-      );
-
-    if (!producto) {
-
-      return res.status(404).json({
-
-        mensaje:
-          'Producto no encontrado'
-
-      });
-
-    }
-
-    res.status(200).json({
-
-      mensaje:
-        'Producto eliminado correctamente'
-
-    });
-
-  }
-
-  catch (error) {
-
-    console.error(error);
-
-    res.status(500).json({
-
-      mensaje:
-        'Error al eliminar producto'
-
-    });
-
-  }
-
 };

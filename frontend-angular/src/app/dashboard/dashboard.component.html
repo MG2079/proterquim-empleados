@@ -1,100 +1,156 @@
+
 <h1 class="titulo">Panel de control</h1>
 
 <div class="resumen-box">
   Resumen general del sistema
 </div>
 
-<!-- 🔵 TARJETAS -->
+<!-- TARJETAS DE INDICADORES -->
 
 <div class="cards">
 
-  <!-- PRODUCTOS -->
-
   <div class="card">
-    <span class="card-title">Productos</span>
-    <span class="card-value">
-      {{ totalProductos }}
-    </span>
+    <span class="card-title">Productos activos</span>
+    <span class="card-value">{{ totalProductos }}</span>
   </div>
-
-  <!-- EMPLEADOS -->
 
   <div class="card">
     <span class="card-title">Empleados</span>
-    <span class="card-value">
-      {{ totalEmpleados }}
-    </span>
+    <span class="card-value">{{ totalEmpleados }}</span>
   </div>
-
-  <!-- PEDIDOS -->
 
   <div class="card">
-    <span class="card-title">Pedidos</span>
-    <span class="card-value">
-      {{ totalPedidos }}
-    </span>
+    <span class="card-title">Pedidos registrados</span>
+    <span class="card-value">{{ totalPedidos }}</span>
   </div>
 
-  <!-- VENTAS -->
-
-<div class="card card-ventas">
-
-  <span class="card-title">
-    Ventas Totales
-  </span>
-
-  <span class="card-value">
-    {{ ventasTotales | currency:'COP':'symbol':'1.0-0' }}
-  </span>
-
-</div>
-
-  <!-- STOCK BAJO -->
+  <div class="card card-ventas">
+    <span class="card-title">Ventas Totales</span>
+    <span class="card-value">
+      {{ ventasTotales | currency:'COP':'symbol':'1.0-0' }}
+    </span>
+  </div>
 
   <div class="card card-warning">
-    <span class="card-title">Stock Bajo</span>
-    <span class="card-value">
-      {{ stockBajo }}
-    </span>
+    <span class="card-title">Alertas de inventario</span>
+    <span class="card-value">{{ stockBajo }}</span>
+  </div>
+
+  <div class="card card-pendientes">
+    <span class="card-title">Pedidos pendientes</span>
+    <span class="card-value">{{ pedidosPendientes }}</span>
   </div>
 
 </div>
 
-<!-- 🔥 TABLA STOCK BAJO -->
+<!-- GRÁFICAS ESTADÍSTICAS -->
+
+<div class="graficas-grid">
+
+  <!-- VENTAS MENSUALES -->
+
+  <section class="grafica-container">
+
+    <h2 class="subtitulo">Ventas mensuales</h2>
+
+    <p class="descripcion-grafica">
+      Valor total de los pedidos agrupados por mes.
+    </p>
+
+    <div
+      class="sin-datos"
+      *ngIf="ventasMensuales.length === 0">
+      No hay datos de ventas con fechas válidas.
+    </div>
+
+    <div
+      class="grafica-barras"
+      *ngIf="ventasMensuales.length > 0">
+
+      <div
+        class="barra-item"
+        *ngFor="let venta of ventasMensuales">
+
+        <span class="barra-valor">
+          {{ venta.total | currency:'COP':'symbol':'1.0-0' }}
+        </span>
+
+        <div class="barra-fondo">
+          <div
+            class="barra-ventas"
+            [style.height.%]="obtenerAnchoBarra(venta.total)">
+          </div>
+        </div>
+
+        <span class="barra-etiqueta">
+          {{ venta.mes }}
+        </span>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- PEDIDOS POR ESTADO -->
+
+  <section class="grafica-container">
+
+    <h2 class="subtitulo">Pedidos por estado</h2>
+
+    <p class="descripcion-grafica">
+      Distribución de los pedidos registrados.
+    </p>
+
+    <div
+      class="estado-grafica"
+      *ngFor="let item of pedidosPorEstado">
+
+      <div class="estado-info">
+        <span>{{ item.estado }}</span>
+        <strong>{{ item.cantidad }}</strong>
+      </div>
+
+      <div class="estado-fondo">
+        <div
+          class="estado-barra"
+          [ngClass]="'barra-' + item.estado.toLowerCase()"
+          [style.width.%]="obtenerPorcentajeEstado(item.cantidad)">
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+</div>
+
+<!-- ALERTAS DE INVENTARIO -->
 
 <div class="tabla-container">
 
   <h2 class="subtitulo">
-    Productos con stock bajo
+    Productos con stock crítico o bajo
   </h2>
 
   <table>
 
     <thead>
-
       <tr>
-
         <th>Nombre</th>
         <th>Precio</th>
         <th>Stock</th>
-
+        <th>Estado</th>
       </tr>
-
     </thead>
 
     <tbody>
 
-      <!-- SIN DATOS -->
-
       <tr *ngIf="productos.length === 0">
-
-        <td colspan="3" class="centrado">
-          No hay productos con stock bajo
+        <td colspan="4" class="centrado">
+          No hay productos activos con stock crítico o bajo
         </td>
-
       </tr>
-
-      <!-- LISTADO -->
 
       <tr *ngFor="let p of productos">
 
@@ -106,6 +162,17 @@
 
         <td>{{ p.stock }}</td>
 
+        <td>
+          <span
+            class="estado-stock"
+            [ngClass]="{
+              'estado-critico': (p.stock ?? 0) < 20,
+              'estado-bajo': (p.stock ?? 0) >= 20 && (p.stock ?? 0) <= 30
+            }">
+            {{ (p.stock ?? 0) < 20 ? 'Crítico' : 'Bajo' }}
+          </span>
+        </td>
+
       </tr>
 
     </tbody>
@@ -114,41 +181,30 @@
 
 </div>
 
-<!-- 🔥 PEDIDOS RECIENTES -->
+<!-- ÚLTIMOS PEDIDOS -->
 
 <div class="tabla-container pedidos-recientes">
 
-  <h2 class="subtitulo">
-    Últimos pedidos
-  </h2>
+  <h2 class="subtitulo">Últimos pedidos</h2>
 
   <table>
 
     <thead>
-
       <tr>
-
         <th>Cliente</th>
         <th>Total</th>
+        <th>Estado</th>
         <th>Fecha</th>
-
       </tr>
-
     </thead>
 
     <tbody>
 
-      <!-- SIN DATOS -->
-
       <tr *ngIf="pedidosRecientes.length === 0">
-
-        <td colspan="3" class="centrado">
+        <td colspan="4" class="centrado">
           No hay pedidos registrados
         </td>
-
       </tr>
-
-      <!-- LISTADO -->
 
       <tr *ngFor="let pedido of pedidosRecientes">
 
@@ -159,7 +215,11 @@
         </td>
 
         <td>
-          {{ pedido.createdAt | date:'short' }}
+          {{ pedido.estado || 'Sin estado' }}
+        </td>
+
+        <td>
+          {{ (pedido.createdAt || pedido.fecha) | date:'short' }}
         </td>
 
       </tr>

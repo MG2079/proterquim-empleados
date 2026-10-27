@@ -1,581 +1,696 @@
-/* 🔥 LAYOUT GENERAL */
+/*
+============================================================
+PROTERQUIMERP - DASHBOARD
+Diseño general del panel de control
+============================================================
+*/
 
+:host {
+  display: block;
+  min-width: 0;
+  color: #1f2937;
+}
 .layout {
-
   display: flex;
-
   flex-direction: column;
-
-  height: 100vh;
-
+  min-height: 100vh;
   background: #f5f7fa;
-
 }
 
-
-/* 🔵 HEADER */
+/* =========================================================
+   ENCABEZADO
+   ========================================================= */
 
 .header {
-
   height: 75px;
-
+  min-height: 75px;
   background: #4a90e2;
-
-  color: white;
-
+  color: #fff;
   display: flex;
-
   align-items: center;
-
   justify-content: space-between;
-
   padding: 0 25px;
-
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   z-index: 10;
-
 }
 
-
-/* 🧩 LOGO */
-
 .logo {
-
   display: flex;
-
   align-items: center;
-
   gap: 12px;
-
 }
 
 .logo img {
-
   width: 50px;
-
   height: 50px;
-
   object-fit: contain;
-
 }
 
 .logo h2 {
-
-  font-size: 16px;
-
-  font-weight: 600;
-
   margin: 0;
-
+  font-size: 16px;
+  font-weight: 600;
 }
-
-
-/* 🔍 BUSCADOR */
 
 .top-bar input {
-
   width: 250px;
-
   height: 38px;
-
   padding: 0 16px;
-
-  border-radius: 20px;
-
   border: none;
-
+  border-radius: 20px;
   outline: none;
-
   font-size: 14px;
-
-  background: rgba(255,255,255,0.95);
-
+  background: rgba(255, 255, 255, 0.95);
 }
 
-
-/* 🔽 CONTENEDOR GENERAL */
+/* =========================================================
+   ESTRUCTURA GENERAL Y MENÚ LATERAL
+   ========================================================= */
 
 .body {
-
   display: flex;
-
   flex: 1;
-
-  height: calc(100vh - 75px);
-
+  min-height: 0;
 }
-
-
-/* 🧭 SIDEBAR */
 
 .sidebar {
-
   width: 250px;
-
+  flex-shrink: 0;
   background: #f7f7f7;
-
   padding: 20px 15px;
-
   border-right: 1px solid #e2e2e2;
-
   display: flex;
-
   flex-direction: column;
-
 }
-
-
-/* 📋 MENÚ */
 
 .menu {
-
   display: flex;
-
   flex-direction: column;
-
   gap: 8px;
-
 }
 
-
-/* 🔘 BOTONES MENÚ */
-
 .menu button {
-
   background: transparent;
-
   border: none;
-
   text-align: left;
-
   padding: 12px 14px;
-
   border-radius: 8px;
-
   font-size: 15px;
-
   font-weight: 500;
-
   color: #333;
-
   cursor: pointer;
-
-  transition: 0.2s;
-
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
 .menu button:hover {
-
   background: #eaf3ff;
-
   color: #3578c8;
-
 }
-
-
-/* 🔥 BOTÓN ACTIVO */
 
 .menu .activo {
-
   background: #e3efff;
-
   color: #3578c8;
-
   font-weight: 600;
-
 }
 
-
-/* 🚪 LOGOUT */
-
 .logout-bottom {
-
   margin-top: auto;
-
   padding-top: 20px;
-
 }
 
 .logout-bottom button {
-
   width: 100%;
-
-  background: #4a90e2;
-
-  color: white;
-
-  border: none;
-
   padding: 12px;
-
+  background: #4a90e2;
+  color: #fff;
+  border: none;
   border-radius: 10px;
-
   font-size: 14px;
-
   font-weight: 500;
-
   cursor: pointer;
-
-  transition: 0.2s;
-
+  transition: background 0.2s ease;
 }
 
 .logout-bottom button:hover {
-
   background: #3578c8;
-
 }
 
-
-/* 📄 CONTENIDO */
+/* =========================================================
+   CONTENIDO PRINCIPAL
+   ========================================================= */
 
 .main {
-
   flex: 1;
-
+  min-width: 0;
   padding: 30px;
-
   overflow-y: auto;
-
+  background: #f5f7fa;
 }
-
-
-/* 🔥 CONTENIDO INTERNO */
 
 .content {
-
-  max-width: 1200px;
-
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
 }
-
-
-/* 🧾 TITULO */
 
 .titulo {
-
-  font-size: 42px;
-
-  font-weight: 700;
-
+  margin: 0 0 20px;
   color: #1f1f1f;
-
-  margin-bottom: 20px;
-
+  font-size: 42px;
+  font-weight: 700;
+  line-height: 1.2;
 }
-
-
-/* 📊 RESUMEN */
 
 .resumen-box {
-
   display: inline-block;
-
-  padding: 10px 20px;
-
-  border: 1px solid #d9d9d9;
-
-  border-radius: 10px;
-
-  background: #ffffff;
-
   margin-bottom: 30px;
-
-  font-size: 14px;
-
+  padding: 10px 20px;
+  border: 1px solid #d9d9d9;
+  border-radius: 10px;
+  background: #fff;
   color: #555;
-
+  font-size: 14px;
 }
 
-
-/* 📦 TARJETAS */
+/* =========================================================
+   TARJETAS DE INDICADORES
+   ========================================================= */
 
 .cards {
-
-  display: flex;
-
-  flex-wrap: wrap;
-
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 20px;
-
-  margin-bottom: 30px;
-
+  margin-bottom: 32px;
 }
 
-
 .card {
-
-  width: 220px;
-
-  height: 95px;
-
-  background: linear-gradient(
-    135deg,
-    #4a90e2,
-    #3578c8
-  ) !important;
-
-  color: white;
-
-  padding: 18px 22px;
-
-  border-radius: 18px;
-
-  display: flex;
-
-  flex-direction: column;
-
-  justify-content: center;
-
-  align-items: center;
-
   position: relative;
-
-  overflow: hidden;
-
-  box-shadow: 0 6px 18px rgba(0,0,0,0.10);
-
-  transition: 0.25s ease;
-
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   gap: 12px;
-
+  min-width: 0;
+  min-height: 95px;
+  padding: 18px 14px;
+  overflow: hidden;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #4a90e2, #3578c8);
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .card:hover {
-
   transform: translateY(-3px);
-
-  box-shadow: 0 10px 22px rgba(0,0,0,0.14);
-
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.14);
 }
 
 .card::before {
-
-  content: '';
-
   position: absolute;
-
-  width: 120px;
-
-  height: 120px;
-
-  background: rgba(255,255,255,0.10);
-
-  border-radius: 50%;
-
   top: -35px;
-
   right: -35px;
-
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  content: "";
+  pointer-events: none;
 }
 
-/* 🔥 STOCK BAJO */
-
-.card-warning {
-
-  background: linear-gradient(
-    135deg,
-    #f59e0b,
-    #f97316
-  ) !important;
-
+.card-title,
+.card-value {
+  position: relative;
+  z-index: 1;
+  max-width: 100%;
+  color: #fff;
+  text-align: center;
+  overflow-wrap: anywhere;
 }
-/* 💰 CARD VENTAS */
-
-.card-ventas {
-
-  width: 260px;
-
-  gap: 18px;
-
-}
-
-
-/* 🏷️ TITULO */
 
 .card-title {
-
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 700;
-
-  color: white;
-
 }
-
-
-/* 🔢 VALOR */
 
 .card-value {
-
   font-size: 2rem;
   font-weight: 800;
-
-  color: white;
-
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
 }
 
+.card-warning {
+  background: linear-gradient(135deg, #f59e0b, #f97316);
+}
 
-/* 📋 TABLAS */
+.card-ventas {
+  background: linear-gradient(135deg, #4a90e2, #3578c8);
+}
+
+.card-pendientes {
+  background: linear-gradient(135deg, #4a90e2, #3578c8);
+}
+
+/* =========================================================
+   GRÁFICAS: DISTRIBUCIÓN GENERAL
+   ========================================================= */
+
+.graficas-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+  align-items: stretch;
+}
+
+.grafica-container {
+  min-width: 0;
+  padding: 22px;
+  border: 1px solid #e8edf4;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 3px 12px rgba(31, 41, 55, 0.06);
+}
+
+.grafica-container .subtitulo {
+  margin: 0;
+  padding: 0;
+  color: #1f2937;
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.descripcion-grafica {
+  margin: 7px 0 22px;
+  color: #6b7280;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* =========================================================
+   GRÁFICA DE VENTAS MENSUALES
+   ========================================================= */
+
+.grafica-barras {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-around;
+  gap: 12px;
+  width: 100%;
+  height: 245px;
+  padding: 12px 4px 0;
+  border-bottom: 1px solid #dfe5ed;
+}
+
+.barra-item {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 9px;
+  min-width: 0;
+  height: 100%;
+}
+
+.barra-valor {
+  display: block;
+  width: 100%;
+  min-height: 30px;
+  color: #4b5563;
+  font-size: 10px;
+  font-weight: 600;
+  text-align: center;
+  overflow-wrap: anywhere;
+  line-height: 1.35;
+}
+
+.barra-fondo {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: 100%;
+  max-width: 46px;
+  height: 155px;
+  overflow: hidden;
+  border-radius: 7px 7px 0 0;
+  background: #eff6ff;
+}
+
+.barra-ventas {
+  width: 100%;
+  min-height: 0;
+  border-radius: 7px 7px 0 0;
+  background: linear-gradient(180deg, #60a5fa, #3578c8);
+  transition: height 0.35s ease;
+}
+
+.barra-etiqueta {
+  display: block;
+  min-height: 20px;
+  color: #4b5563;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.sin-datos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 180px;
+  padding: 20px;
+  border: 1px dashed #d1dbe8;
+  border-radius: 10px;
+  background: #f9fbfe;
+  color: #6b7280;
+  font-size: 14px;
+  text-align: center;
+}
+
+/* =========================================================
+   GRÁFICA DE PEDIDOS POR ESTADO
+   ========================================================= */
+
+.estado-grafica {
+  margin-bottom: 21px;
+}
+
+.estado-grafica:last-child {
+  margin-bottom: 0;
+}
+
+.estado-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+  color: #374151;
+  font-size: 14px;
+}
+
+.estado-info strong {
+  color: #111827;
+  font-size: 14px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.estado-fondo {
+  width: 100%;
+  height: 12px;
+  overflow: hidden;
+  border-radius: 20px;
+  background: #edf1f6;
+}
+
+.estado-barra {
+  height: 100%;
+  min-width: 0;
+  border-radius: 20px;
+  transition: width 0.35s ease;
+}
+
+.barra-pendiente {
+  background: linear-gradient(90deg, #fbbf24, #f59e0b);
+}
+
+.barra-procesado {
+  background: linear-gradient(90deg, #60a5fa, #3578c8);
+}
+
+.barra-entregado {
+  background: linear-gradient(90deg, #4ade80, #16a34a);
+}
+
+.barra-cancelado {
+  background: linear-gradient(90deg, #f87171, #dc2626);
+}
+
+/* =========================================================
+   TABLAS
+   ========================================================= */
 
 .tabla-container {
-
-  background: white;
-
-  border-radius: 14px;
-
-  overflow: hidden;
-
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-
+  width: 100%;
+  min-width: 0;
   margin-bottom: 30px;
-
+  overflow: hidden;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 }
-
-
-/* 🧾 SUBTITULOS */
 
 .subtitulo {
-
-  font-size: 22px;
-
-  font-weight: 600;
-
+  margin: 0;
+  padding: 20px 20px 12px;
   color: #1f1f1f;
-
-  padding: 20px 20px 10px;
-
-}
-
-
-/* 📊 TABLA */
-
-table {
-
-  width: 100%;
-
-  border-collapse: collapse;
-
-}
-
-
-/* 🔵 HEADER TABLA */
-
-th {
-
-  background: linear-gradient(
-    to right,
-    #4a90e2,
-    #3578c8
-  );
-
-  color: white;
-
-  padding: 14px 16px;
-
-  text-align: left;
-
-  font-size: 14px;
-
+  font-size: 22px;
   font-weight: 600;
-
 }
 
+.tabla-container table {
+  width: 100%;
+  border-collapse: collapse;
+}
 
-/* 📄 CELDAS */
-
-td {
-
+.tabla-container th {
   padding: 14px 16px;
-
-  border-bottom: 1px solid #ececec;
-
+  background: linear-gradient(to right, #4a90e2, #3578c8);
+  color: #fff;
+  text-align: left;
   font-size: 14px;
+  font-weight: 600;
+}
 
+.tabla-container td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #ececec;
   color: #333;
-
+  font-size: 14px;
+  overflow-wrap: anywhere;
 }
 
-
-/* 🔥 HOVER FILAS */
-
-tbody tr:hover {
-
-  background: #f5f9ff;
-
-  transition: 0.2s;
-
-}
-
-
-/* 🎨 FILAS ALTERNAS */
-
-tbody tr:nth-child(even) {
-
+.tabla-container tbody tr:nth-child(even) {
   background: #fafcff;
-
 }
 
+.tabla-container tbody tr:hover {
+  background: #f0f6ff;
+}
 
-/* 🔥 TEXTO CENTRADO */
+.tabla-container tbody tr:last-child td {
+  border-bottom: none;
+}
 
 .centrado {
-
+  padding: 24px 16px !important;
+  color: #6b7280 !important;
   text-align: center;
-
-  color: #666;
-
   font-style: italic;
-
 }
 
+/* =========================================================
+   ESTADOS DE INVENTARIO
+   ========================================================= */
 
-/* 📱 RESPONSIVE */
+.estado-stock {
+  display: inline-block;
+  padding: 5px 10px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.estado-critico {
+  border-color: #fecaca;
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.estado-bajo {
+  border-color: #fde68a;
+  background: #fef3c7;
+  color: #92400e;
+}
+
+/* =========================================================
+   RESPONSIVE: PANTALLAS MEDIANAS
+   ========================================================= */
 
 @media (max-width: 1200px) {
-
   .cards {
-
-    flex-wrap: wrap;
-
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
+  .graficas-grid {
+    gap: 18px;
+  }
+
+  .main {
+    padding: 24px;
+  }
 }
 
+/* =========================================================
+   RESPONSIVE: TABLETAS
+   ========================================================= */
 
-@media (max-width: 768px) {
-
-  .body {
-
-    flex-direction: column;
-
+@media (max-width: 900px) {
+  .graficas-grid {
+    grid-template-columns: 1fr;
   }
 
-  .sidebar {
-
-    width: 100%;
-
-    border-right: none;
-
-    border-bottom: 1px solid #ddd;
-
+  .grafica-container {
+    padding: 20px;
   }
 
   .cards {
-
-    flex-direction: column;
-
-  }
-
-  .top-bar input {
-
-    width: 180px;
-
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .titulo {
+    font-size: 36px;
+  }
+}
 
-    font-size: 34px;
+/* =========================================================
+   RESPONSIVE: MÓVILES
+   ========================================================= */
 
+@media (max-width: 768px) {
+  .body {
+    flex-direction: column;
   }
 
+  .sidebar {
+    width: 100%;
+    box-sizing: border-box;
+    border-right: none;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .main {
+    padding: 18px 14px;
+  }
+
+  .content {
+    max-width: 100%;
+  }
+
+  .titulo {
+    font-size: 30px;
+  }
+
+  .resumen-box {
+    margin-bottom: 22px;
+  }
+
+  .cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .card {
+    min-height: 88px;
+    padding: 14px 8px;
+    border-radius: 14px;
+  }
+
+  .card-title {
+    font-size: 13px;
+  }
+
+  .card-value {
+    font-size: 25px;
+  }
+
+  .graficas-grid {
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .grafica-container {
+    padding: 16px;
+  }
+
+  .grafica-container .subtitulo {
+    font-size: 19px;
+  }
+
+  .grafica-barras {
+    gap: 6px;
+    height: 220px;
+  }
+
+  .barra-fondo {
+    max-width: 34px;
+    height: 135px;
+  }
+
+  .barra-valor {
+    font-size: 9px;
+  }
+
+  .barra-etiqueta {
+    font-size: 11px;
+  }
+
+  .subtitulo {
+    padding: 16px 14px 12px;
+    font-size: 19px;
+  }
+
+  .tabla-container {
+    overflow-x: auto;
+  }
+
+  .tabla-container table {
+    min-width: 520px;
+  }
+
+  .tabla-container th,
+  .tabla-container td {
+    padding: 12px;
+    font-size: 13px;
+  }
+
+  .top-bar input {
+    width: 180px;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+@media (max-width: 420px) {
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    min-height: 80px;
+  }
+
+  .grafica-container {
+    padding: 12px;
+  }
+
+  .grafica-barras {
+    gap: 4px;
+  }
+
+  .barra-fondo {
+    max-width: 27px;
+  }
+
+  .barra-valor {
+    font-size: 8px;
+  }
 }

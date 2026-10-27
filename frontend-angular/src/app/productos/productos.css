@@ -458,5 +458,58 @@ tbody tr:nth-child(even) {
     font-size: 13px;
 
   }
+/* ==========================================
+   ESTADOS DEL INVENTARIO
+========================================== */
+
+.estado-producto {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.estado-critico,
+.stock-critico {
+  background: #fdeaea;
+  color: #b91c1c;
+}
+
+.estado-bajo,
+.stock-bajo {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.estado-normal,
+.stock-ok {
+  background: #dcfce7;
+  color: #166534;
+}
+
+/* ==========================================
+   CONTROLES DESHABILITADOS
+========================================== */
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ==========================================
+   TABLA RESPONSIVE
+========================================== */
+
+.tabla-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.tabla-responsive table {
+  min-width: 850px;
+}
 
 }

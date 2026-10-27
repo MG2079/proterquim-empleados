@@ -1,316 +1,313 @@
 <div class="productos-container">
 
-  <!-- 🔥 TITULO -->
+  <h1 class="titulo-modulo">Gestión de Productos</h1>
 
-  <h1 class="titulo-modulo">
-    Gestión de Productos
-  </h1>
-
-  <!-- 🔔 MENSAJES -->
-
+  <!-- MENSAJES -->
   <div
     *ngIf="mensaje"
     class="mensaje"
-    [ngClass]="tipoMensaje">
-
+    [ngClass]="tipoMensaje"
+    role="alert"
+  >
     {{ mensaje }}
-
   </div>
 
-  <!-- 🧾 FORMULARIO -->
-
+  <!-- FORMULARIO DE CREACIÓN -->
   <div class="contenedor-formulario">
 
-    <h2 class="subtitulo-formulario">
-      Nuevo Producto
-    </h2>
+    <h2 class="subtitulo-formulario">Nuevo Producto</h2>
 
     <div class="form-row">
 
-      <!-- NOMBRE -->
-
       <div class="campo">
-
-        <label>Nombre</label>
-
+        <label for="nombreNuevo">Nombre</label>
         <input
+          id="nombreNuevo"
           type="text"
           [(ngModel)]="nuevoProducto.nombre"
-          placeholder="Ingrese nombre">
-
+          placeholder="Ingrese nombre"
+          maxlength="150"
+          required
+        >
       </div>
 
-      <!-- DESCRIPCIÓN -->
-
       <div class="campo">
-
-        <label>Descripción</label>
-
+        <label for="descripcionNueva">Descripción</label>
         <input
+          id="descripcionNueva"
           type="text"
           [(ngModel)]="nuevoProducto.descripcion"
-          placeholder="Ingrese descripción">
-
+          placeholder="Ingrese descripción"
+          maxlength="500"
+          required
+        >
       </div>
 
-      <!-- PRECIO -->
+      <div class="campo">
+        <label for="categoriaNueva">Categoría</label>
+        <input
+          id="categoriaNueva"
+          type="text"
+          [(ngModel)]="nuevoProducto.categoria"
+          placeholder="General"
+          maxlength="100"
+        >
+      </div>
 
       <div class="campo">
-
-        <label>Precio</label>
-
+        <label for="precioNuevo">Precio (COP)</label>
         <input
+          id="precioNuevo"
           type="number"
           [(ngModel)]="nuevoProducto.precio"
-          placeholder="Ingrese precio">
-
+          min="0.01"
+          step="any"
+          placeholder="Ingrese precio"
+          required
+        >
       </div>
-
-      <!-- STOCK -->
 
       <div class="campo">
-
-        <label>Stock</label>
-
+        <label for="stockNuevo">Stock inicial</label>
         <input
+          id="stockNuevo"
           type="number"
           [(ngModel)]="nuevoProducto.stock"
-          placeholder="Ingrese stock">
-
+          min="0"
+          step="1"
+          placeholder="Ingrese stock"
+          required
+        >
       </div>
 
-      <!-- BOTON -->
-
-      <div class="contenedor-boton">
-
-        <button
-          class="btn-agregar"
-          (click)="crearProducto()">
-
-          Agregar Producto
-
-        </button>
-
+      <div class="campo">
+        <label for="stockMinimoNuevo">Stock mínimo</label>
+        <input
+          id="stockMinimoNuevo"
+          type="number"
+          [(ngModel)]="nuevoProducto.stockMinimo"
+          min="0"
+          step="1"
+          required
+        >
       </div>
 
     </div>
 
-  </div>
-
-  <!-- ✏️ FORMULARIO EDICIÓN -->
-
-<div
-  *ngIf="productoEditando"
-  class="contenedor-formulario">
-
-  <h2 class="subtitulo-formulario">
-
-    Editar Producto
-
-  </h2>
-
-  <div class="form-row">
-
-    <!-- NOMBRE -->
-
-    <div class="campo">
-
-      <label>Nombre</label>
-
-      <input
-        type="text"
-        [(ngModel)]="productoEditando.nombre">
-
-    </div>
-
-    <!-- DESCRIPCIÓN -->
-
-    <div class="campo">
-
-      <label>Descripción</label>
-
-      <input
-        type="text"
-        [(ngModel)]="productoEditando.descripcion">
-
-    </div>
-
-    <!-- PRECIO -->
-
-    <div class="campo">
-
-      <label>Precio</label>
-
-      <input
-        type="number"
-        [(ngModel)]="productoEditando.precio">
-
-    </div>
-
-    <!-- STOCK -->
-
-    <div class="campo">
-
-      <label>Stock</label>
-
-      <input
-        type="number"
-        [(ngModel)]="productoEditando.stock">
-
+    <div class="contenedor-boton">
+      <button
+        class="btn-agregar"
+        type="button"
+        [disabled]="cargando"
+        (click)="crearProducto()"
+      >
+        {{ cargando ? 'Procesando...' : 'Agregar Producto' }}
+      </button>
     </div>
 
   </div>
 
-  <div class="contenedor-boton">
+  <!-- FORMULARIO DE EDICIÓN -->
+  <div
+    *ngIf="productoEditando"
+    class="contenedor-formulario"
+  >
 
-    <button
-      class="btn-agregar"
-      (click)="actualizarProducto()">
+    <h2 class="subtitulo-formulario">Editar Producto</h2>
 
-      Guardar Cambios
+    <div class="form-row">
 
-    </button>
+      <div class="campo">
+        <label for="nombreEditar">Nombre</label>
+        <input
+          id="nombreEditar"
+          type="text"
+          [(ngModel)]="productoEditando.nombre"
+          maxlength="150"
+          required
+        >
+      </div>
 
-    <button
-      class="btn-eliminar"
-      (click)="cancelarEdicion()">
+      <div class="campo">
+        <label for="descripcionEditar">Descripción</label>
+        <input
+          id="descripcionEditar"
+          type="text"
+          [(ngModel)]="productoEditando.descripcion"
+          maxlength="500"
+          required
+        >
+      </div>
 
-      Cancelar
+      <div class="campo">
+        <label for="categoriaEditar">Categoría</label>
+        <input
+          id="categoriaEditar"
+          type="text"
+          [(ngModel)]="productoEditando.categoria"
+          maxlength="100"
+        >
+      </div>
 
-    </button>
+      <div class="campo">
+        <label for="precioEditar">Precio (COP)</label>
+        <input
+          id="precioEditar"
+          type="number"
+          [(ngModel)]="productoEditando.precio"
+          min="0.01"
+          step="any"
+          required
+        >
+      </div>
+
+      <div class="campo">
+        <label for="stockEditar">Stock actual</label>
+        <input
+          id="stockEditar"
+          type="number"
+          [(ngModel)]="productoEditando.stock"
+          min="0"
+          step="1"
+          required
+        >
+      </div>
+
+      <div class="campo">
+        <label for="stockMinimoEditar">Stock mínimo</label>
+        <input
+          id="stockMinimoEditar"
+          type="number"
+          [(ngModel)]="productoEditando.stockMinimo"
+          min="0"
+          step="1"
+          required
+        >
+      </div>
+
+    </div>
+
+    <div class="contenedor-boton">
+      <button
+        class="btn-agregar"
+        type="button"
+        [disabled]="cargando"
+        (click)="actualizarProducto()"
+      >
+        Guardar Cambios
+      </button>
+
+      <button
+        class="btn-eliminar"
+        type="button"
+        [disabled]="cargando"
+        (click)="cancelarEdicion()"
+      >
+        Cancelar
+      </button>
+    </div>
 
   </div>
 
-</div>
-
-  <!-- 📊 TABLA -->
-
+  <!-- TABLA DE PRODUCTOS -->
   <div class="tabla-container">
 
     <div class="tabla-header">
-
-      <h2 class="subtitulo-tabla">
-        Lista de Productos
-      </h2>
+      <h2 class="subtitulo-tabla">Lista de Productos</h2>
 
       <span class="contador-productos">
-
-        Total:
-        {{ productosFiltrados.length }}
-
+        Total: {{ productosFiltrados.length }}
       </span>
-
     </div>
-
-    <!-- 🔥 WRAPPER RESPONSIVE -->
 
     <div class="tabla-responsive">
 
       <table>
 
         <thead>
-
           <tr>
-
             <th>Nombre</th>
-
             <th>Descripción</th>
-
+            <th>Categoría</th>
             <th>Precio</th>
-
             <th>Stock</th>
-
-            <th class="col-acciones">
-              Acciones
-            </th>
-
+            <th>Estado</th>
+            <th class="col-acciones">Acciones</th>
           </tr>
-
         </thead>
 
         <tbody>
 
-          <!-- 🚫 SIN DATOS -->
-
-          <tr *ngIf="productosFiltrados.length === 0">
-
-            <td colspan="5" class="centrado">
-
-              📦 No hay productos registrados
-
+          <tr *ngIf="cargando">
+            <td colspan="7" class="centrado">
+              Cargando información...
             </td>
-
           </tr>
 
-          <!-- 📋 LISTADO -->
+          <tr
+            *ngIf="!cargando && productosFiltrados.length === 0"
+          >
+            <td colspan="7" class="centrado">
+              No hay productos registrados
+            </td>
+          </tr>
 
           <tr *ngFor="let p of productosFiltrados">
 
-            <!-- NOMBRE -->
+            <td>{{ p.nombre }}</td>
+
+            <td>{{ p.descripcion }}</td>
+
+            <td>{{ p.categoria || 'General' }}</td>
 
             <td>
-
-              {{ p.nombre }}
-
+              {{ p.precio | currency:'COP':'symbol':'1.0-0' }}
             </td>
 
-            <!-- DESCRIPCIÓN -->
-
             <td>
-
-              {{ p.descripcion }}
-
-            </td>
-
-            <!-- PRECIO -->
-
-            <td>
-
-              {{
-                p.precio |
-                currency:'COP':'symbol':'1.0-0'
-              }}
-
-            </td>
-
-            <!-- STOCK -->
-
-            <td>
-
-              <span
-                class="stock"
-                [ngClass]="{
-                  'stock-bajo': p.stock <= 5,
-                  'stock-ok': p.stock > 5
-                }">
-
+              <span class="stock" [ngClass]="{
+                'stock-critico': p.stock < 20,
+                'stock-bajo': p.stock >= 20 && p.stock <= 30,
+                'stock-ok': p.stock > 30
+              }">
                 {{ p.stock }}
-
               </span>
-
             </td>
 
-            <!-- ACCIONES -->
+            <td>
+              <span class="estado-producto" [ngClass]="{
+                'estado-critico': p.stock < 20,
+                'estado-bajo': p.stock >= 20 && p.stock <= 30,
+                'estado-normal': p.stock > 30
+              }">
+                {{
+                  p.stock < 20
+                    ? 'Crítico'
+                    : p.stock <= 30
+                      ? 'Bajo'
+                      : 'Normal'
+                }}
+              </span>
+            </td>
 
             <td class="acciones">
 
               <button
                 class="btn-editar"
-                (click)="editarProducto(p)">
-
+                type="button"
+                [disabled]="cargando"
+                (click)="editarProducto(p)"
+              >
                 Editar
-
               </button>
 
               <button
                 class="btn-eliminar"
-                (click)="
-                  p._id &&
-                  eliminarProducto(p._id)
-                ">
-
+                type="button"
+                [disabled]="cargando || !p._id"
+                (click)="p._id && eliminarProducto(p._id)"
+              >
                 Eliminar
-
               </button>
 
             </td>

@@ -1,51 +1,59 @@
+
 const mongoose = require('mongoose');
 
 const ProductoSchema = new mongoose.Schema(
-
   {
-
-    // 🔥 INFORMACIÓN GENERAL
-
     nombre: {
       type: String,
-      required: true,
-      trim: true
+      required: [true, 'El nombre del producto es obligatorio'],
+      trim: true,
+      minlength: [1, 'El nombre no puede estar vacío']
     },
 
     descripcion: {
       type: String,
-      required: true,
-      trim: true
+      required: [true, 'La descripción es obligatoria'],
+      trim: true,
+      minlength: [1, 'La descripción no puede estar vacía']
     },
 
     categoria: {
       type: String,
+      trim: true,
       default: 'General'
     },
 
-    // 🔥 INVENTARIO
-
     stock: {
       type: Number,
-      required: true,
-      min: 0,
-      default: 0
+      required: [true, 'El stock es obligatorio'],
+      min: [0, 'El stock no puede ser negativo'],
+      default: 0,
+      validate: {
+        validator: Number.isSafeInteger,
+        message: 'El stock debe ser un número entero válido'
+      }
     },
 
     stockMinimo: {
       type: Number,
-      default: 20
+      required: true,
+      default: 20,
+      min: [0, 'El stock mínimo no puede ser negativo'],
+      validate: {
+        validator: Number.isSafeInteger,
+        message: 'El stock mínimo debe ser un número entero válido'
+      }
     },
-
-    // 🔥 PRECIO
 
     precio: {
       type: Number,
-      required: true,
-      min: 0
+      required: [true, 'El precio es obligatorio'],
+      min: [0, 'El precio no puede ser negativo'],
+      validate: {
+        validator: Number.isFinite,
+        message: 'El precio debe ser un número válido'
+      }
     },
-
-    // 🔥 ESTADO AUTOMÁTICO
 
     estado: {
       type: String,
@@ -53,46 +61,30 @@ const ProductoSchema = new mongoose.Schema(
       default: 'Normal'
     },
 
-    // 🔥 CONTROL
-
     activo: {
       type: Boolean,
       default: true
     }
-
   },
-
   {
     timestamps: true
   }
-
 );
 
-// 🔥 ACTUALIZAR ESTADO AUTOMÁTICO
-
-ProductoSchema.pre('save', async function() {
-
-  if (this.stock <= 0) {
-
+// Clasificación única para todos los productos.
+ProductoSchema.methods.actualizarEstadoInventario = function () {
+  if (this.stock < 20) {
     this.estado = 'Crítico';
-
-  }
-
-  else if (this.stock <= this.stockMinimo) {
-
+  } else if (this.stock <= 30) {
     this.estado = 'Bajo';
-
-  }
-
-  else {
-
+  } else {
     this.estado = 'Normal';
-
   }
+};
 
+// Recalcular el estado antes de guardar.
+ProductoSchema.pre('save', function () {
+  this.actualizarEstadoInventario();
 });
 
-module.exports = mongoose.model(
-  'Producto',
-  ProductoSchema
-);
+module.exports = mongoose.model('Producto', ProductoSchema);

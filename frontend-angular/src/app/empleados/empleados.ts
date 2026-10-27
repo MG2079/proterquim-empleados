@@ -17,11 +17,8 @@ import {
 } from '@angular/router';
 
 import {
-
   EmpleadoService,
-
   Empleado
-
 } from '../services/empleado.service';
 
 import {
@@ -29,522 +26,329 @@ import {
 } from '../services/search.service';
 
 @Component({
-
   selector: 'app-empleados',
-
   standalone: true,
-
   imports: [
-
     CommonModule,
-
     FormsModule,
-
     RouterModule
-
   ],
-
   templateUrl: './empleados.html',
-
   styleUrls: ['./empleados.css']
-
 })
+export class EmpleadosComponent implements OnInit {
 
-export class EmpleadosComponent
-implements OnInit {
-
-  // 👨‍💼 LISTAS
-
+  // LISTAS
   empleados: Empleado[] = [];
+  empleadosFiltrados: Empleado[] = [];
 
-  empleadosFiltrados:
-  Empleado[] = [];
-
-  // ➕ NUEVO EMPLEADO
-
+  // NUEVO EMPLEADO
   nuevoEmpleado: Empleado = {
-
     nombre: '',
-
     cargo: '',
-
     salario: 0
-
   };
 
-  // ✏️ EDICIÓN
+  // EDICIÓN
+  empleadoEditando: Empleado | null = null;
 
-  empleadoEditando:
-  Empleado | null = null;
-
-  // 🔔 MENSAJES
-
+  // MENSAJES
   mensaje = '';
-
   tipoMensaje = '';
 
-  // 🔍 FILTRO
-
+  // FILTRO
   filtro = '';
 
-  // 🔄 LOADING
-
+  // CARGA
   cargando = false;
 
   constructor(
-
     private router: Router,
-
-    private empleadoService:
-    EmpleadoService,
-
-    private searchService:
-    SearchService
-
+    private empleadoService: EmpleadoService,
+    private searchService: SearchService
   ) {}
 
-  // 🚀 INIT
-
   ngOnInit(): void {
-
     this.obtenerEmpleados();
 
-    // 🔍 BUSCADOR GLOBAL
-
-    this.searchService
-
-      .termino$
-
-      .subscribe({
-
-        next: (
-          texto: string
-        ) => {
-
-          this.filtro =
-            texto;
-
-          this.actualizarLista();
-
-        }
-
-      });
-
+    // Buscador global
+    this.searchService.termino$.subscribe({
+      next: (texto: string) => {
+        this.filtro = texto;
+        this.actualizarLista();
+      }
+    });
   }
 
-  // 👨‍💼 OBTENER EMPLEADOS
-
+  // OBTENER EMPLEADOS
   obtenerEmpleados(): void {
-
     this.cargando = true;
 
-    this.empleadoService
+    this.empleadoService.obtenerEmpleados().subscribe({
+      next: (empleados: Empleado[]) => {
+        this.empleados = empleados.sort(
+          (a, b) => a.nombre.localeCompare(b.nombre)
+        );
 
-      .obtenerEmpleados()
-
-      .subscribe({
-
-        next: (
-          empleados: Empleado[]
-        ) => {
-
-          // 🔥 ORDENAR
-
-          this.empleados =
-
-            empleados.sort(
-
-              (a, b) =>
-
-                a.nombre.localeCompare(
-                  b.nombre
-                )
-
-            );
-
-          this.actualizarLista();
-
-          this.cargando = false;
-
-        },
-
-        error: (error) => {
-
-          console.error(error);
-
-          this.mostrarMensaje(
-
-            'Error al cargar empleados',
-
-            'error'
-
-          );
-
-          this.cargando = false;
-
-        }
-
-      });
-
+        this.actualizarLista();
+        this.cargando = false;
+      },
+      error: (error) => {
+        console.error(error);
+        this.mostrarMensaje(
+          'Error al cargar empleados',
+          'error'
+        );
+        this.cargando = false;
+      }
+    });
   }
 
-  // 🔍 FILTRAR EMPLEADOS
-
+  // FILTRAR EMPLEADOS
   actualizarLista(): void {
-
-    const texto =
-
-      this.filtro
-        .toLowerCase()
-        .trim();
+    const texto = this.filtro.toLowerCase().trim();
 
     if (!texto) {
-
-      this.empleadosFiltrados =
-
-        [...this.empleados];
-
+      this.empleadosFiltrados = [...this.empleados];
       return;
-
     }
 
-    this.empleadosFiltrados =
-
-      this.empleados.filter(
-
-        (empleado) =>
-
-          empleado.nombre
-            .toLowerCase()
-            .includes(texto)
-
-          ||
-
-          empleado.cargo
-            .toLowerCase()
-            .includes(texto)
-
-      );
-
+    this.empleadosFiltrados = this.empleados.filter(
+      (empleado) =>
+        empleado.nombre.toLowerCase().includes(texto) ||
+        empleado.cargo.toLowerCase().includes(texto)
+    );
   }
 
-  // ➕ CREAR EMPLEADO
+  // VALIDAR SALARIO
+  private validarSalario(salario: unknown): string | null {
+    if (
+      salario === null ||
+      salario === undefined ||
+      (typeof salario === 'string' && salario.trim() === '')
+    ) {
+      return 'El salario es obligatorio';
+    }
 
-  crearEmpleado(): void {
+    const valor = Number(salario);
 
-    // 🔥 VALIDACIONES
+    if (!Number.isFinite(valor)) {
+      return 'El salario debe ser un número válido';
+    }
+
+    if (valor < 0) {
+      return 'El salario no puede ser negativo';
+    }
+
+    if (valor === 0) {
+      return 'El salario debe ser mayor que cero';
+    }
+
+    return null;
+  }
+
+  // VALIDAR NOMBRE Y CARGO
+  private validarDatosEmpleado(
+    empleado: Empleado
+  ): string | null {
+    if (
+      typeof empleado.nombre !== 'string' ||
+      !empleado.nombre.trim()
+    ) {
+      return 'El nombre del empleado es obligatorio';
+    }
+
+    if (empleado.nombre.trim().length < 3) {
+      return 'El nombre debe tener al menos 3 caracteres';
+    }
+
+    if (empleado.nombre.trim().length > 100) {
+      return 'El nombre no puede superar los 100 caracteres';
+    }
 
     if (
-
-      !this.nuevoEmpleado.nombre
-        .trim()
-
-      ||
-
-      !this.nuevoEmpleado.cargo
-        .trim()
-
-      ||
-
-      this.nuevoEmpleado.salario <= 0
-
+      typeof empleado.cargo !== 'string' ||
+      !empleado.cargo.trim()
     ) {
-
-      this.mostrarMensaje(
-
-        'Todos los campos son obligatorios',
-
-        'error'
-
-      );
-
-      return;
-
+      return 'El cargo del empleado es obligatorio';
     }
 
-    this.empleadoService
+    if (empleado.cargo.trim().length < 2) {
+      return 'El cargo debe tener al menos 2 caracteres';
+    }
 
-      .crearEmpleado(
-        this.nuevoEmpleado
-      )
+    if (empleado.cargo.trim().length > 100) {
+      return 'El cargo no puede superar los 100 caracteres';
+    }
 
-      .subscribe({
-
-        next: () => {
-
-          this.obtenerEmpleados();
-
-          this.limpiarFormulario();
-
-          this.mostrarMensaje(
-
-            'Empleado agregado correctamente',
-
-            'success'
-
-          );
-
-        },
-
-        error: (error) => {
-
-          console.error(error);
-
-          this.mostrarMensaje(
-
-            'Error al crear empleado',
-
-            'error'
-
-          );
-
-        }
-
-      });
-
+    return this.validarSalario(empleado.salario);
   }
 
-  // ✏️ EDITAR EMPLEADO
+  // CREAR EMPLEADO
+  crearEmpleado(): void {
+    const errorValidacion = this.validarDatosEmpleado(
+      this.nuevoEmpleado
+    );
 
-  editarEmpleado(
-    empleado: Empleado
-  ): void {
+    if (errorValidacion) {
+      this.mostrarMensaje(errorValidacion, 'error');
+      return;
+    }
 
-    this.empleadoEditando = {
-
-      ...empleado
-
+    const datosEmpleado: Empleado = {
+      ...this.nuevoEmpleado,
+      nombre: this.nuevoEmpleado.nombre.trim(),
+      cargo: this.nuevoEmpleado.cargo.trim(),
+      salario: Number(this.nuevoEmpleado.salario)
     };
 
-    // 🔥 SCROLL ARRIBA
+    this.empleadoService.crearEmpleado(datosEmpleado).subscribe({
+      next: () => {
+        this.obtenerEmpleados();
+        this.limpiarFormulario();
+
+        this.mostrarMensaje(
+          'Empleado agregado correctamente',
+          'success'
+        );
+      },
+      error: (error) => {
+        console.error(error);
+
+        const mensajeServidor =
+          error?.error?.errores?.[0] ||
+          error?.error?.mensaje ||
+          'Error al crear empleado';
+
+        this.mostrarMensaje(mensajeServidor, 'error');
+      }
+    });
+  }
+
+  // EDITAR EMPLEADO
+  editarEmpleado(empleado: Empleado): void {
+    this.empleadoEditando = { ...empleado };
 
     window.scrollTo({
-
       top: 0,
-
       behavior: 'smooth'
-
     });
-
   }
 
-  // 🔄 ACTUALIZAR EMPLEADO
-
+  // ACTUALIZAR EMPLEADO
   actualizarEmpleado(): void {
-
     if (
-
       !this.empleadoEditando ||
-
       !this.empleadoEditando._id
-
     ) {
-
       return;
-
     }
 
-    // 🔥 VALIDACIONES
+    const errorValidacion = this.validarDatosEmpleado(
+      this.empleadoEditando
+    );
 
-    if (
-
-      !this.empleadoEditando.nombre
-        .trim()
-
-      ||
-
-      !this.empleadoEditando.cargo
-        .trim()
-
-      ||
-
-      this.empleadoEditando.salario <= 0
-
-    ) {
-
-      this.mostrarMensaje(
-
-        'Todos los campos son obligatorios',
-
-        'error'
-
-      );
-
+    if (errorValidacion) {
+      this.mostrarMensaje(errorValidacion, 'error');
       return;
-
     }
 
-    this.empleadoService
+    const datosEmpleado: Empleado = {
+      ...this.empleadoEditando,
+      nombre: this.empleadoEditando.nombre.trim(),
+      cargo: this.empleadoEditando.cargo.trim(),
+      salario: Number(this.empleadoEditando.salario)
+    };
 
-      .actualizarEmpleado(
+    this.empleadoService.actualizarEmpleado(
+      this.empleadoEditando._id,
+      datosEmpleado
+    ).subscribe({
+      next: () => {
+        this.obtenerEmpleados();
+        this.cancelarEdicion();
 
-        this.empleadoEditando._id,
+        this.mostrarMensaje(
+          'Empleado actualizado correctamente',
+          'success'
+        );
+      },
+      error: (error) => {
+        console.error(error);
 
-        this.empleadoEditando
+        const mensajeServidor =
+          error?.error?.errores?.[0] ||
+          error?.error?.mensaje ||
+          'Error al actualizar empleado';
 
-      )
-
-      .subscribe({
-
-        next: () => {
-
-          this.obtenerEmpleados();
-
-          this.cancelarEdicion();
-
-          this.mostrarMensaje(
-
-            'Empleado actualizado correctamente',
-
-            'success'
-
-          );
-
-        },
-
-        error: (error) => {
-
-          console.error(error);
-
-          this.mostrarMensaje(
-
-            'Error al actualizar empleado',
-
-            'error'
-
-          );
-
-        }
-
-      });
-
+        this.mostrarMensaje(mensajeServidor, 'error');
+      }
+    });
   }
 
-  // 🗑 ELIMINAR EMPLEADO
-
-  eliminarEmpleado(
-    id: string
-  ): void {
-
+  // ELIMINAR EMPLEADO
+  eliminarEmpleado(id: string): void {
     const confirmar = confirm(
-
       '¿Seguro que deseas eliminar este empleado?'
-
     );
 
     if (!confirmar) {
-
       return;
-
     }
 
-    this.empleadoService
+    this.empleadoService.eliminarEmpleado(id).subscribe({
+      next: () => {
+        this.obtenerEmpleados();
 
-      .eliminarEmpleado(id)
+        this.mostrarMensaje(
+          'Empleado eliminado correctamente',
+          'success'
+        );
+      },
+      error: (error) => {
+        console.error(error);
 
-      .subscribe({
-
-        next: () => {
-
-          this.obtenerEmpleados();
-
-          this.mostrarMensaje(
-
-            'Empleado eliminado correctamente',
-
-            'success'
-
-          );
-
-        },
-
-        error: (error) => {
-
-          console.error(error);
-
-          this.mostrarMensaje(
-
-            'Error al eliminar empleado',
-
-            'error'
-
-          );
-
-        }
-
-      });
-
+        this.mostrarMensaje(
+          'Error al eliminar empleado',
+          'error'
+        );
+      }
+    });
   }
 
-  // ❌ CANCELAR EDICIÓN
-
+  // CANCELAR EDICIÓN
   cancelarEdicion(): void {
-
-    this.empleadoEditando =
-      null;
-
+    this.empleadoEditando = null;
   }
 
-  // 🧹 LIMPIAR FORMULARIO
-
+  // LIMPIAR FORMULARIO
   limpiarFormulario(): void {
-
     this.nuevoEmpleado = {
-
       nombre: '',
-
       cargo: '',
-
       salario: 0
-
     };
-
   }
 
-  // 🔔 MOSTRAR MENSAJES
-
+  // MOSTRAR MENSAJES
   mostrarMensaje(
-
     texto: string,
-
     tipo: string
-
   ): void {
-
     this.mensaje = texto;
-
-    this.tipoMensaje =
-
-      tipo === 'error'
-
-        ? 'error'
-
-        : 'success';
+    this.tipoMensaje = tipo === 'error' ? 'error' : 'success';
 
     setTimeout(() => {
-
       this.mensaje = '';
-
     }, 4000);
-
   }
 
-  // 🚀 NAVEGACIÓN
-
+  // NAVEGACIÓN
   irAProductos(): void {
-
-    this.router.navigate([
-      '/productos'
-    ]);
-
+    this.router.navigate(['/productos']);
   }
 
   irADashboard(): void {
-
-    this.router.navigate([
-      '/dashboard'
-    ]);
-
+    this.router.navigate(['/dashboard']);
   }
-
 }

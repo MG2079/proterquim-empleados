@@ -1,609 +1,415 @@
 import {
   Component,
-  OnInit
+  OnInit,
+  OnDestroy
 } from '@angular/core';
 
-import {
-  CommonModule
-} from '@angular/common';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs';
 
 import {
-  FormsModule
-} from '@angular/forms';
-
-import {
-  Router
-} from '@angular/router';
-
-import {
-
   ProductoService,
-
-  Producto
-
+  Producto,
+  RespuestaProducto
 } from '../services/producto.service';
 
-import {
-  SearchService
-} from '../services/search.service';
+import { SearchService } from '../services/search.service';
 
 @Component({
-
   selector: 'app-productos',
-
   standalone: true,
-
   imports: [
     CommonModule,
     FormsModule
   ],
-
   templateUrl: './productos.html',
-
   styleUrls: ['./productos.css']
-
 })
+export class ProductosComponent implements OnInit, OnDestroy {
 
-export class ProductosComponent
-implements OnInit {
-
-  // 📦 LISTADOS
+  // ==========================================
+  // LISTADOS
+  // ==========================================
 
   productos: Producto[] = [];
+  productosFiltrados: Producto[] = [];
 
-  productosFiltrados:
-  Producto[] = [];
+  // ==========================================
+  // FORMULARIO DE CREACIÓN
+  // ==========================================
 
-  // ➕ NUEVO PRODUCTO
+  nuevoProducto: Producto = this.crearFormularioVacio();
 
-  nuevoProducto: Producto = {
+  // ==========================================
+  // FORMULARIO DE EDICIÓN
+  // ==========================================
 
-    nombre: '',
+  productoEditando: Producto | null = null;
 
-    descripcion: '',
-
-    precio: 0,
-
-    stock: 0,
-
-    stockMinimo: 20,
-
-    categoria: 'General',
-
-    estado: 'Normal'
-
-  };
-
-  // ✏️ EDITAR PRODUCTO
-
-  productoEditando:
-  Producto | null = null;
-
-  // 🔔 MENSAJES
+  // ==========================================
+  // MENSAJES Y CARGA
+  // ==========================================
 
   mensaje = '';
-
   tipoMensaje = '';
-
-  // 🔄 LOADING
-
   cargando = false;
 
+  private searchSubscription?: Subscription;
+  private temporizadorMensaje?: ReturnType<typeof setTimeout>;
+
   constructor(
-
     private router: Router,
-
-    private productoService:
-    ProductoService,
-
-    private searchService:
-    SearchService
-
+    private productoService: ProductoService,
+    private searchService: SearchService
   ) {}
 
-  ngOnInit(): void {
+  // ==========================================
+  // INICIALIZACIÓN
+  // ==========================================
 
+  ngOnInit(): void {
     this.obtenerProductos();
 
-    // 🔍 BUSCADOR GLOBAL
-
-    this.searchService
-      .termino$
-
-      .subscribe({
-
-        next: (
-          texto: string
-        ) => {
-
-          this.filtrarProductos(
-            texto
-          );
-
-        }
-
-      });
-
+    this.searchSubscription = this.searchService.termino$.subscribe({
+      next: (texto: string) => {
+        this.filtrarProductos(texto);
+      }
+    });
   }
 
-  // 📦 OBTENER PRODUCTOS
+  ngOnDestroy(): void {
+    this.searchSubscription?.unsubscribe();
+
+    if (this.temporizadorMensaje) {
+      clearTimeout(this.temporizadorMensaje);
+    }
+  }
+
+  // ==========================================
+  // FORMULARIO VACÍO
+  // ==========================================
+
+  private crearFormularioVacio(): Producto {
+    return {
+      nombre: '',
+      descripcion: '',
+      precio: 0,
+      stock: 0,
+      stockMinimo: 20,
+      categoria: 'General',
+      estado: 'Crítico',
+      activo: true
+    };
+  }
+
+  // ==========================================
+  // OBTENER PRODUCTOS
+  // ==========================================
 
   obtenerProductos(): void {
-
     this.cargando = true;
 
-    this.productoService
-      .obtenerProductos()
+    this.productoService.obtenerProductos().subscribe({
+      next: (productos: Producto[]) => {
+        this.productos = productos;
 
-      .subscribe({
+        // Aplicar el término de búsqueda actual.
+        this.filtrarProductos(this.ultimoTerminoBusqueda);
 
-        next: (
-          productos: Producto[]
-        ) => {
+        this.cargando = false;
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('Error cargando productos:', error);
 
-          this.productos =
-            productos;
+        this.mostrarMensaje(
+          this.obtenerMensajeError(
+            error,
+            'Error al cargar productos'
+          ),
+          'error'
+        );
 
-          this.productosFiltrados =
-            productos;
-
-          this.cargando = false;
-
-        },
-
-        error: (error) => {
-
-          console.error(
-
-            'Error cargando productos:',
-
-            error
-
-          );
-
-          this.mostrarMensaje(
-
-            'Error al cargar productos',
-
-            'error'
-
-          );
-
-          this.cargando = false;
-
-        }
-
-      });
-
+        this.cargando = false;
+      }
+    });
   }
 
-  // 🔍 FILTRAR PRODUCTOS
+  // ==========================================
+  // FILTRAR PRODUCTOS
+  // ==========================================
 
-  filtrarProductos(
-    texto: string
-  ): void {
+  private ultimoTerminoBusqueda = '';
 
-    if (!texto.trim()) {
+  filtrarProductos(texto: string): void {
+    this.ultimoTerminoBusqueda = texto || '';
 
-      this.productosFiltrados =
-        this.productos;
+    const valor = this.ultimoTerminoBusqueda
+      .trim()
+      .toLowerCase();
 
+    if (!valor) {
+      this.productosFiltrados = [...this.productos];
       return;
-
     }
 
-    const valor =
-      texto.toLowerCase();
-
-    this.productosFiltrados =
-
-      this.productos.filter(
-
-        (producto) =>
-
-          producto.nombre
-            .toLowerCase()
-            .includes(valor)
-
-          ||
-
-          producto.descripcion
-            .toLowerCase()
-            .includes(valor)
-
-      );
-
+    this.productosFiltrados = this.productos.filter(
+      (producto: Producto) =>
+        producto.nombre.toLowerCase().includes(valor) ||
+        producto.descripcion.toLowerCase().includes(valor) ||
+        (producto.categoria || '').toLowerCase().includes(valor) ||
+        (producto.estado || '').toLowerCase().includes(valor)
+    );
   }
 
-  // ➕ CREAR PRODUCTO
+  // ==========================================
+  // CREAR PRODUCTO
+  // ==========================================
 
   crearProducto(): void {
-
-    if (
-
-      !this.validarProducto(
-        this.nuevoProducto
-      )
-
-    ) {
-
+    if (!this.validarProducto(this.nuevoProducto)) {
       return;
-
     }
 
     this.cargando = true;
 
-    this.productoService
+    this.productoService.crearProducto(this.nuevoProducto).subscribe({
+      next: (respuesta: RespuestaProducto) => {
+        this.mostrarMensaje(
+          respuesta.mensaje || 'Producto agregado correctamente',
+          'success'
+        );
 
-      .crearProducto(
-        this.nuevoProducto
-      )
+        this.limpiarFormulario();
+        this.obtenerProductos();
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('Error creando producto:', error);
 
-      .subscribe({
+        this.mostrarMensaje(
+          this.obtenerMensajeError(error, 'Error al crear producto'),
+          'error'
+        );
 
-        next: () => {
-
-          this.obtenerProductos();
-
-          this.limpiarFormulario();
-
-          this.mostrarMensaje(
-
-            'Producto agregado correctamente',
-
-            'success'
-
-          );
-
-          this.cargando = false;
-
-        },
-
-        error: (error) => {
-
-          console.error(
-
-            'Error creando producto:',
-
-            error
-
-          );
-
-          this.mostrarMensaje(
-
-            error.error?.mensaje ||
-
-            'Error al crear producto',
-
-            'error'
-
-          );
-
-          this.cargando = false;
-
-        }
-
-      });
-
+        this.cargando = false;
+      }
+    });
   }
 
-  // ✏️ EDITAR PRODUCTO
+  // ==========================================
+  // EDITAR PRODUCTO
+  // ==========================================
 
-editarProducto(
-  producto: Producto
-): void {
+  editarProducto(producto: Producto): void {
+    this.productoEditando = { ...producto };
+  }
 
-  this.productoEditando = {
-
-    ...producto
-
-  };
-
-}
-
-  // 🔄 ACTUALIZAR PRODUCTO
+  // ==========================================
+  // ACTUALIZAR PRODUCTO
+  // ==========================================
 
   actualizarProducto(): void {
-
-    if (
-
-      !this.productoEditando ||
-
-      !this.productoEditando._id
-
-    ) {
-
+    if (!this.productoEditando?._id) {
+      this.mostrarMensaje(
+        'No se pudo identificar el producto',
+        'error'
+      );
       return;
-
     }
 
-    if (
-
-      !this.validarProducto(
-
-        this.productoEditando
-
-      )
-
-    ) {
-
+    if (!this.validarProducto(this.productoEditando)) {
       return;
-
     }
 
     this.cargando = true;
 
-    this.productoService
+    this.productoService.actualizarProducto(
+      this.productoEditando._id,
+      this.productoEditando
+    ).subscribe({
+      next: (respuesta: RespuestaProducto) => {
+        this.mostrarMensaje(
+          respuesta.mensaje || 'Producto actualizado correctamente',
+          'success'
+        );
 
-      .actualizarProducto(
+        this.cancelarEdicion();
+        this.obtenerProductos();
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('Error actualizando producto:', error);
 
-        this.productoEditando._id,
+        this.mostrarMensaje(
+          this.obtenerMensajeError(
+            error,
+            'Error al actualizar producto'
+          ),
+          'error'
+        );
 
-        this.productoEditando
-
-      )
-
-      .subscribe({
-
-        next: () => {
-
-          this.obtenerProductos();
-
-          this.cancelarEdicion();
-
-          this.mostrarMensaje(
-
-            'Producto actualizado correctamente',
-
-            'success'
-
-          );
-
-          this.cargando = false;
-
-        },
-
-        error: (error) => {
-
-          console.error(
-
-            'Error actualizando producto:',
-
-            error
-
-          );
-
-          this.mostrarMensaje(
-
-            error.error?.mensaje ||
-
-            'Error al actualizar producto',
-
-            'error'
-
-          );
-
-          this.cargando = false;
-
-        }
-
-      });
-
+        this.cargando = false;
+      }
+    });
   }
 
-  // 🗑 ELIMINAR PRODUCTO
+  // ==========================================
+  // ELIMINAR PRODUCTO
+  // ==========================================
 
-  eliminarProducto(
-    id: string
-  ): void {
-
+  eliminarProducto(id: string): void {
     const confirmar = confirm(
-
-      '¿Desea eliminar este producto?'
-
+      '¿Desea eliminar este producto? Esta acción no se puede deshacer.'
     );
 
     if (!confirmar) {
-
       return;
-
     }
 
-    this.productoService
+    this.cargando = true;
 
-      .eliminarProducto(id)
+    this.productoService.eliminarProducto(id).subscribe({
+      next: (respuesta: { mensaje: string }) => {
+        this.mostrarMensaje(
+          respuesta.mensaje || 'Producto eliminado correctamente',
+          'success'
+        );
 
-      .subscribe({
+        this.obtenerProductos();
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('Error eliminando producto:', error);
 
-        next: () => {
+        this.mostrarMensaje(
+          this.obtenerMensajeError(
+            error,
+            'Error al eliminar producto'
+          ),
+          'error'
+        );
 
-          this.obtenerProductos();
-
-          this.mostrarMensaje(
-
-            'Producto eliminado correctamente',
-
-            'success'
-
-          );
-
-        },
-
-        error: (error) => {
-
-          console.error(
-
-            'Error eliminando producto:',
-
-            error
-
-          );
-
-          this.mostrarMensaje(
-
-            'Error al eliminar producto',
-
-            'error'
-
-          );
-
-        }
-
-      });
-
+        this.cargando = false;
+      }
+    });
   }
 
-  // ✅ VALIDAR PRODUCTO
+  // ==========================================
+  // VALIDAR PRODUCTO
+  // ==========================================
 
-  validarProducto(
-    producto: Producto
-  ): boolean {
-
-    // 🔥 CAMPOS VACÍOS
+  validarProducto(producto: Producto): boolean {
+    if (
+      typeof producto.nombre !== 'string' ||
+      !producto.nombre.trim() ||
+      typeof producto.descripcion !== 'string' ||
+      !producto.descripcion.trim()
+    ) {
+      this.mostrarMensaje(
+        'El nombre y la descripción son obligatorios',
+        'error'
+      );
+      return false;
+    }
 
     if (
-
-      !producto.nombre.trim() ||
-
-      !producto.descripcion.trim()
-
+      typeof producto.precio !== 'number' ||
+      !Number.isFinite(producto.precio) ||
+      producto.precio <= 0
     ) {
-
       this.mostrarMensaje(
-
-        'Todos los campos son obligatorios',
-
+        'El precio debe ser un número válido mayor que cero',
         'error'
-
       );
-
       return false;
-
     }
 
-    // 🔥 PRECIO NEGATIVO
-
-    if (producto.precio < 0) {
-
+    if (
+      typeof producto.stock !== 'number' ||
+      !Number.isSafeInteger(producto.stock) ||
+      producto.stock < 0
+    ) {
       this.mostrarMensaje(
-
-        'El precio no puede ser negativo',
-
+        'El stock debe ser un número entero no negativo',
         'error'
-
       );
-
       return false;
-
     }
 
-    // 🔥 PRECIO EN CERO
-
-    if (producto.precio === 0) {
-
+    if (
+      typeof producto.stockMinimo !== 'number' ||
+      !Number.isSafeInteger(producto.stockMinimo) ||
+      producto.stockMinimo < 0
+    ) {
       this.mostrarMensaje(
-
-        'El precio debe ser mayor a cero',
-
+        'El stock mínimo debe ser un número entero no negativo',
         'error'
-
       );
-
       return false;
-
-    }
-
-    // 🔥 STOCK NEGATIVO
-
-    if (producto.stock < 0) {
-
-      this.mostrarMensaje(
-
-        'El stock no puede ser negativo',
-
-        'error'
-
-      );
-
-      return false;
-
     }
 
     return true;
-
   }
 
-  // ❌ CANCELAR EDICIÓN
+  // ==========================================
+  // CANCELAR EDICIÓN
+  // ==========================================
 
   cancelarEdicion(): void {
-
-    this.productoEditando =
-      null;
-
+    this.productoEditando = null;
   }
 
-  // 🧹 LIMPIAR FORMULARIO
+  // ==========================================
+  // LIMPIAR FORMULARIO
+  // ==========================================
 
   limpiarFormulario(): void {
-
-    this.nuevoProducto = {
-
-      nombre: '',
-
-      descripcion: '',
-
-      precio: 0,
-
-      stock: 0,
-
-      stockMinimo: 20,
-
-      categoria: 'General',
-
-      estado: 'Normal'
-
-    };
-
+    this.nuevoProducto = this.crearFormularioVacio();
   }
 
-  // 🔔 MOSTRAR MENSAJES
+  // ==========================================
+  // OBTENER MENSAJE DE ERROR
+  // ==========================================
 
-  mostrarMensaje(
+  private obtenerMensajeError(
+    error: HttpErrorResponse,
+    mensajePredeterminado: string
+  ): string {
+    const mensajeServidor = error.error?.mensaje;
 
-    texto: string,
+    return typeof mensajeServidor === 'string' && mensajeServidor.trim()
+      ? mensajeServidor
+      : mensajePredeterminado;
+  }
 
-    tipo: string
+  // ==========================================
+  // MOSTRAR MENSAJES
+  // ==========================================
 
-  ): void {
-
+  mostrarMensaje(texto: string, tipo: string): void {
     this.mensaje = texto;
-
     this.tipoMensaje = tipo;
 
-    setTimeout(() => {
+    if (this.temporizadorMensaje) {
+      clearTimeout(this.temporizadorMensaje);
+    }
 
+    this.temporizadorMensaje = setTimeout(() => {
       this.mensaje = '';
-
+      this.tipoMensaje = '';
+      this.temporizadorMensaje = undefined;
     }, 4000);
-
   }
 
-  // 🚀 NAVEGACIÓN
+  // ==========================================
+  // NAVEGACIÓN
+  // ==========================================
 
   irADashboard(): void {
-
-    this.router.navigate([
-      '/dashboard'
-    ]);
-
+    this.router.navigate(['/dashboard']);
   }
 
   irAEmpleados(): void {
-
-    this.router.navigate([
-      '/empleados'
-    ]);
-
+    this.router.navigate(['/empleados']);
   }
-
 }

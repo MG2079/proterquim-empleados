@@ -2,364 +2,185 @@
   Gestión de Inventarios
 </h1>
 
-<!-- ====================================== -->
-<!-- 🔥 RESUMEN -->
-<!-- ====================================== -->
-
+<!-- RESUMEN -->
 <div class="resumen-box">
-
   Control general del inventario y alertas de stock
-
 </div>
 
+<!-- ACCIONES -->
 <div class="acciones-inventario">
-
-  <button class="btn-exportar excel">
-
+  <button
+    type="button"
+    class="btn-exportar excel"
+    (click)="exportarExcel()"
+    [disabled]="cargando || inventariosFiltrados.length === 0"
+  >
     Exportar Excel
-
   </button>
 
-  <button class="btn-exportar pdf">
-
+  <button
+    type="button"
+    class="btn-exportar pdf"
+    (click)="exportarPDF()"
+    [disabled]="cargando || inventariosFiltrados.length === 0"
+  >
     Exportar PDF
-
   </button>
 
+  <button
+    type="button"
+    class="btn-recargar"
+    (click)="recargarInventario()"
+    [disabled]="cargando"
+  >
+    {{ cargando ? 'Cargando...' : 'Actualizar inventario' }}
+  </button>
 </div>
 
-<!-- ====================================== -->
-<!-- 🔥 MENSAJE ERROR -->
-<!-- ====================================== -->
-
+<!-- MENSAJE -->
 <div
   *ngIf="mensaje"
   class="mensaje-error"
+  role="alert"
 >
-
   {{ mensaje }}
-
 </div>
 
-<!-- ====================================== -->
-<!-- 🔥 CARDS -->
-<!-- ====================================== -->
-
+<!-- MÉTRICAS -->
 <div class="cards">
-
-  <!-- PRODUCTOS -->
-
   <div class="card">
-
-    <span class="card-title">
-      Productos
-    </span>
-
-    <span class="card-value">
-      {{ totalProductos }}
-    </span>
-
+    <span class="card-title">Productos</span>
+    <span class="card-value">{{ totalProductos }}</span>
   </div>
-
-  <!-- STOCK BAJO -->
 
   <div class="card bajo">
-
-    <span class="card-title">
-      Stock Bajo
-    </span>
-
-    <span class="card-value">
-      {{ stockBajo }}
-    </span>
-
+    <span class="card-title">Stock Bajo</span>
+    <span class="card-value">{{ stockBajo }}</span>
   </div>
-
-  <!-- STOCK NORMAL -->
 
   <div class="card card-success">
-
-    <span class="card-title">
-      Stock Normal
-    </span>
-
-    <span class="card-value">
-      {{ stockNormal }}
-    </span>
-
+    <span class="card-title">Stock Normal</span>
+    <span class="card-value">{{ stockNormal }}</span>
   </div>
-
-  <!-- STOCK CRÍTICO -->
 
   <div class="card card-danger">
-
-    <span class="card-title">
-      Críticos
-    </span>
-
-    <span class="card-value">
-      {{ stockCritico }}
-    </span>
-
+    <span class="card-title">Críticos</span>
+    <span class="card-value">{{ stockCritico }}</span>
   </div>
-
 </div>
 
-<!-- ====================================== -->
-<!-- 🔥 INFO EXTRA -->
-<!-- ====================================== -->
-
+<!-- INFORMACIÓN GENERAL -->
 <div class="info-grid">
-
-  <!-- 💰 VALOR INVENTARIO -->
-
   <div class="info-card">
-
-    <span class="info-title">
-      Valor Total Inventario
-    </span>
-
+    <span class="info-title">Valor Total del Inventario</span>
     <span class="info-value">
-
-      {{
-        valorInventario
-        | currency:'COP':'symbol':'1.0-0'
-      }}
-
+      {{ valorInventario | currency:'COP':'symbol':'1.0-0' }}
     </span>
-
   </div>
 
-  <!-- 🕒 FECHA -->
-
   <div class="info-card">
-
-    <span class="info-title">
-      Última actualización
-    </span>
-
+    <span class="info-title">Última actualización</span>
     <span class="info-value">
       {{ ultimaActualizacion | date:'short' }}
     </span>
-
   </div>
-
 </div>
 
-<!-- ====================================== -->
-<!-- 🔥 TABLA -->
-<!-- ====================================== -->
-
+<!-- TABLA -->
 <div class="tabla-container">
-
-  <!-- 🔥 HEADER TABLA -->
-
   <div class="tabla-header">
-
-    <h2>
-      Inventario General
-    </h2>
+    <h2>Inventario General</h2>
 
     <span class="tabla-total">
-
-      Total:
-      {{ inventariosFiltrados.length }}
-
+      Total: {{ inventariosFiltrados.length }}
     </span>
-
   </div>
 
-  <!-- 🔥 LOADING -->
-
-  <div
-    *ngIf="cargando"
-    class="loading"
-  >
-
+  <!-- CARGA -->
+  <div *ngIf="cargando" class="loading" role="status">
     Cargando inventario...
-
   </div>
 
-  <!-- 🔥 TABLA -->
-
-  <div
-    class="tabla-scroll"
-    *ngIf="!cargando"
-  >
-
+  <!-- LISTADO -->
+  <div class="tabla-scroll" *ngIf="!cargando">
     <table>
-
       <thead>
-
         <tr>
-
           <th>Producto</th>
-
           <th>Descripción</th>
-
           <th>Precio</th>
-
           <th>Stock Actual</th>
-
           <th>Stock Mínimo</th>
-
           <th>Estado</th>
-
           <th>Última actualización</th>
-
         </tr>
-
       </thead>
 
       <tbody>
-
-        <!-- 🚫 SIN DATOS -->
-
-        <tr
-          *ngIf="
-            inventariosFiltrados.length === 0
-          "
-        >
-
-          <td
-            colspan="7"
-            class="centrado"
-          >
-
-            📦 No hay productos registrados
-
+        <tr *ngIf="inventariosFiltrados.length === 0">
+          <td colspan="7" class="centrado">
+            No hay productos para mostrar.
           </td>
-
         </tr>
 
-        <!-- 🔥 LISTADO -->
-
-        <tr
-          *ngFor="
-            let item of inventariosFiltrados
-          "
-        >
-
-          <!-- PRODUCTO -->
-
+        <tr *ngFor="let item of inventariosFiltrados">
           <td class="producto">
-
             {{ item.producto }}
-
           </td>
-
-          <!-- DESCRIPCIÓN -->
 
           <td class="descripcion">
-
             {{ item.descripcion }}
-
           </td>
 
-          <!-- PRECIO -->
-
           <td>
-
-            {{
-              item.precio
-              | currency:'COP':'symbol':'1.0-0'
-            }}
-
+            {{ item.precio | currency:'COP':'symbol':'1.0-0' }}
           </td>
 
-          <!-- STOCK -->
-
           <td>
-
             <div class="stock-box">
-
-              <span>
-
-                {{ item.stock }}
-
-              </span>
-
-              <!-- 🔥 BARRA -->
+              <span>{{ item.stock }}</span>
 
               <div class="barra-stock">
-
                 <div
                   class="barra-fill"
                   [style.width.%]="
-                    (item.stock / 100) * 100
+                    item.stock > 100
+                      ? 100
+                      : item.stock < 0
+                        ? 0
+                        : item.stock
                   "
                   [ngClass]="{
-
-                    'fill-normal':
-                      item.estado === 'Normal',
-
-                    'fill-bajo':
-                      item.estado === 'Bajo',
-
-                    'fill-critico':
-                      item.estado === 'Crítico'
-
+                    'fill-normal': item.estado === 'Normal',
+                    'fill-bajo': item.estado === 'Bajo',
+                    'fill-critico': item.estado === 'Crítico'
                   }"
-                >
-                </div>
-
+                ></div>
               </div>
-
             </div>
-
           </td>
 
-          <!-- MÍNIMO -->
+          <td>{{ item.minimo }}</td>
 
           <td>
-
-            {{ item.minimo }}
-
-          </td>
-
-          <!-- ESTADO -->
-
-          <td>
-
             <span
               class="estado"
               [ngClass]="{
-
-                'normal':
-                  item.estado === 'Normal',
-
-                'bajo':
-                  item.estado === 'Bajo',
-
-                'critico':
-                  item.estado === 'Crítico'
-
+                'normal': item.estado === 'Normal',
+                'bajo': item.estado === 'Bajo',
+                'critico': item.estado === 'Crítico'
               }"
             >
-
               {{ item.estado }}
-
             </span>
-
           </td>
-
-          <!-- FECHA -->
 
           <td>
-
-            {{
-              item.fecha
-              | date:'short'
-            }}
-
+            {{ item.fecha | date:'short' }}
           </td>
-
         </tr>
-
       </tbody>
-
     </table>
-
   </div>
-
 </div>
+```

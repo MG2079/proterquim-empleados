@@ -2,263 +2,185 @@ const Pedido = require("../models/Pedido");
 const Producto = require("../models/Producto");
 const Empleado = require("../models/Empleado");
 
+// Solo estos estados se consideran ventas realizadas.
+const ESTADOS_VENTA = ["Procesado", "Entregado"];
+const ESTADO_PENDIENTE = "Pendiente";
+const ESTADO_CANCELADO = "Cancelado";
 
 // ==========================================
-// 🔥 DASHBOARD GENERAL
+// DASHBOARD GENERAL
 // ==========================================
 
 exports.obtenerDashboard = async (req, res) => {
-
     try {
+        const [
+            totalProductos,
+            totalEmpleados,
+            totalPedidos,
+            pedidosVenta,
+            pedidosPendientes,
+            pedidosCancelados,
+            ultimosPedidos,
+            productosInventario
+        ] = await Promise.all([
+            Producto.countDocuments(),
+            Empleado.countDocuments(),
+            Pedido.countDocuments(),
+            Pedido.find({ estado: { $in: ESTADOS_VENTA } }),
+            Pedido.find({ estado: ESTADO_PENDIENTE }),
+            Pedido.find({ estado: ESTADO_CANCELADO }),
+            Pedido.find().sort({ createdAt: -1 }).limit(5),
+            Producto.find({
+                stock: { $lte: 30 },
+                activo: { $ne: false }
+            }).sort({ stock: 1 })
+        ]);
 
-        // 🔥 PRODUCTOS
-
-        const totalProductos =
-            await Producto.countDocuments();
-
-        // 🔥 EMPLEADOS
-
-        const totalEmpleados =
-            await Empleado.countDocuments();
-
-        // 🔥 PEDIDOS
-
-        const totalPedidos =
-            await Pedido.countDocuments();
-
-        // 🔥 VENTAS TOTALES
-
-        const pedidos =
-            await Pedido.find();
-
-        const ventasTotales =
+        const sumarTotales = pedidos =>
             pedidos.reduce(
-
-                (acc, pedido) =>
-                    acc + pedido.total,
-
+                (acumulado, pedido) =>
+                    acumulado + (Number(pedido.total) || 0),
                 0
-
             );
 
-        // 🔥 STOCK BAJO
+        const ventasTotales = sumarTotales(pedidosVenta);
+        const valorPedidosPendientes = sumarTotales(pedidosPendientes);
+        const valorPedidosCancelados = sumarTotales(pedidosCancelados);
 
-        const stockBajo =
-            await Producto.countDocuments({
+        const productosCriticos = productosInventario.map(producto => {
+            const datos = producto.toObject();
 
-                estado: {
-                    $in: ["Bajo", "Crítico"]
-                }
+            datos.estado =
+                datos.stock < 20 ? "Crítico" : "Bajo";
 
-            });
-
-        // 🔥 ÚLTIMOS PEDIDOS
-
-        const ultimosPedidos =
-            await Pedido.find()
-                .sort({ createdAt: -1 })
-                .limit(5);
-
-        // 🔥 PRODUCTOS CRÍTICOS
-
-        const productosCriticos =
-            await Producto.find({
-
-                estado: {
-                    $in: ["Bajo", "Crítico"]
-                }
-
-            });
-
-        // 🔥 RESPUESTA
+            return datos;
+        });
 
         res.status(200).json({
-
             totalProductos,
-
             totalEmpleados,
-
             totalPedidos,
 
             ventasTotales,
+            pedidosRealizados: pedidosVenta.length,
 
-            stockBajo,
+            pedidosPendientes: pedidosPendientes.length,
+            valorPedidosPendientes,
 
+            pedidosCancelados: pedidosCancelados.length,
+            valorPedidosCancelados,
+
+            stockBajo: productosInventario.length,
             ultimosPedidos,
-
             productosCriticos
-
         });
-
     } catch (error) {
-
-        console.log(error);
+        console.error("Error al obtener dashboard:", error);
 
         res.status(500).json({
-
-            mensaje:
-                "Error al obtener dashboard"
-
+            mensaje: "Error al obtener dashboard"
         });
-
     }
-
 };
 
-
 // ==========================================
-// 🔥 REPORTE DE VENTAS
+// REPORTE DE VENTAS Y PEDIDOS
 // ==========================================
 
 exports.obtenerVentas = async (req, res) => {
-
     try {
+        const pedidos = await Pedido.find()
+            .sort({ createdAt: -1 });
 
-        const ventas =
-            await Pedido.find()
-                .sort({ createdAt: -1 });
-
-        res.status(200).json(ventas);
-
+        res.status(200).json(pedidos);
     } catch (error) {
-
-        console.log(error);
+        console.error("Error al obtener ventas:", error);
 
         res.status(500).json({
-
-            mensaje:
-                "Error al obtener ventas"
-
+            mensaje: "Error al obtener ventas"
         });
-
     }
-
 };
 
-
 // ==========================================
-// 🔥 PRODUCTOS MÁS VENDIDOS
+// PRODUCTOS MÁS VENDIDOS
 // ==========================================
 
-exports.obtenerProductosMasVendidos =
-    async (req, res) => {
+exports.obtenerProductosMasVendidos = async (req, res) => {
+    try {
+        const pedidos = await Pedido.find({
+            estado: { $in: ESTADOS_VENTA }
+        });
 
-        try {
+        const productosMap = {};
 
-            const pedidos =
-                await Pedido.find();
+        pedidos.forEach(pedido => {
+            (pedido.productos || []).forEach(producto => {
+                const nombre = producto.nombreProducto;
 
-            const productosMap = {};
+                if (!nombre) return;
 
-            // 🔥 RECORRER PEDIDOS
+                if (!productosMap[nombre]) {
+                    productosMap[nombre] = {
+                        cantidad: 0,
+                        ingresos: 0
+                    };
+                }
 
-            pedidos.forEach(pedido => {
+                productosMap[nombre].cantidad +=
+                    Number(producto.cantidad) || 0;
 
-                pedido.productos.forEach(producto => {
-
-                    if (!productosMap[
-                        producto.nombreProducto
-                    ]) {
-
-                        productosMap[
-                            producto.nombreProducto
-                        ] = {
-
-                            cantidad: 0,
-                            ingresos: 0
-
-                        };
-
-                    }
-
-                    productosMap[
-                        producto.nombreProducto
-                    ].cantidad += producto.cantidad;
-
-                    productosMap[
-                        producto.nombreProducto
-                    ].ingresos += producto.subtotal;
-
-                });
-
+                productosMap[nombre].ingresos +=
+                    Number(producto.subtotal) || 0;
             });
+        });
 
-            // 🔥 CONVERTIR A ARRAY
+        const productos = Object.entries(productosMap).map(
+            ([nombre, datos]) => ({
+                nombre,
+                cantidad: datos.cantidad,
+                ingresos: datos.ingresos
+            })
+        );
 
-            const productos =
-                Object.keys(productosMap)
-                    .map(nombre => ({
+        productos.sort((a, b) => b.cantidad - a.cantidad);
 
-                        nombre,
+        res.status(200).json(productos);
+    } catch (error) {
+        console.error("Error al obtener productos vendidos:", error);
 
-                        cantidad:
-                            productosMap[nombre]
-                                .cantidad,
-
-                        ingresos:
-                            productosMap[nombre]
-                                .ingresos
-
-                    }));
-
-            // 🔥 ORDENAR
-
-            productos.sort(
-
-                (a, b) =>
-                    b.cantidad - a.cantidad
-
-            );
-
-            res.status(200).json(productos);
-
-        } catch (error) {
-
-            console.log(error);
-
-            res.status(500).json({
-
-                mensaje:
-                    "Error al obtener productos vendidos"
-
-            });
-
-        }
-
-    };
-
+        res.status(500).json({
+            mensaje: "Error al obtener productos vendidos"
+        });
+    }
+};
 
 // ==========================================
-// 🔥 INVENTARIO CRÍTICO
+// INVENTARIO BAJO O CRÍTICO
 // ==========================================
 
-exports.obtenerInventarioCritico =
-    async (req, res) => {
+exports.obtenerInventarioCritico = async (req, res) => {
+    try {
+        const productos = await Producto.find({
+            stock: { $lte: 30 },
+            activo: { $ne: false }
+        }).sort({ stock: 1 });
 
-        try {
+        const resultado = productos.map(producto => {
+            const datos = producto.toObject();
 
-            const productos =
-                await Producto.find({
+            datos.estado =
+                datos.stock < 20 ? "Crítico" : "Bajo";
 
-                    estado: {
-                        $in: ["Bajo", "Crítico"]
-                    }
+            return datos;
+        });
 
-                });
+        res.status(200).json(resultado);
+    } catch (error) {
+        console.error("Error al obtener inventario crítico:", error);
 
-            res.status(200).json(productos);
-
-        } catch (error) {
-
-            console.log(error);
-
-            res.status(500).json({
-
-                mensaje:
-                    "Error al obtener inventario crítico"
-
-            });
-
-        }
-
-    };
+        res.status(500).json({
+            mensaje: "Error al obtener inventario crítico"
+        });
+    }
+};
